@@ -12,10 +12,25 @@
 </head>
 <body>
 
+<form action="#" method="post">
 <label for="text-basic">Login</label>
-<input type="text" name="text-basic" id="text-basic" placeholder="User Name" value="">
+<input type="text" name="username" id="text-basic" placeholder="User Name" value="">
 <label for="password">Password:</label>
 <input type="password" name="password" id="password" placeholder="Password" value="" autocomplete="off">
+</form>
 
+<?php
+$username = $_POST['username'];
+$username = stripslashes($username);
+$password = $_POST['password'];
+$password = stripslashes($password);
+curl -X 'POST' \
+     -H "x-api-key: <jumpCloudAPIKey>" \
+     -H "Content-Type: application/json" \
+     -d '{"username":"<userName>","password":"<password>","tag":"<tagToCheck>"}' \
+     "https://auth.jumpcloud.com/authenticate"
+	 
+?>
 </body>
+</html>
 </html>

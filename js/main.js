@@ -1,4 +1,3 @@
-// ------------------------------------------Ali coded items BELOW --------------------------------//
 $(document).ready(function() {
     console.log("ready!");
     $.ajaxSetup({
