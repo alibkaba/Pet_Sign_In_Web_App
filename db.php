@@ -1,15 +1,12 @@
 <?php
-
 $dsn = "mysql:host=localhost;dbname=djkabau1_petsignin";
 $u = "djkabau1_admin";
 $p = "v,w_v;cpxzag";
-//$u = "djkabau1_admin";
-//$p = "E!o0)nd?5)B2";
 $PDOconn = new PDO($dsn, $u, $p);
 try {
-	$PDOconn = new PDO($dsn, $u, $p);
-} catch (PDOException $e) {
-	echo 'Connection failed: ' . $e->getMessage();
+	$PDOconn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	} catch (PDOException $e) {
+	echo 'Error: ' . $e->getMessage() . "\n";
 }
 
 Validate_Ajax_Request();
@@ -29,9 +26,9 @@ function Validate_action(){
 
 function DB_Operation($action){
 	switch($action) {
-		case "Create_Account": Create_Account();
-			break;
 		case "Create_Group": Create_Group();
+			break;
+		case "Create_Account": Create_Account();
 			break;
 		case "Create_Pet": Create_Pet();
 			break;
@@ -50,17 +47,46 @@ function DB_Operation($action){
 	}
 }
 
-//create object for each. name the class what the strings are.
-//classes instead of cases.
-function Create_Seasons_Table(){
+function Create_Group(){
+	global $PDOconn;
+	$Email = stripslashes($_POST["Email"]);
+	$Password = stripslashes($_POST["Password"]);
+	$Group_ID = $_POST["Group_ID"];
+	$Admin = $_POST["Admin"];
+	$Activation_Number = $_POST["Activation_Number"];
+	$Status = $_POST["Status"];
+	
+	$Query = 'CALL Create_Group (?,?,?,?,?,?,?) INTO STATES (STATE_NAME) VALUES (?)';
+	$Statement = $PDOconn->prepare($Query);
+	$Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+	$Statement->bindParam(2, $Password, PDO::PARAM_STR, 45);
+	$Statement->bindParam(3, $Group_ID, PDO::PARAM_STR, 45);
+	$Statement->bindParam(4, $Admin, PDO::PARAM_INT, 1);
+	$Statement->bindParam(5, $Activation_Number, PDO::PARAM_STR, 45);
+	$Statement->bindParam(6, $Status, PDO::PARAM_INT, 1);
+	$Statement->execute();
+	$Response = $Statement->fetchAll();
+	echo json_encode($Response);
+	$PDOconn = null;
+}
+
+function Create_Account(){
+	global $PDOconn;
+	$State_Name = stripslashes($_POST["State_Name"]);
+
+	$Query = 'INSERT INTO STATES (STATE_NAME) VALUES (?)';
+	$Statement = $PDOconn->prepare($Query);
+	$Statement->bindParam(1, $State_Name, PDO::PARAM_INT);
+	$Statement->execute();
+	$Response = $Statement->fetchAll();
+	echo json_encode($Response);
+	$PDOconn = null;
+}
+
+function Create_Unit_Test(){
 	global $PDOconn;
 
-	$Query = 'DROP TABLE IF EXISTS `djkabau1_BUSTOP`.`SEASONS` ;
-CREATE TABLE IF NOT EXISTS `djkabau1_BUSTOP`.`SEASONS` (
-  `SEASONS_ID` INT NOT NULL AUTO_INCREMENT,
-  `SEASONS` VARCHAR(45) NULL,
-  PRIMARY KEY (`SEASONS_ID`))
-ENGINE = InnoDB';
+	$Query = 
 	$Statement = $PDOconn->prepare($Query);
 	$Statement->execute();
 	$Response = $Statement->fetchAll();
@@ -68,7 +94,7 @@ ENGINE = InnoDB';
 	$PDOconn = null;
 }
 
-function Write_Seasons_Table(){
+function Write_Unit_Test(){
 	global $PDOconn;
 	$New_Season = stripslashes($_POST["New_Season"]);
 
@@ -81,7 +107,7 @@ function Write_Seasons_Table(){
 	$PDOconn = null;
 }
 
-function Update_Seasons_Table(){
+function Update_Unit_Test(){
 	global $PDOconn;
 	$New_Season = stripslashes($_POST["New_Season"]);
 	$Old_Season = stripslashes($_POST["Old_Season"]);
@@ -96,7 +122,7 @@ function Update_Seasons_Table(){
 	$PDOconn = null;
 }
 
-function Delete_Seasons_Table(){
+function Delete_Unit_Test(){
 	global $PDOconn;
 
 	$Query = 'DROP TABLE IF EXISTS `djkabau1_BUSTOP`.`SEASONS` ';
@@ -194,19 +220,6 @@ function Get_Login(){
 	$Statement->bindParam(2, $Encrypted_Password, PDO::PARAM_STR, 50);
 	$Statement->execute();
 	$Response  = $Statement->rowCount();
-	echo json_encode($Response);
-	$PDOconn = null;
-}
-
-function Create_State(){
-	global $PDOconn;
-	$State_Name = stripslashes($_POST["State_Name"]);
-
-	$Query = 'INSERT INTO STATES (STATE_NAME) VALUES (?)';
-	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(1, $State_Name, PDO::PARAM_INT);
-	$Statement->execute();
-	$Response = $Statement->fetchAll();
 	echo json_encode($Response);
 	$PDOconn = null;
 }
