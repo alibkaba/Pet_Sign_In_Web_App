@@ -1,8 +1,8 @@
 <?php
 
-$dsn = "mysql:host=localhost;dbname=djkabau1_BUSTOP";
+$dsn = "mysql:host=localhost;dbname=djkabau1_petsignin";
 $u = "djkabau1_admin";
-$p = "E!o0)nd?5)B2";
+$p = "v,w_v;cpxzag";
 //$u = "djkabau1_admin";
 //$p = "E!o0)nd?5)B2";
 $PDOconn = new PDO($dsn, $u, $p);
@@ -29,71 +29,23 @@ function Validate_action(){
 
 function DB_Operation($action){
 	switch($action) {
-		case "Create_Seasons_Table": Create_Seasons_Table();
+		case "Create_Account": Create_Account();
 			break;
-		case "Write_Seasons_Table": Write_Seasons_Table();
+		case "Create_Group": Create_Group();
 			break;
-		case "Update_Seasons_Table": Update_Seasons_Table();
+		case "Create_Pet": Create_Pet();
 			break;
-		case "Delete_Seasons_Table": Delete_Seasons_Table();
+		case "Update_Account": Update_Account();
 			break;
-		case "Get_States": Get_States();
+		case "Update_Pet": Update_Pet();
 			break;
-		case "Get_Districts": Get_Districts();
+		case "Reset_Password": Reset_Password();
 			break;
-		case "Get_Schools": Get_Schools();
+		case "Verify_Account": Verify_Account();
 			break;
-		case "Get_View_All_Buses": Get_View_All_Buses();
+		case "Sign_In": Sign_In();
 			break;
-		case "Get_Bus_Stop_Numbers": Get_Bus_Stop_Numbers();
-			break;
-		case "Get_Bus_Stop_Details": Get_Bus_Stop_Details();
-			break;
-		case "Geocode_PHP": Geocode_PHP();
-			break;
-		case "Cal_Distance_PHP": Cal_Distance_PHP();
-			break;
-		case "Get_Login": Get_Login();
-			break;
-		case "Create_State": Create_State();
-			break;
-		case "Create_District": Create_District();
-			break;
-		case "Create_School": Create_School();
-			break;
-		case "Create_Bus_Stop_Number": Create_Bus_Stop_Number();
-			break;
-		case "Create_Bus_Stop_Detail": Create_Bus_Stop_Detail();
-			break;
-		case "Get_State_Data": Get_State_Data();
-			break;
-		case "Get_District_Data": Get_District_Data();
-			break;
-		case "Get_School_Data": Get_School_Data();
-			break;
-		case "Get_Bus_Stop_Number_Data": Get_Bus_Stop_Number_Data();
-			break;
-		case "Get_Bus_Stop_Detail_Data": Get_Bus_Stop_Detail_Data();
-			break;
-		case "Update_State": Update_State();
-			break;
-		case "Update_District": Update_District();
-			break;
-		case "Update_School": Update_School();
-			break;
-		case "Update_Bus_Stop_Number": Update_Bus_Stop_Number();
-			break;
-		case "Update_Bus_Stop_Detail": Update_Bus_Stop_Detail();
-			break;
-		case "Delete_State": Delete_State();
-			break;
-		case "Delete_District": Delete_District();
-			break;
-		case "Delete_School": Delete_School();
-			break;
-		case "Delete_Bus_Stop_Number": Delete_Bus_Stop_Number();
-			break;
-		case "Delete_Bus_Stop_Detail": Delete_Bus_Stop_Detail();
+		case "Sign_In_Pet": Sign_In_Pet();
 			break;
 	}
 }
