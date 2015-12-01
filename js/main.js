@@ -4,7 +4,6 @@ $(document).ready(function() {
         url: 'db.php',
         type: 'post',
         cache: 'false',
-        async: false,
         success: function(data) {
             console.log(data);
         },
@@ -15,7 +14,7 @@ $(document).ready(function() {
 });
 
 function Create_Group_Or_Account() {
-	var if (document.getElementById('Group_Checked').checked) {
+	if (document.getElementById('Group_Checked').checked) {
 		Create_Group();
 	}
 	else {
@@ -36,30 +35,24 @@ function Sign_In() {
 function Create_Group() {
     var Email = document.getElementById("inputEmail").value;
     var Password = document.getElementById("inputPassword").value;
-	var Group_ID = Generate_Group(Group_ID);
+	alert(Email);
     var Admin = 1;
-	var Activation = Generate_Activation(Activation_Number)
 	var Status = 0;
 	var action = "Create_Group";
     var Ajax_Data = {
         Email: Email,
         Password: Password,
-		Group_ID: Group_ID,
 		Admin: Admin,
-		Activation: Activation,
 		Status: Status,
         action: action
     };
     Outgoing_Ajax(Ajax_Data);
-    var Response = jQuery.parseJSON(Incoming_Ajax_Data);
-    Check_Login_Response(Email, Response);
+    //var Response = jQuery.parseJSON(Incoming_Ajax_Data);
+    //Check_Login_Response(Email, Response);
 }
 
 function Outgoing_Ajax(Ajax_Data) {
-    Incoming_Ajax_Data = $.ajax({
-        data: Ajax_Data
-    }).responseText;
-    return Incoming_Ajax_Data;
+    $.ajax({data: Ajax_Data});
 }
 
 function Check_Login_Response(Email, Response) {
@@ -71,14 +64,4 @@ function Check_Login_Response(Email, Response) {
     else {
         alert('Incorrect login credentials');
     }
-}
-
-function Generate_Group_ID(Group_ID){
-
-    return Group_ID;
-}
-
-function Generate_Activation(Activation_Number){
-
-    return Activation_Number;
 }
