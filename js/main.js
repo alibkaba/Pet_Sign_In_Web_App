@@ -14,6 +14,20 @@ $(document).ready(function() {
     });
 });
 
+function Create_Group_Or_Account() {
+	var if (document.getElementById('Group_Checked').checked) {
+		Create_Group();
+	}
+	else {
+		Create_Account();
+	}
+}
+
+function Create_Account() {
+    var Email = document.getElementById("inputEmail").value;
+    var Password = document.getElementById("inputPassword").value;
+}
+
 function Sign_In() {
     var Email = document.getElementById("inputEmail").value;
     var Password = document.getElementById("inputPassword").value;
