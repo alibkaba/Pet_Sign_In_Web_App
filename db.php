@@ -1,15 +1,15 @@
 <?php
-phpinfo();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-$dns = "mysql:host=localhost;dbname=ad_781aca08c7a46e9";
-$u = "b19cea52955b2b";
-$p = "b35f5779";
-$PDOconn = new PDO($dns, $u, $p);
+$dsn = "mysql:host=localhost;dbname=djkabau1_petsignin";
+$u = "djkabau1_admin";
+$p = "v,w_v;cpxzag";
+$PDOconn = new PDO($dsn, $u, $p);
 try {
+	$PDOconn = new PDO($dsn, $u, $p);
 	$PDOconn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	} catch (PDOException $e) {
-	echo 'Error: ' . $e->getMessage() . "\n";
+	echo 'Connection failed: ' . $e->getMessage() . "\n";
 }
 
 Validate_Ajax_Request();
