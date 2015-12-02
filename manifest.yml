@@ -7,5 +7,5 @@ applications:
   host: alitest
   disk_quota: 1024M
   services:
-  - SQL Database-50
+  - ClearDB MySQL Database-bs
   buildpack: php_buildpack
