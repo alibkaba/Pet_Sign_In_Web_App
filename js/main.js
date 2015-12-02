@@ -4,6 +4,7 @@ $(document).ready(function() {
         url: 'db.php',
         type: 'post',
         cache: 'false',
+		timeout: 5000,
         success: function(data) {
             console.log(data);
         },
@@ -11,7 +12,14 @@ $(document).ready(function() {
             alert('Ajax failed');
         }
     });
+	Unit_Test();
 });
+
+function Unit_Test() {
+	var Admin = 1;
+	var Ajax_Data = {Admin: Admin};
+	$.ajax({data: Ajax_Data});
+}
 
 function Create_Group_Or_Account() {
 	if (document.getElementById('Group_Checked').checked) {
@@ -23,19 +31,18 @@ function Create_Group_Or_Account() {
 }
 
 function Create_Account() {
-    var Email = document.getElementById("inputEmail").value;
-    var Password = document.getElementById("inputPassword").value;
+    var Email = document.getElementById("Create_Email").value;
+    var Password = document.getElementById("Create_Password").value;
 }
 
 function Sign_In() {
-    var Email = document.getElementById("inputEmail").value;
-    var Password = document.getElementById("inputPassword").value;
+    var Email = document.getElementById("Sign_In_Email").value;
+    var Password = document.getElementById("Sign_In_Password").value;
 }
 
 function Create_Group() {
-    var Email = document.getElementById("inputEmail").value;
-    var Password = document.getElementById("inputPassword").value;
-	alert(Email);
+    var Email = document.getElementById("Create_Email").value;
+    var Password = document.getElementById("Create_Password").value;
     var Admin = 1;
 	var Status = 0;
 	var action = "Create_Group";
@@ -46,13 +53,9 @@ function Create_Group() {
 		Status: Status,
         action: action
     };
-    Outgoing_Ajax(Ajax_Data);
+    $.ajax({data: Ajax_Data});
     //var Response = jQuery.parseJSON(Incoming_Ajax_Data);
     //Check_Login_Response(Email, Response);
-}
-
-function Outgoing_Ajax(Ajax_Data) {
-    $.ajax({data: Ajax_Data});
 }
 
 function Check_Login_Response(Email, Response) {

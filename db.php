@@ -1,29 +1,6 @@
 <?php
-//MySQL
-$msqldns = "mysql:host=localhost;dbname=djkabau1_petsignin";
-$msqlu = "djkabau1_admin";
-$msqlp = "v,w_v;cpxzag";
-$PDOconn = new PDO($msqldns, $msqlu, $msqlp);
-try {
-	$PDOconn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	} catch (PDOException $e) {
-	echo 'Error: ' . $e->getMessage() . "\n";
-}
-
-//DB2
-$db2dsn = "jdbc:db2://75.126.155.153:50001/SQLDB:securityMechanism=9";
-$db2u = "akaba@us.ibm.com";
-$db2p = "Lwiogn4s.12";
-$DB2conn = db2_connect($db2dsn, $db2u, $db2p);
-$DB2close = db2_close($DB2conn);
-if ($DB2conn) {
-    echo "Connection succeeded.";
-    $DB2close;
-}
-else {
-    echo "Connection failed.";
-}
-
+ini_set('display_errors', 1); 
+error_reporting(E_ALL);
 Validate_Ajax_Request();
 
 function Validate_Ajax_Request() {
@@ -62,8 +39,21 @@ function DB_Operation($action){
 	}
 }
 
+$db2dsn = "jdbc:db2://75.126.155.153:50000/SQLDB";
+$db2u = "user11307";
+$db2p = "WVudohpLuJg0";
+$DB2conn = db2_connect($db2dsn, $db2u, $db2p);
+$DB2close = db2_close($DB2conn);
+if ($DB2conn) {
+    echo "Connection succeeded.";
+    $DB2close;
+}
+else {
+    echo "Connection failed.";
+}
+
 function Create_Group(){
-	global $DB2conn;
+	$DB2conn;
 
 	$Query = 'CREATE TABLE MYTABLE (  COL1 INT,  COL2 VARCHAR(5) )';
 	$Result = db2_exec($DB2conn, $Query);
@@ -74,108 +64,4 @@ function Create_Group(){
 	$DB2close;
 }
 
-function Create_Groupc(){
-	global $DB2conn;
-	$Email = stripslashes($_POST["Email"]);
-	$Password = stripslashes($_POST["Password"]);
-	$Admin = $_POST["Admin"];
-	$Status = $_POST["Status"];
-	
-	$Query = 'CALL Create_Group (?,?,?,?,?,?,?) INTO STATES (STATE_NAME) VALUES (?)';
-	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-	$Statement->bindParam(2, $Password, PDO::PARAM_STR, 45);
-	$Statement->bindParam(3, $Admin, PDO::PARAM_INT, 1);
-	$Statement->bindParam(4, $Status, PDO::PARAM_INT, 1);
-	$Statement->execute();
-	$Response = $Statement->fetchAll();
-	echo json_encode($Response);
-	$DB2close;
-}
-
-function Create_Groupx(){
-	global $PDOconn;
-	$Email = stripslashes($_POST["Email"]);
-	$Password = stripslashes($_POST["Password"]);
-	$Group_ID = $_POST["Group_ID"];
-	$Admin = $_POST["Admin"];
-	$Activation_Number = $_POST["Activation_Number"];
-	$Status = $_POST["Status"];
-	
-	$Query = 'CALL Create_Group (?,?,?,?,?,?,?) INTO STATES (STATE_NAME) VALUES (?)';
-	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-	$Statement->bindParam(2, $Password, PDO::PARAM_STR, 45);
-	$Statement->bindParam(3, $Group_ID, PDO::PARAM_STR, 45);
-	$Statement->bindParam(4, $Admin, PDO::PARAM_INT, 1);
-	$Statement->bindParam(5, $Activation_Number, PDO::PARAM_STR, 45);
-	$Statement->bindParam(6, $Status, PDO::PARAM_INT, 1);
-	$Statement->execute();
-	$Response = $Statement->fetchAll();
-	echo json_encode($Response);
-	$PDOconn = null;
-}
-
-function Create_Account(){
-	global $PDOconn;
-	$State_Name = stripslashes($_POST["State_Name"]);
-
-	$Query = 'INSERT INTO STATES (STATE_NAME) VALUES (?)';
-	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(1, $State_Name, PDO::PARAM_INT);
-	$Statement->execute();
-	$Response = $Statement->fetchAll();
-	echo json_encode($Response);
-	$PDOconn = null;
-}
-
-function Create_Unit_Test(){
-	global $PDOconn;
-
-	$Query = 
-	$Statement = $PDOconn->prepare($Query);
-	$Statement->execute();
-	$Response = $Statement->fetchAll();
-	echo json_encode($Response);
-	$PDOconn = null;
-}
-
-function Write_Unit_Test(){
-	global $PDOconn;
-	$New_Season = stripslashes($_POST["New_Season"]);
-
-	$Query = 'INSERT INTO USERS (SEASONS) VALUES (?)';
-	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(1, $New_Season, PDO::PARAM_STR, 45);
-	$Statement->execute();
-	$Response = $Statement->fetchAll();
-	echo json_encode($Response);
-	$PDOconn = null;
-}
-
-function Update_Unit_Test(){
-	global $PDOconn;
-	$New_Season = stripslashes($_POST["New_Season"]);
-	$Old_Season = stripslashes($_POST["Old_Season"]);
-
-	$Query = 'UPDATE SEASONS SET SEASONS = (?) WHERE SEASONS = (?)';
-	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(1, $New_Season, PDO::PARAM_STR, 45);
-	$Statement->bindParam(2, $Old_Season, PDO::PARAM_STR, 45);
-	$Statement->execute();
-	$Response = $Statement->fetchAll();
-	echo json_encode($Response);
-	$PDOconn = null;
-}
-
-function Delete_Unit_Test(){
-	global $PDOconn;
-
-	$Query = 'DROP TABLE IF EXISTS `djkabau1_BUSTOP`.`SEASONS` ';
-	$Statement = $PDOconn->prepare($Query);
-	$Statement->execute();
-	$Response = $Statement->fetchAll();
-	echo json_encode($Response);
-	$PDOconn = null;
-}
 ?>
