@@ -47,123 +47,61 @@ function DB_Operation($action){
 			break;
 		case "Sign_In_Pet": Sign_In_Pet();
 			break;
+		case "Check_Group_ID": Check_Group_ID();
+			break;
 	}
 }
 
 function Create_Group(){
-	global $DB2conn;
-
-	$Query = 'CREATE TABLE MYTABLE (  COL1 INT,  COL2 VARCHAR(5) )';
-	$Result = db2_exec($DB2conn, $Query);
-	$Result = $Statement->fetchAll();
-	if ($Result) {
-    print "Successfully created the table.\n";
-	}
-	$DB2close;
-}
-
-function Create_Groupc(){
-	global $DB2conn;
-	$Email = stripslashes($_POST["Email"]);
-	$Password = stripslashes($_POST["Password"]);
-	$Admin = $_POST["Admin"];
-	$Status = $_POST["Status"];
-	
-	$Query = 'CALL Create_Group (?,?,?,?,?,?,?) INTO STATES (STATE_NAME) VALUES (?)';
-	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-	$Statement->bindParam(2, $Password, PDO::PARAM_STR, 45);
-	$Statement->bindParam(3, $Admin, PDO::PARAM_INT, 1);
-	$Statement->bindParam(4, $Status, PDO::PARAM_INT, 1);
-	$Statement->execute();
-	$Response = $Statement->fetchAll();
-	echo json_encode($Response);
-	$DB2close;
-}
-
-function Create_Groupx(){
 	global $PDOconn;
 	$Email = stripslashes($_POST["Email"]);
 	$Password = stripslashes($_POST["Password"]);
-	$Group_ID = $_POST["Group_ID"];
-	$Admin = $_POST["Admin"];
-	$Activation_Number = $_POST["Activation_Number"];
-	$Status = $_POST["Status"];
+	$Group_ID = stripslashes($_POST["Group_ID"]);
+	$Admin = stripslashes($_POST["Admin"]);
+	$Activation = stripslashes($_POST["Activation"]);
+	$Status = stripslashes($_POST["Status"]);
 	
-	$Query = 'CALL Create_Group (?,?,?,?,?,?,?) INTO STATES (STATE_NAME) VALUES (?)';
+	$Query = 'CALL Create_Group (?,?,?,?,?,?)';
 	$Statement = $PDOconn->prepare($Query);
 	$Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
 	$Statement->bindParam(2, $Password, PDO::PARAM_STR, 45);
-	$Statement->bindParam(3, $Group_ID, PDO::PARAM_STR, 45);
+	$Statement->bindParam(3, $Group_ID, PDO::PARAM_INT, 6);
 	$Statement->bindParam(4, $Admin, PDO::PARAM_INT, 1);
-	$Statement->bindParam(5, $Activation_Number, PDO::PARAM_STR, 45);
+	$Statement->bindParam(5, $Activation, PDO::PARAM_INT, 6);
 	$Statement->bindParam(6, $Status, PDO::PARAM_INT, 1);
 	$Statement->execute();
 	$Response = $Statement->fetchAll();
-	echo json_encode($Response);
+	print_r($Response);
+	//echo json_encode($Response);
 	$PDOconn = null;
 }
 
-function Create_Account(){
-	global $PDOconn;
-	$State_Name = stripslashes($_POST["State_Name"]);
-
-	$Query = 'INSERT INTO STATES (STATE_NAME) VALUES (?)';
+function Check_Group_ID(){
+	$PDOconn;
+	$Group_ID = stripslashes($_POST["Group_ID"]);
+	
+	$Query = 'CALL Check_Group_ID (?)';
 	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(1, $State_Name, PDO::PARAM_INT);
+	$Statement->bindParam(3, $New_Group_ID, PDO::PARAM_INT, 6);
 	$Statement->execute();
 	$Response = $Statement->fetchAll();
+	print $Response;
 	echo json_encode($Response);
 	$PDOconn = null;
 }
 
-function Create_Unit_Test(){
-	global $PDOconn;
-
-	$Query = 
+function Check_Activation_Number(){
+	$PDOconn;
+	$Group_ID = stripslashes($_POST["Group_ID"]);
+	
+	$Query = 'CALL Check_Activation_Number (?)';
 	$Statement = $PDOconn->prepare($Query);
+	$Statement->bindParam(3, $New_Activation_Number, PDO::PARAM_INT, 6);
 	$Statement->execute();
 	$Response = $Statement->fetchAll();
+	print $Response;
 	echo json_encode($Response);
 	$PDOconn = null;
 }
 
-function Write_Unit_Test(){
-	global $PDOconn;
-	$New_Season = stripslashes($_POST["New_Season"]);
-
-	$Query = 'INSERT INTO USERS (SEASONS) VALUES (?)';
-	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(1, $New_Season, PDO::PARAM_STR, 45);
-	$Statement->execute();
-	$Response = $Statement->fetchAll();
-	echo json_encode($Response);
-	$PDOconn = null;
-}
-
-function Update_Unit_Test(){
-	global $PDOconn;
-	$New_Season = stripslashes($_POST["New_Season"]);
-	$Old_Season = stripslashes($_POST["Old_Season"]);
-
-	$Query = 'UPDATE SEASONS SET SEASONS = (?) WHERE SEASONS = (?)';
-	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(1, $New_Season, PDO::PARAM_STR, 45);
-	$Statement->bindParam(2, $Old_Season, PDO::PARAM_STR, 45);
-	$Statement->execute();
-	$Response = $Statement->fetchAll();
-	echo json_encode($Response);
-	$PDOconn = null;
-}
-
-function Delete_Unit_Test(){
-	global $PDOconn;
-
-	$Query = 'DROP TABLE IF EXISTS `djkabau1_BUSTOP`.`SEASONS` ';
-	$Statement = $PDOconn->prepare($Query);
-	$Statement->execute();
-	$Response = $Statement->fetchAll();
-	echo json_encode($Response);
-	$PDOconn = null;
-}
 ?>
