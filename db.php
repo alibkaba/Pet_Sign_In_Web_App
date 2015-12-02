@@ -1,4 +1,5 @@
 <?php
+phpinfo();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 $dns = "mysql:host=localhost;dbname=ad_781aca08c7a46e9";
