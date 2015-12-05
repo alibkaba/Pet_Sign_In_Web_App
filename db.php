@@ -69,10 +69,23 @@ function Create_Group(){
 	$Statement->bindParam(4, $Admin, PDO::PARAM_INT, 1);
 	$Statement->bindParam(5, $Activation, PDO::PARAM_INT, 6);
 	$Statement->bindParam(6, $Status, PDO::PARAM_INT, 1);
+	if($Statement->execute()) {
+		echo "Success";
+	};
+	$PDOconn = null;
+}
+
+function Check_Email(){
+	$PDOconn;
+	$Group_ID = stripslashes($_POST["Group_ID"]);
+	
+	$Query = 'CALL Check_Email (?)';
+	$Statement = $PDOconn->prepare($Query);
+	$Statement->bindParam(3, $New_Group_ID, PDO::PARAM_INT, 6);
 	$Statement->execute();
 	$Response = $Statement->fetchAll();
-	print_r($Response);
-	//echo json_encode($Response);
+	print $Response;
+	echo json_encode($Response);
 	$PDOconn = null;
 }
 

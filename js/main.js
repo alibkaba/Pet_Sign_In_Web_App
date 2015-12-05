@@ -42,8 +42,11 @@ function Sign_In() {
 
 function Create_Group() {
     var Email = document.getElementById("Create_Email").value;
+	if (Check_Email){
+		alert();
+	}
     var Password = document.getElementById("Create_Password").value;
-	var Group_ID = Generate_Group_ID();
+	var Group_ID = 1;
     var Admin = 1;
 	var Activation = Generate_Activation();
 	var Status = 0;
@@ -57,27 +60,22 @@ function Create_Group() {
 		Status: Status,
         action: action
     };
-    Outgoing_Ajax(Ajax_Data);
-    //var Response = jQuery.parseJSON(Incoming_Ajax_Data);
-    //Check_Login_Response(Email, Response);
+	Outgoing_Ajax(Ajax_Data);
 }
 
 function Outgoing_Ajax(Ajax_Data) {
-    Incoming_Ajax_Data = $.ajax({
+    var Response = $.ajax({
         data: Ajax_Data
-    }).ResponseText;
-    return Incoming_Ajax_Data;
+    });
+    return;
 }
 
-function Check_Login_Response(Email, Response) {
-    alert(Response);
-    if (Response !== "1") {
-        localStorage.setItem("email", Email);
-        window.location.href = 'dashboard.html';
-    }
-    else {
-        alert('Incorrect login credentials');
-    }
+function Check_Email(Email){
+	var Ajax_Data = {
+		New_Email: New_Email,
+	};
+	Outgoing_Ajax(Ajax_Data);
+	
 }
 
 function Generate_Group_ID(){
@@ -105,14 +103,4 @@ function Generate_Activation(){
 function Generator(){
 	return Math.floor(100000 + Math.random() * 900000);
 	
-}
-
-function Check_Response(Data) {
-    alert(Data);
-    if (Data !== "1") {
-        alert('Incorrect login credentials');
-    }
-    else {
-        alert('Incorrect login credentials');
-    }
 }
