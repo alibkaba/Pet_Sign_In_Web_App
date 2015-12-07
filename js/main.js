@@ -6,19 +6,19 @@ $(document).ready(function() {
         cache: 'false',
 		timeout: 5000,
         success: function(data) {
-            console.log(data);
+            console.log('Ajax Success');
         },
         error: function() {
-            alert('Ajax failed');
+            console.log('Ajax failed');
         }
     });
 	Unit_Test();
 });
 
 function Unit_Test() {
-	var Admin = "Unit Test";
-	var Ajax_Data = {Admin: Admin};
-	$.ajax({data: Ajax_Data});
+	var action = "Unit_Test";
+	var Ajax_Data = {action: action};
+	Outgoing_Ajax(Ajax_Data);
 }
 
 function Create_Group_Or_Account() {
@@ -43,7 +43,7 @@ function Sign_In() {
 function Create_Group() {
     var Email = document.getElementById("Create_Email").value;
 	if (Check_Email){
-		alert();
+		console.log('Email already exists');
 	}
     var Password = document.getElementById("Create_Password").value;
 	var Group_ID = 1;
@@ -64,10 +64,10 @@ function Create_Group() {
 }
 
 function Outgoing_Ajax(Ajax_Data) {
-    var Response = $.ajax({
+    Incoming_Ajax_Data = $.ajax({
         data: Ajax_Data
-    });
-    return;
+    }).responseText;
+    return Incoming_Ajax_Data;
 }
 
 function Check_Email(Email){

@@ -29,6 +29,8 @@ function Validate_action(){
 
 function DB_Operation($action){
 	switch($action) {
+		case "Unit_Test": Unit_Test();
+			break;
 		case "Create_Group": Create_Group();
 			break;
 		case "Create_Account": Create_Account();
@@ -52,6 +54,41 @@ function DB_Operation($action){
 	}
 }
 
+function Unit_Test(){
+	global $PDOconn;
+	$Query = 'DROP TABLE IF EXISTS djkabau1_petsignin.Unit_Test ;
+	CREATE TABLE IF NOT EXISTS djkabau1_petsignin.Unit_Test (
+	Test_Column INT NOT NULL,
+	PRIMARY KEY (Test_Column))
+	ENGINE = InnoDB;
+	USE djkabau1_petsignin';
+	$Statement = $PDOconn->prepare($Query);
+	$Statement->execute();
+	
+	$New_Value = "1";
+	$Query = 'INSERT INTO djkabau1_petsignin.Unit_Test (Test_Column) VALUES (?)';
+	$Statement = $PDOconn->prepare($Query);
+	$Statement->bindParam(1, $New_Value, PDO::PARAM_INT);
+	$Statement->execute();
+	
+	$Updated_Value = "2";
+	$Query = 'UPDATE djkabau1_petsignin.Unit_Test set Test_Column = (?) where Test_Column = (?)';
+	$Statement = $PDOconn->prepare($Query);
+	$Statement->bindParam(1, $Updated_Value, PDO::PARAM_INT);
+	$Statement->bindParam(2, $New_Value, PDO::PARAM_INT);
+	$Statement->execute();
+	
+	$Query = 'DELETE FROM djkabau1_petsignin.Unit_Test WHERE Test_Column = (?)';
+	$Statement = $PDOconn->prepare($Query);
+	$Statement->bindParam(1, $Updated_Value, PDO::PARAM_INT);
+	$Statement->execute();
+	
+	$Query = 'DROP TABLE IF EXISTS djkabau1_petsignin.Unit_Test';
+	$Statement = $PDOconn->prepare($Query);
+	$Statement->execute();
+	$PDOconn = null;
+}
+
 function Create_Group(){
 	global $PDOconn;
 	$Email = stripslashes($_POST["Email"]);
@@ -70,7 +107,7 @@ function Create_Group(){
 	$Statement->bindParam(5, $Activation, PDO::PARAM_INT, 6);
 	$Statement->bindParam(6, $Status, PDO::PARAM_INT, 1);
 	if($Statement->execute()) {
-		echo "Success";
+		echo "Create_Group Success";
 	};
 	$PDOconn = null;
 }
