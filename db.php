@@ -31,7 +31,7 @@ function DB_Operation($action){
 	switch($action) {
 		case "Unit_Test": Unit_Test();
 			break;
-		case "Create_Group": Create_Group();
+		case "Create_Company": Create_Company();
 			break;
 		case "Create_Account": Create_Account();
 			break;
@@ -49,7 +49,7 @@ function DB_Operation($action){
 			break;
 		case "Sign_In_Pet": Sign_In_Pet();
 			break;
-		case "Check_Group_ID": Check_Group_ID();
+		case "Check_Company_ID": Check_Company_ID();
 			break;
 	}
 }
@@ -89,36 +89,36 @@ function Unit_Test(){
 	$PDOconn = null;
 }
 
-function Create_Group(){
+function Create_Company(){
 	global $PDOconn;
 	$Email = stripslashes($_POST["Email"]);
 	$Password = stripslashes($_POST["Password"]);
-	$Group_ID = stripslashes($_POST["Group_ID"]);
+	$Company_ID = stripslashes($_POST["Company_ID"]);
 	$Admin = stripslashes($_POST["Admin"]);
 	$Activation = stripslashes($_POST["Activation"]);
 	$Status = stripslashes($_POST["Status"]);
 	
-	$Query = 'CALL Create_Group (?,?,?,?,?,?)';
+	$Query = 'CALL Create_Company (?,?,?,?,?,?)';
 	$Statement = $PDOconn->prepare($Query);
 	$Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
 	$Statement->bindParam(2, $Password, PDO::PARAM_STR, 45);
-	$Statement->bindParam(3, $Group_ID, PDO::PARAM_INT, 6);
+	$Statement->bindParam(3, $Company_ID, PDO::PARAM_INT, 6);
 	$Statement->bindParam(4, $Admin, PDO::PARAM_INT, 1);
 	$Statement->bindParam(5, $Activation, PDO::PARAM_INT, 6);
 	$Statement->bindParam(6, $Status, PDO::PARAM_INT, 1);
 	if($Statement->execute()) {
-		echo "Create_Group Success";
+		echo "Create_Company Success";
 	};
 	$PDOconn = null;
 }
 
 function Check_Email(){
 	$PDOconn;
-	$Group_ID = stripslashes($_POST["Group_ID"]);
+	$Company_ID = stripslashes($_POST["Company_ID"]);
 	
 	$Query = 'CALL Check_Email (?)';
 	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(3, $New_Group_ID, PDO::PARAM_INT, 6);
+	$Statement->bindParam(3, $New_Company_ID, PDO::PARAM_INT, 6);
 	$Statement->execute();
 	$Response = $Statement->fetchAll();
 	print $Response;
@@ -126,13 +126,13 @@ function Check_Email(){
 	$PDOconn = null;
 }
 
-function Check_Group_ID(){
+function Check_Company_ID(){
 	$PDOconn;
-	$Group_ID = stripslashes($_POST["Group_ID"]);
+	$Company_ID = stripslashes($_POST["Company_ID"]);
 	
-	$Query = 'CALL Check_Group_ID (?)';
+	$Query = 'CALL Check_Company_ID (?)';
 	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(3, $New_Group_ID, PDO::PARAM_INT, 6);
+	$Statement->bindParam(3, $New_Company_ID, PDO::PARAM_INT, 6);
 	$Statement->execute();
 	$Response = $Statement->fetchAll();
 	print $Response;
@@ -142,7 +142,7 @@ function Check_Group_ID(){
 
 function Check_Activation_Number(){
 	$PDOconn;
-	$Group_ID = stripslashes($_POST["Group_ID"]);
+	$Company_ID = stripslashes($_POST["Company_ID"]);
 	
 	$Query = 'CALL Check_Activation_Number (?)';
 	$Statement = $PDOconn->prepare($Query);

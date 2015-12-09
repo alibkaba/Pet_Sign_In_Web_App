@@ -21,9 +21,9 @@ function Unit_Test() {
 	Outgoing_Ajax(Ajax_Data);
 }
 
-function Create_Group_Or_Account() {
-	if (document.getElementById('Group_Checked').checked) {
-		Create_Group();
+function Create_Company_Or_Account() {
+	if (document.getElementById('Company_Checked').checked) {
+		Create_Company();
 	}
 	else {
 		Create_Account();
@@ -40,21 +40,21 @@ function Sign_In() {
     var Password = document.getElementById("Sign_In_Password").value;
 }
 
-function Create_Group() {
+function Create_Company() {
     var Email = document.getElementById("Create_Email").value;
 	if (Check_Email){
 		console.log('Email already exists');
 	}
     var Password = document.getElementById("Create_Password").value;
-	var Group_ID = 1;
+	var Company_ID = 1;
     var Admin = 1;
 	var Activation = Generate_Activation();
 	var Status = 0;
-	var action = "Create_Group";
+	var action = "Create_Company";
     var Ajax_Data = {
         Email: Email,
         Password: Password,
-		Group_ID: Group_ID,
+		Company_ID: Company_ID,
 		Admin: Admin,
 		Activation: Activation,
 		Status: Status,
@@ -78,15 +78,15 @@ function Check_Email(Email){
 	
 }
 
-function Generate_Group_ID(){
-	var New_Group_ID = Generator()
-	var action = "Check_Group_ID";
+function Generate_Company_ID(){
+	var New_Company_ID = Generator()
+	var action = "Check_Company_ID";
 	var Ajax_Data = {
-		New_Group_ID: New_Group_ID,
+		New_Company_ID: New_Company_ID,
 	};
 	Outgoing_Ajax(Ajax_Data);
 	//Data = jQuery.parseJSON(Incoming_Ajax_Data);
-    return New_Group_ID;
+    return New_Company_ID;
 }
 
 function Generate_Activation(){

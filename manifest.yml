@@ -1,11 +1,12 @@
 applications:
 - path: .
-  memory: 128M
+  memory: 512M
   instances: 1
   domain: mybluemix.net
   name: alitest
   host: alitest
   disk_quota: 1024M
   services:
-  - ClearDB MySQL Database-bs
-  buildpack: php_buildpack
+  - alitest-cloudantNoSQLDB
+  - alitest-imfpush
+  - alitest-AdvancedMobileAccess
