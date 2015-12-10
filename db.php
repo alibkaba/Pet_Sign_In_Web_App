@@ -31,26 +31,18 @@ function DB_Operation($action){
 	switch($action) {
 		case "Unit_Test": Unit_Test();
 			break;
-		case "Create_Company": Create_Company();
-			break;
 		case "Create_Account": Create_Account();
 			break;
-		case "Create_Pet": Create_Pet();
-			break;
-		case "Update_Account": Update_Account();
-			break;
-		case "Update_Pet": Update_Pet();
-			break;
-		case "Reset_Password": Reset_Password();
-			break;
-		case "Verify_Account": Verify_Account();
-			break;
+        case "Create_Company": Create_Company();
+            break;
+        case "Create_Pet": Create_Pet();
+            break;
 		case "Sign_In": Sign_In();
 			break;
-		case "Sign_In_Pet": Sign_In_Pet();
-			break;
-		case "Check_Company_ID": Check_Company_ID();
-			break;
+        case "Check_Email": Check_Email();
+            break;
+        case "Check_Company_ID": Check_Company_ID();
+            break;
 	}
 }
 
@@ -89,69 +81,51 @@ function Unit_Test(){
 	$PDOconn = null;
 }
 
-function Create_Company(){
+function Create_Account(){
 	global $PDOconn;
 	$Email = stripslashes($_POST["Email"]);
 	$Password = stripslashes($_POST["Password"]);
 	$Company_ID = stripslashes($_POST["Company_ID"]);
 	$Admin = stripslashes($_POST["Admin"]);
-	$Activation = stripslashes($_POST["Activation"]);
 	$Status = stripslashes($_POST["Status"]);
 	
-	$Query = 'CALL Create_Company (?,?,?,?,?,?)';
+	$Query = 'CALL Create_Account (?,?,?,?,?)';
 	$Statement = $PDOconn->prepare($Query);
 	$Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
 	$Statement->bindParam(2, $Password, PDO::PARAM_STR, 45);
 	$Statement->bindParam(3, $Company_ID, PDO::PARAM_INT, 6);
 	$Statement->bindParam(4, $Admin, PDO::PARAM_INT, 1);
-	$Statement->bindParam(5, $Activation, PDO::PARAM_INT, 6);
-	$Statement->bindParam(6, $Status, PDO::PARAM_INT, 1);
+	$Statement->bindParam(5, $Status, PDO::PARAM_INT, 1);
 	if($Statement->execute()) {
-		echo "Create_Company Success";
+		echo "Success";
 	};
+    //echo json_encode($Response);
 	$PDOconn = null;
 }
 
 function Check_Email(){
-	$PDOconn;
-	$Company_ID = stripslashes($_POST["Company_ID"]);
+    global $PDOconn;
+    $Email = stripslashes($_POST["Email"]);
 	
 	$Query = 'CALL Check_Email (?)';
 	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(3, $New_Company_ID, PDO::PARAM_INT, 6);
-	$Statement->execute();
-	$Response = $Statement->fetchAll();
-	print $Response;
-	echo json_encode($Response);
-	$PDOconn = null;
+	$Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    if($Statement->execute()) {
+        echo "Success";
+    };
+    $PDOconn = null;
 }
 
 function Check_Company_ID(){
-	$PDOconn;
+    global $PDOconn;
 	$Company_ID = stripslashes($_POST["Company_ID"]);
 	
 	$Query = 'CALL Check_Company_ID (?)';
 	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(3, $New_Company_ID, PDO::PARAM_INT, 6);
-	$Statement->execute();
-	$Response = $Statement->fetchAll();
-	print $Response;
-	echo json_encode($Response);
-	$PDOconn = null;
+	$Statement->bindParam(1, $New_Company_ID, PDO::PARAM_INT, 6);
+    if($Statement->execute()) {
+        echo "Success";
+    };
+    $PDOconn = null;
 }
-
-function Check_Activation_Number(){
-	$PDOconn;
-	$Company_ID = stripslashes($_POST["Company_ID"]);
-	
-	$Query = 'CALL Check_Activation_Number (?)';
-	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(3, $New_Activation_Number, PDO::PARAM_INT, 6);
-	$Statement->execute();
-	$Response = $Statement->fetchAll();
-	print $Response;
-	echo json_encode($Response);
-	$PDOconn = null;
-}
-
 ?>

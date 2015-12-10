@@ -1,0 +1,8 @@
+body {
+    background-color: #f2f2f3;
+}
+
+#Account, #Sign_Out, #Create_Button {
+    display: none;
+    visibility: hidden;
+}

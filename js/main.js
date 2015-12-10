@@ -21,18 +21,25 @@ function Unit_Test() {
 	Outgoing_Ajax(Ajax_Data);
 }
 
-function Create_Company_Or_Account() {
-	if (document.getElementById('Company_Checked').checked) {
-		Create_Company();
-	}
-	else {
-		Create_Account();
-	}
-}
-
 function Create_Account() {
-    var Email = document.getElementById("Create_Email").value;
+    var Email = document.getElementById("email").value;
+    if (Check_Email){
+        console.log('Email already exists');
+    }
     var Password = document.getElementById("Create_Password").value;
+    var Company_ID = 0;
+    var Admin = 0;
+    var Status = 0;
+    var action = "Create_Company";
+    var Ajax_Data = {
+        Email: Email,
+        Password: Password,
+        Company_ID: Company_ID,
+        Admin: Admin,
+        Status: Status,
+        action: action
+    };
+    Outgoing_Ajax(Ajax_Data);
 }
 
 function Sign_In() {
@@ -89,18 +96,21 @@ function Generate_Company_ID(){
     return New_Company_ID;
 }
 
-function Generate_Activation(){
-	var New_Activation_Number = Generator()
-	var action = "Check_Activation_Number";
-	var Ajax_Data = {
-		New_Activation_Number: New_Activation_Number,
-	};
-	Outgoing_Ajax(Ajax_Data);
-	//Data = jQuery.parseJSON(Incoming_Ajax_Data);
-    return New_Activation_Number;
-} 
-
 function Generator(){
 	return Math.floor(100000 + Math.random() * 900000);
-	
+}
+
+function Display_Admin(){
+    document.getElementById("Select_Districts").style.visibility="visible";
+    if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == 'admin.html') {
+        document.getElementById("Update_State_Form_Button").style.visibility="visible";
+        document.getElementById("Delete_State_Form_Button").style.visibility="visible";
+        document.getElementById("Create_District_Form_Button").style.visibility="visible";
+    }
+}
+
+function Display_Associated_User() {
+}
+
+function Display_User() {
 }
