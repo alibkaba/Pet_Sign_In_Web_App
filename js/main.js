@@ -21,7 +21,7 @@ function Unit_Test() {
 	Outgoing_Ajax(Ajax_Data);
 }
 
-function Create_Account() {
+function Register() {
     var Email = document.getElementById("email").value;
     if (Check_Email){
         console.log('Email already exists');
@@ -30,7 +30,7 @@ function Create_Account() {
     var Company_ID = 0;
     var Admin = 0;
     var Status = 0;
-    var action = "Create_Company";
+    var action = "Register";
     var Ajax_Data = {
         Email: Email,
         Password: Password,

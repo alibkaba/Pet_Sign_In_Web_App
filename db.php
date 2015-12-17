@@ -31,7 +31,7 @@ function DB_Operation($action){
 	switch($action) {
 		case "Unit_Test": Unit_Test();
 			break;
-		case "Create_Account": Create_Account();
+		case "Register": Register();
 			break;
         case "Create_Company": Create_Company();
             break;
@@ -81,7 +81,7 @@ function Unit_Test(){
 	$PDOconn = null;
 }
 
-function Create_Account(){
+function Register(){
 	global $PDOconn;
 	$Email = stripslashes($_POST["Email"]);
 	$Password = stripslashes($_POST["Password"]);
