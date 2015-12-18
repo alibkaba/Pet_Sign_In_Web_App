@@ -36,18 +36,50 @@
 </nav>
 
 <div class="form-group">
-    <label for="Email">Email Address: </label>
-    <input type="text" name="email" id="Email" placeholder="Email" required>
+    <label for="Email1">Email Address: </label>
+    <input type="text" name="Email1" id="Email1" placeholder="Email" required>
 </div>
 <div class="form-group">
-    <label for="Password">Password:</label>
-    <input type="password" name="password" id="Password" placeholder="Password" autocomplete="off"><br>
+    <label for="Password1">Password:</label>
+    <input type="password" name="Password1" id="Password1" placeholder="Password" autocomplete="off"><br>
 </div>
 <button type="button" class="btn btn-primary btn-sm" onclick="Sign_In();">Sign In</button>
-<button type="button" class="btn btn-primary btn-xs" id="Register" onclick="Register();">Register</button>
 <br><br>
-<button type="button" class="btn btn-default btn-xs" data-dismiss="modal">I don't have an account</button>
+<button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#RegisterModal">Register</button>
 
+
+<div class="modal fade" id="RegisterModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Register</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="Email2">Email Address: </label>
+                    <input type="text" name="Email2" id="Email2" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <label for="Password2">Password:</label>
+                    <input type="password" name="Password2" id="Password2" placeholder="Password" autocomplete="off"><br>
+                </div>
+                <div class="radio">
+                    <label><input type="radio" name="Company_ID" id="Join">Join a Company</label>
+                    <label><input type="radio" name="Company_ID" id="Create" checked>Create a Company</label>
+                </div>
+                <div class="form-group">
+                    <label for="Company_ID">Company ID: </label>
+                    <input type="text" name="Company_ID" id="Company_ID" placeholder="Company ID">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="Register" onclick="Register();">Register</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

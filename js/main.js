@@ -22,12 +22,16 @@ function Unit_Test() {
 }
 
 function Register() {
-    var Email = document.getElementById("email").value;
+    var Email = document.getElementById("Email2").value;
     if (Check_Email){
         console.log('Email already exists');
     }
-    var Password = document.getElementById("Create_Password").value;
-    var Company_ID = 0;
+    var Password = document.getElementById("Password2").value;
+    if (document.getElementById("Create").checked = true){
+        var Company_ID = Generate_Company_ID();
+    }else{
+        var Company_ID = document.getElementById("Company_ID").value;
+    }
     var Admin = 0;
     var Status = 0;
     var action = "Register";
@@ -43,8 +47,8 @@ function Register() {
 }
 
 function Sign_In() {
-    var Email = document.getElementById("Sign_In_Email").value;
-    var Password = document.getElementById("Sign_In_Password").value;
+    var Email = document.getElementById("Email1").value;
+    var Password = document.getElementById("Password1").value;
 }
 
 function Create_Company() {
