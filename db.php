@@ -46,6 +46,13 @@ function DB_Operation($action){
 	}
 }
 
+function Execute($Statement){
+    if($Statement->execute()) {
+        $Response = 'Success';
+        echo json_encode($Response);
+    }
+}
+
 function Unit_Test(){
 	global $PDOconn;
 	$Query = 'DROP TABLE IF EXISTS djkabau1_petsignin.Unit_Test ;
@@ -55,7 +62,7 @@ function Unit_Test(){
 	ENGINE = InnoDB;
 	USE djkabau1_petsignin';
 	$Statement = $PDOconn->prepare($Query);
-	$Statement->execute();
+    Execute($Statement);
 	
 	$New_Value = "1";
 	$Query = 'INSERT INTO djkabau1_petsignin.Unit_Test (Test_Column) VALUES (?)';
@@ -97,7 +104,7 @@ function Register(){
 	$Statement->bindParam(4, $Admin, PDO::PARAM_INT, 1);
 	$Statement->bindParam(5, $Status, PDO::PARAM_INT, 1);
 	if($Statement->execute()) {
-		echo "Success";
+		echo json_encode("Success");
 	};
     //echo json_encode($Response);
 	$PDOconn = null;
@@ -106,12 +113,12 @@ function Register(){
 function Check_Email(){
     global $PDOconn;
     $Email = stripslashes($_POST["Email"]);
-	
-	$Query = 'CALL Check_Email (?)';
+
+	$Query = 'select Email from Users where Email = (?)';
 	$Statement = $PDOconn->prepare($Query);
 	$Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     if($Statement->execute()) {
-        echo "Success";
+        echo json_encode("Success");
     };
     $PDOconn = null;
 }
