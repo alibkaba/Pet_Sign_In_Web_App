@@ -1,19 +1,61 @@
 $(document).ready(function() {
+    var Incoming_Ajax_Data;
     console.log("ready!");
     $.ajaxSetup({
         url: 'db.php',
         type: 'post',
         cache: 'false',
 		timeout: 5000,
+        async: true,
         success: function(data) {
-            console.log('Success');
+            console.log(data, Incoming_Ajax_Data);
         },
         error: function() {
-            console.log('Failed');
+            console.log('Ajax Failed');
         }
     });
+    GUI_Handler();
 	Unit_Test();
+    if (typeof console  != "undefined")
+        if (typeof console.log != 'undefined')
+            console.olog = console.log;
+        else
+            console.olog = function() {};
+
+    console.log = function(message) {
+        console.olog(message);
+        $('#Display_Log').append('<p>' + message + '</p>');
+    };
+    console.error = console.debug = console.info =  console.log
 });
+
+function GUI_Handler(){
+    var Register_Handler = new Register_Manager();
+    Register_Handler.Register_Listener();
+}
+
+function Register_Manager(){
+    this.Register_Listener = function(){
+        var Register = document.getElementById("Register");
+        Register.addEventListener("click", function () {
+            this.Check_Email();
+        });
+    };
+    this.Check_Email = function(){
+        var Email = document.getElementById("Email2").value;
+        var Ajax_Data = {
+            Email: Email,
+            action: Check_Email
+        };
+        Outgoing_Ajax(Ajax_Data);
+    };
+}
+
+function Outgoing_Ajax(Ajax_Data) {
+    $.ajax({
+        data: Ajax_Data
+    });
+}
 
 function Unit_Test() {
 	var action = "Unit_Test";
@@ -23,53 +65,12 @@ function Unit_Test() {
 	Outgoing_Ajax(Ajax_Data);
 }
 
-function Register() {
-    var Email = document.getElementById("Email2").value;
-    if (Check_Email(Email)){
-        console.log('Email already exists');
-    }
-    var Password = document.getElementById("Password2").value;
-    if (document.getElementById("Create").checked = true){
-        var Company_ID = Generate_Company_ID();
-    }else{
-        var Company_ID = document.getElementById("Company_ID").value;
-    }
-    var Admin = 0;
-    var Status = 0;
-    var action = "Register";
-    var Ajax_Data = {
-        Email: Email,
-        Password: Password,
-        Company_ID: Company_ID,
-        Admin: Admin,
-        Status: Status,
-        action: action
-    };
-    Outgoing_Ajax(Ajax_Data);
-}
-
 function Sign_In() {
     var Email = document.getElementById("Email1").value;
     if (Check_Email(Email)){
         console.log('Email already exists');
     }
     var Password = document.getElementById("Password1").value;
-}
-
-function Outgoing_Ajax(Ajax_Data) {
-    var Incoming_Ajax_Data = $.ajax({
-        data: Ajax_Data
-    }).responseText;
-    console.log(JSON.stringify(Incoming_Ajax_Data))
-    console.dir(Incoming_Ajax_Data);
-}
-
-function Check_Email(Email){
-	var Ajax_Data = {
-        Email: Email,
-		action: Check_Email,
-	};
-	Outgoing_Ajax(Ajax_Data);
 }
 
 function Generate_Company_ID(){

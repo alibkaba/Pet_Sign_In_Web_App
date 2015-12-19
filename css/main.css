@@ -6,3 +6,8 @@ body {
     display: none;
     visibility: hidden;
 }
+
+#Display_Log{
+    padding: 5px;
+    background: #ff9;
+}
