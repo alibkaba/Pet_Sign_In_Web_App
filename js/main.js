@@ -31,15 +31,22 @@ $(document).ready(function() {
 
 function GUI_Handler(){
     var Register_Handler = new Register_Manager();
-    Register_Handler.Register_Listener();
+    Register_Handler.Create_Listener();
 }
 
 function Register_Manager(){
-    this.Register_Listener = function(){
-        var Register = document.getElementById("Register");
-        Register.addEventListener("click", function () {
-            this.Check_Email();
+    this.Create_Listener = function(){
+        var Register_Button = document.getElementById("Email2");
+        Register_Button.addEventListener("click", function () {
+            var Email = document.getElementById("Email2").value;
+            var Attribute = ["Email"];
+            var Value = [Email];
+            if (Validate_Text_Fields(Attribute, Value) != false) {
+                //this.Check_Email();
+            }
         });
+
+        var Register = document.getElementById("Register");
     };
     this.Check_Email = function(){
         var Email = document.getElementById("Email2").value;
@@ -49,6 +56,16 @@ function Register_Manager(){
         };
         Outgoing_Ajax(Ajax_Data);
     };
+}
+
+function Validate_Text_Fields(Attribute, Value) {
+    var i;
+    for (i = 0; i < Value.length; i++) {
+        if (Value[i] == null || Value[i] == "") {
+            alert("Invalid " + Attribute[i]);
+            return false;
+        }
+    }
 }
 
 function Outgoing_Ajax(Ajax_Data) {
