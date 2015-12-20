@@ -49,16 +49,17 @@ function DB_Operation($action){
 
 function Execute($Statement){
     if($Statement->execute()) {
-        echo nl2br("Success \n");
+        echo nl2br("Statement pass \n");
     }else{
-        echo nl2br("Failed \n");
+        echo nl2br("Statement failed \n");
         Debugging();
     }
 }
 
 function Fetch($Statement){
     if($Statement->fetchAll()) {
-        echo nl2br("Success \n");
+        echo nl2br("Fetch pass \n");
+        //echo json_encode($Response);
     }
 }
 
@@ -115,6 +116,8 @@ function Register(){
 	$Email = stripslashes($_POST["Email"]);
 	$Password = stripslashes($_POST["Password"]);
 	$Company_ID = stripslashes($_POST["Company_ID"]);
+    //validate company id
+    //generate company id
 	$Admin = stripslashes($_POST["Admin"]);
 	$Status = stripslashes($_POST["Status"]);
 	
@@ -137,7 +140,8 @@ function Check_Email(){
 	$Statement = $PDOconn->prepare($Query);
 	$Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     Execute($Statement);
-    Fetch($Statement);
+    $Response = $Statement->fetchAll();
+    echo json_encode($Response);
     $PDOconn = null;
 }
 

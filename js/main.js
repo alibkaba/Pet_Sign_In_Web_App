@@ -14,8 +14,16 @@ $(document).ready(function() {
             console.log('Ajax Failed');
         }
     });
-    GUI_Handler();
-	Unit_Test();
+    Start();
+});
+
+function Start(){
+    Unit_Test();
+    Register_Button();
+    Console_Log();
+}
+
+function Console_Log(){
     if (typeof console  != "undefined")
         if (typeof console.log != 'undefined')
             console.olog = console.log;
@@ -27,82 +35,90 @@ $(document).ready(function() {
         $('#Display_Log').append('<p>' + message + '</p>');
     };
     console.error = console.debug = console.info =  console.log
-});
+}
+
+function Register_Button(){
+    var Register_Button = document.getElementById("Register");
+    Register_Button['onclick'] = function () {
+        try{
+            var Email = document.getElementById("Email2").value;
+            Validate_Email(Email);
+            Check_Email(Email);
+            console.log('test');
+            var Password = document.getElementById("Password2").value;
+            //validate password function 8-25 characters long
+            var Admin = 0;
+            //var Company_ID = Company_ID();  -> validate function or generate function and validate function via php
+            var Company_ID = 1;
+            var Status = 0;
+            var action = "Register";
+            console.log('test');
+            var Ajax_Data = {
+                Email: Email,
+                Password: Password,
+                Company_ID: Company_ID,
+                Admin: Admin,
+                Status: Status,
+                action: action
+            };
+            Outgoing_Ajax(Ajax_Data);
+        }catch(e){}
+    };
+}
+
+function Check_Email(Email){
+    var action = "Check_Email";
+    var Ajax_Data = {
+        Email: Email,
+        action: action
+    };
+    Ajax_Data = jQuery.parseJSON(Incoming_Ajax_Data);
+    console.log(Ajax_Data[0].Email);
+}
 
 function GUI_Handler(){
     var Register_Handler = new Register_Manager();
-    Register_Handler.Create_Listener();
-}
-
-function Register_Manager(){
-    this.Create_Listener = function(){
-        var Register_Button = document.getElementById("Email2");
-        Register_Button.addEventListener("click", function () {
-            var Email = document.getElementById("Email2").value;
-            var Attribute = ["Email"];
-            var Value = [Email];
-            if (Validate_Text_Fields(Attribute, Value) != false) {
-                //this.Check_Email();
-            }
-        });
-
-        var Register = document.getElementById("Register");
-    };
-    this.Check_Email = function(){
-        var Email = document.getElementById("Email2").value;
-        var Ajax_Data = {
-            Email: Email,
-            action: Check_Email
-        };
-        Outgoing_Ajax(Ajax_Data);
-    };
-}
-
-function Validate_Text_Fields(Attribute, Value) {
-    var i;
-    for (i = 0; i < Value.length; i++) {
-        if (Value[i] == null || Value[i] == "") {
-            alert("Invalid " + Attribute[i]);
-            return false;
-        }
-    }
-}
-
-function Outgoing_Ajax(Ajax_Data) {
-    $.ajax({
-        data: Ajax_Data
-    });
+    Register_Handler.Register_Listener();
 }
 
 function Unit_Test() {
-	var action = "Unit_Test";
-	var Ajax_Data = {
+    var action = "Unit_Test";
+    var Ajax_Data = {
         action: action
     };
-	Outgoing_Ajax(Ajax_Data);
-}
-
-function Sign_In() {
-    var Email = document.getElementById("Email1").value;
-    if (Check_Email(Email)){
-        console.log('Email already exists');
-    }
-    var Password = document.getElementById("Password1").value;
+    Outgoing_Ajax(Ajax_Data);
 }
 
 function Generate_Company_ID(){
-	var New_Company_ID = Generator()
-	var action = "Check_Company_ID";
-	var Ajax_Data = {
-		New_Company_ID: New_Company_ID,
-	};
-	Outgoing_Ajax(Ajax_Data);
-	//Data = jQuery.parseJSON(Incoming_Ajax_Data);
+    var New_Company_ID = Generator();
+    var action = "Check_Company_ID";
+    var Ajax_Data = {
+        New_Company_ID: New_Company_ID
+    };
+    Outgoing_Ajax(Ajax_Data);
+    //Data = jQuery.parseJSON(Incoming_Ajax_Data);
     return New_Company_ID;
 }
 
 function Generator(){
-	return Math.floor(100000 + Math.random() * 900000);
+    return Math.floor(100000 + Math.random() * 900000);
+}
+
+function Validate_Email(Email) {
+    var atpos = Email.indexOf("@");
+    var dotpos = Email.lastIndexOf(".");
+    if (atpos<1 || dotpos<atpos+2 || dotpos+2>=Email.length) {
+        console.log('Not a valid e-mail address');
+        throw new Error();
+    }
+}
+
+// RECYCLE LIST RECYCLE LIST RECYCLE LIST RECYCLE LIST RECYCLE LIST RECYCLE LIST RECYCLE LIST
+function Outgoing_Ajax(Ajax_Data) {
+    var Incoming_Ajax_Data = $.ajax({
+        data: Ajax_Data
+    }).responseText;
+    return Incoming_Ajax_Data;
 }
 
 function Display_Admin(){
