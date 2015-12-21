@@ -48,22 +48,35 @@ function DB_Operation($action){
 }
 
 function Execute($Statement){
-    if($Response = $Statement->execute()) {
-        //$Response = array('action' => $action, 'status' => 1);
-        echo json_encode($Response);
-    }else{
-        echo json_encode($Response);
-        Debugging();
+    global $action;
+    try {
+        if(!$Statement->execute()) {
+            $Response = array('action' => $action, 'status' => 0);
+            echo json_encode($Response);
+            Debugging();
+        }
+    } catch (PDOException $e) {
+        echo 'Connection failed: ' . $e->getMessage() . "\n";
+        $ErrorMSG = 'Connection failed: ' . $e->getMessage() . "\n";
+        //echo $ErrorMSG;
+        Debugging($ErrorMSG);
     }
 }
 
 function Fetch($Statement){
     global $action;
-    if($Response = $Statement->fetchAll()) {
-        echo json_encode(array($action => $Response));
-    }else{;
-        echo json_encode(array($action => $Response));
-        Debugging();
+    try {
+        if($Response = $Statement->fetchAll()) {
+            echo json_encode(array($action => $Response));
+        }else{
+            $Response = array('action' => $action, 'status' => 0);
+            echo json_encode($Response);
+            Debugging();
+    }
+    } catch (PDOException $e) {
+        echo 'Connection failed: ' . $e->getMessage() . "\n";
+        $ErrorMSG = $e->getMessage();
+        Debugging($ErrorMSG);
     }
 }
 
@@ -102,15 +115,17 @@ function Unit_Test(){
 	$PDOconn = null;
 }
 
-function Debugging(){
+//this handles errors when an action fails on the database
+function Debugging($ErrorMSG){
     global $PDOconn;
     global $action;
     $Email = 'a@a.com';
 
-    $Query = 'INSERT INTO djkabau1_petsignin.Debugging (Email, Action) VALUES (?,?);';
+    $Query = 'INSERT INTO djkabau1_petsignin.Debugging (Email, Action, ErrorMSG) VALUES (?,?,?);';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $action, PDO::PARAM_STR, 45);
+    $Statement->bindParam(3, $ErrorMSG, PDO::PARAM_STR, 100);
     $Statement->execute();
     $PDOconn = null;
 }

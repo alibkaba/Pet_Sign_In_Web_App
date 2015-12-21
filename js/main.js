@@ -7,7 +7,7 @@ $(document).ready(function() {
         timeout: 5000,
         async: true,
         success: function(Ajax_Data) {
-            //console.log(Ajax_Data);
+            console.log(Ajax_Data);
             Validate_Ajax_Data(Ajax_Data);
         },
         error: function() {
@@ -24,11 +24,7 @@ function Start(){
 }
 
 function Validate_Ajax_Data(Ajax_Data){
-    if (Ajax_Data instanceof Object) {
-        console.log('object');
-    }else{
-        console.log('not object');
-    }
+
 
 }
 
@@ -57,7 +53,7 @@ function Register_Button(){
             var Email = document.getElementById("Email2").value;
             Validate_Email(Email);
             Check_Email(Email);
-            console.log('test');
+            console.log('passed check email');
             var Password = document.getElementById("Password2").value;
             //validate password function 8-25 characters long
             var Admin = 0;
@@ -65,7 +61,7 @@ function Register_Button(){
             var Company_ID = 1;
             var Status = 0;
             var action = "Register";
-            console.log('test');
+            console.log('passed register');
             var Ajax_Data = {
                 Email: Email,
                 Password: Password,
