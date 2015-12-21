@@ -25,7 +25,7 @@
       <file leaf-file-name="main.css" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/css/main.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.8461537">
+            <state vertical-scroll-proportion="0.0">
               <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
               <folding />
             </state>
@@ -35,38 +35,37 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.818182">
+            <state vertical-scroll-proportion="-39.53846">
               <caret line="76" column="81" selection-start-line="76" selection-start-column="73" selection-end-line="76" selection-end-column="81" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.27334082">
-              <caret line="75" column="36" selection-start-line="75" selection-start-column="36" selection-end-line="75" selection-end-column="36" />
+            <state vertical-scroll-proportion="-29.48276">
+              <caret line="75" column="14" selection-start-line="75" selection-start-column="14" selection-end-line="75" selection-end-column="14" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="db.php" pinned="false" current-in-tab="false">
+      <file leaf-file-name="db.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/db.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-12.6">
-              <caret line="139" column="25" selection-start-line="139" selection-start-column="25" selection-end-line="139" selection-end-column="25" />
+            <state vertical-scroll-proportion="0.19466975">
+              <caret line="56" column="5" selection-start-line="56" selection-start-column="5" selection-end-line="56" selection-end-column="5" />
               <folding>
-                <marker date="1450589217126" expanded="true" signature="1595:1644" placeholder="DROP TABLE I..." />
-                <marker date="1450589217126" expanded="true" signature="1648:1777" placeholder="CREATE TABLE..IF..." />
-                <marker date="1450589217126" expanded="true" signature="1903:1968" placeholder="INSERT INTO djkabau1_petsignin.Unit_Test..." />
-                <marker date="1450589217126" expanded="true" signature="2128:2209" placeholder="UPDATE djkab..." />
-                <marker date="1450589217126" expanded="true" signature="2405:2469" placeholder="DELETE FROM ..." />
-                <marker date="1450589217126" expanded="true" signature="2610:2659" placeholder="DROP TABLE I..." />
-                <marker date="1450589217126" expanded="true" signature="2849:2918" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
-                <marker date="1450589217126" expanded="true" signature="3964:4005" placeholder="SELECT Email..Users..." />
-                <marker date="1450589217126" expanded="true" signature="3970:4005" placeholder="select Email..Users..." />
+                <marker date="1450672681365" expanded="true" signature="1761:1810" placeholder="DROP TABLE I..." />
+                <marker date="1450672681365" expanded="true" signature="1814:1943" placeholder="CREATE TABLE..IF..." />
+                <marker date="1450672681365" expanded="true" signature="2068:2133" placeholder="INSERT INTO djkabau1_petsignin.Unit_Test..." />
+                <marker date="1450672681365" expanded="true" signature="2292:2373" placeholder="UPDATE djkab..." />
+                <marker date="1450672681365" expanded="true" signature="2568:2632" placeholder="DELETE FROM ..." />
+                <marker date="1450672681365" expanded="true" signature="2772:2821" placeholder="DROP TABLE I..." />
+                <marker date="1450672681365" expanded="true" signature="3013:3082" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
+                <marker date="1450672681365" expanded="true" signature="4131:4171" placeholder="SELECT Email..User..." />
               </folding>
             </state>
           </provider>
@@ -298,7 +297,7 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -347,7 +346,7 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -820,16 +819,17 @@
       <workItem from="1450311851631" duration="599000" />
       <workItem from="1450325780086" duration="207000" />
       <workItem from="1450396573342" duration="5482000" />
-      <workItem from="1450547091514" duration="26350000" />
+      <workItem from="1450547091514" duration="26442000" />
+      <workItem from="1450638528594" duration="16625000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="50562000" />
+    <option name="totallyTimeSpent" value="67279000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -869,7 +869,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <option name="time" value="5" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -878,6 +878,47 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/css/main.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="76" column="81" selection-start-line="76" selection-start-column="73" selection-end-line="76" selection-end-column="81" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/db.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="139" column="25" selection-start-line="139" selection-start-column="25" selection-end-line="139" selection-end-column="25" />
+          <folding>
+            <marker date="1450672681365" expanded="true" signature="1761:1810" placeholder="DROP TABLE I..." />
+            <marker date="1450672681365" expanded="true" signature="1814:1943" placeholder="CREATE TABLE..IF..." />
+            <marker date="1450672681365" expanded="true" signature="2068:2133" placeholder="INSERT INTO djkabau1_petsignin.Unit_Test..." />
+            <marker date="1450672681365" expanded="true" signature="2292:2373" placeholder="UPDATE djkab..." />
+            <marker date="1450672681365" expanded="true" signature="2568:2632" placeholder="DELETE FROM ..." />
+            <marker date="1450672681365" expanded="true" signature="2772:2821" placeholder="DROP TABLE I..." />
+            <marker date="1450672681365" expanded="true" signature="3013:3082" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
+            <marker date="1450672681365" expanded="true" signature="4131:4171" placeholder="SELECT Email..User..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/css/main.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -907,15 +948,14 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1450589217126" expanded="true" signature="1595:1644" placeholder="DROP TABLE I..." />
-            <marker date="1450589217126" expanded="true" signature="1648:1777" placeholder="CREATE TABLE..IF..." />
-            <marker date="1450589217126" expanded="true" signature="1903:1968" placeholder="INSERT INTO djkabau1_petsignin.Unit_Test..." />
-            <marker date="1450589217126" expanded="true" signature="2128:2209" placeholder="UPDATE djkab..." />
-            <marker date="1450589217126" expanded="true" signature="2405:2469" placeholder="DELETE FROM ..." />
-            <marker date="1450589217126" expanded="true" signature="2610:2659" placeholder="DROP TABLE I..." />
-            <marker date="1450589217126" expanded="true" signature="2849:2918" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
-            <marker date="1450589217126" expanded="true" signature="3964:4005" placeholder="SELECT Email..Users..." />
-            <marker date="1450589217126" expanded="true" signature="3970:4005" placeholder="select Email..Users..." />
+            <marker date="1450672681365" expanded="true" signature="1761:1810" placeholder="DROP TABLE I..." />
+            <marker date="1450672681365" expanded="true" signature="1814:1943" placeholder="CREATE TABLE..IF..." />
+            <marker date="1450672681365" expanded="true" signature="2068:2133" placeholder="INSERT INTO djkabau1_petsignin.Unit_Test..." />
+            <marker date="1450672681365" expanded="true" signature="2292:2373" placeholder="UPDATE djkab..." />
+            <marker date="1450672681365" expanded="true" signature="2568:2632" placeholder="DELETE FROM ..." />
+            <marker date="1450672681365" expanded="true" signature="2772:2821" placeholder="DROP TABLE I..." />
+            <marker date="1450672681365" expanded="true" signature="3013:3082" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
+            <marker date="1450672681365" expanded="true" signature="4131:4171" placeholder="SELECT Email..User..." />
           </folding>
         </state>
       </provider>
@@ -949,15 +989,14 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="87" column="53" selection-start-line="87" selection-start-column="53" selection-end-line="87" selection-end-column="53" />
           <folding>
-            <marker date="1450589217126" expanded="true" signature="1595:1644" placeholder="DROP TABLE I..." />
-            <marker date="1450589217126" expanded="true" signature="1648:1777" placeholder="CREATE TABLE..IF..." />
-            <marker date="1450589217126" expanded="true" signature="1903:1968" placeholder="INSERT INTO djkabau1_petsignin.Unit_Test..." />
-            <marker date="1450589217126" expanded="true" signature="2128:2209" placeholder="UPDATE djkab..." />
-            <marker date="1450589217126" expanded="true" signature="2405:2469" placeholder="DELETE FROM ..." />
-            <marker date="1450589217126" expanded="true" signature="2610:2659" placeholder="DROP TABLE I..." />
-            <marker date="1450589217126" expanded="true" signature="2849:2918" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
-            <marker date="1450589217126" expanded="true" signature="3964:4005" placeholder="SELECT Email..Users..." />
-            <marker date="1450589217126" expanded="true" signature="3970:4005" placeholder="select Email..Users..." />
+            <marker date="1450672681365" expanded="true" signature="1761:1810" placeholder="DROP TABLE I..." />
+            <marker date="1450672681365" expanded="true" signature="1814:1943" placeholder="CREATE TABLE..IF..." />
+            <marker date="1450672681365" expanded="true" signature="2068:2133" placeholder="INSERT INTO djkabau1_petsignin.Unit_Test..." />
+            <marker date="1450672681365" expanded="true" signature="2292:2373" placeholder="UPDATE djkab..." />
+            <marker date="1450672681365" expanded="true" signature="2568:2632" placeholder="DELETE FROM ..." />
+            <marker date="1450672681365" expanded="true" signature="2772:2821" placeholder="DROP TABLE I..." />
+            <marker date="1450672681365" expanded="true" signature="3013:3082" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
+            <marker date="1450672681365" expanded="true" signature="4131:4171" placeholder="SELECT Email..User..." />
           </folding>
         </state>
       </provider>
@@ -991,15 +1030,14 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="34" column="18" selection-start-line="34" selection-start-column="18" selection-end-line="34" selection-end-column="18" />
           <folding>
-            <marker date="1450589217126" expanded="true" signature="1595:1644" placeholder="DROP TABLE I..." />
-            <marker date="1450589217126" expanded="true" signature="1648:1777" placeholder="CREATE TABLE..IF..." />
-            <marker date="1450589217126" expanded="true" signature="1903:1968" placeholder="INSERT INTO djkabau1_petsignin.Unit_Test..." />
-            <marker date="1450589217126" expanded="true" signature="2128:2209" placeholder="UPDATE djkab..." />
-            <marker date="1450589217126" expanded="true" signature="2405:2469" placeholder="DELETE FROM ..." />
-            <marker date="1450589217126" expanded="true" signature="2610:2659" placeholder="DROP TABLE I..." />
-            <marker date="1450589217126" expanded="true" signature="2849:2918" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
-            <marker date="1450589217126" expanded="true" signature="3964:4005" placeholder="SELECT Email..Users..." />
-            <marker date="1450589217126" expanded="true" signature="3970:4005" placeholder="select Email..Users..." />
+            <marker date="1450672681365" expanded="true" signature="1761:1810" placeholder="DROP TABLE I..." />
+            <marker date="1450672681365" expanded="true" signature="1814:1943" placeholder="CREATE TABLE..IF..." />
+            <marker date="1450672681365" expanded="true" signature="2068:2133" placeholder="INSERT INTO djkabau1_petsignin.Unit_Test..." />
+            <marker date="1450672681365" expanded="true" signature="2292:2373" placeholder="UPDATE djkab..." />
+            <marker date="1450672681365" expanded="true" signature="2568:2632" placeholder="DELETE FROM ..." />
+            <marker date="1450672681365" expanded="true" signature="2772:2821" placeholder="DROP TABLE I..." />
+            <marker date="1450672681365" expanded="true" signature="3013:3082" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
+            <marker date="1450672681365" expanded="true" signature="4131:4171" placeholder="SELECT Email..User..." />
           </folding>
         </state>
       </provider>
@@ -1033,15 +1071,14 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="34" column="18" selection-start-line="34" selection-start-column="18" selection-end-line="34" selection-end-column="18" />
           <folding>
-            <marker date="1450589217126" expanded="true" signature="1595:1644" placeholder="DROP TABLE I..." />
-            <marker date="1450589217126" expanded="true" signature="1648:1777" placeholder="CREATE TABLE..IF..." />
-            <marker date="1450589217126" expanded="true" signature="1903:1968" placeholder="INSERT INTO djkabau1_petsignin.Unit_Test..." />
-            <marker date="1450589217126" expanded="true" signature="2128:2209" placeholder="UPDATE djkab..." />
-            <marker date="1450589217126" expanded="true" signature="2405:2469" placeholder="DELETE FROM ..." />
-            <marker date="1450589217126" expanded="true" signature="2610:2659" placeholder="DROP TABLE I..." />
-            <marker date="1450589217126" expanded="true" signature="2849:2918" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
-            <marker date="1450589217126" expanded="true" signature="3964:4005" placeholder="SELECT Email..Users..." />
-            <marker date="1450589217126" expanded="true" signature="3970:4005" placeholder="select Email..Users..." />
+            <marker date="1450672681365" expanded="true" signature="1761:1810" placeholder="DROP TABLE I..." />
+            <marker date="1450672681365" expanded="true" signature="1814:1943" placeholder="CREATE TABLE..IF..." />
+            <marker date="1450672681365" expanded="true" signature="2068:2133" placeholder="INSERT INTO djkabau1_petsignin.Unit_Test..." />
+            <marker date="1450672681365" expanded="true" signature="2292:2373" placeholder="UPDATE djkab..." />
+            <marker date="1450672681365" expanded="true" signature="2568:2632" placeholder="DELETE FROM ..." />
+            <marker date="1450672681365" expanded="true" signature="2772:2821" placeholder="DROP TABLE I..." />
+            <marker date="1450672681365" expanded="true" signature="3013:3082" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
+            <marker date="1450672681365" expanded="true" signature="4131:4171" placeholder="SELECT Email..User..." />
           </folding>
         </state>
       </provider>
@@ -1075,15 +1112,14 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="34" column="18" selection-start-line="34" selection-start-column="18" selection-end-line="34" selection-end-column="18" />
           <folding>
-            <marker date="1450589217126" expanded="true" signature="1595:1644" placeholder="DROP TABLE I..." />
-            <marker date="1450589217126" expanded="true" signature="1648:1777" placeholder="CREATE TABLE..IF..." />
-            <marker date="1450589217126" expanded="true" signature="1903:1968" placeholder="INSERT INTO djkabau1_petsignin.Unit_Test..." />
-            <marker date="1450589217126" expanded="true" signature="2128:2209" placeholder="UPDATE djkab..." />
-            <marker date="1450589217126" expanded="true" signature="2405:2469" placeholder="DELETE FROM ..." />
-            <marker date="1450589217126" expanded="true" signature="2610:2659" placeholder="DROP TABLE I..." />
-            <marker date="1450589217126" expanded="true" signature="2849:2918" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
-            <marker date="1450589217126" expanded="true" signature="3964:4005" placeholder="SELECT Email..Users..." />
-            <marker date="1450589217126" expanded="true" signature="3970:4005" placeholder="select Email..Users..." />
+            <marker date="1450672681365" expanded="true" signature="1761:1810" placeholder="DROP TABLE I..." />
+            <marker date="1450672681365" expanded="true" signature="1814:1943" placeholder="CREATE TABLE..IF..." />
+            <marker date="1450672681365" expanded="true" signature="2068:2133" placeholder="INSERT INTO djkabau1_petsignin.Unit_Test..." />
+            <marker date="1450672681365" expanded="true" signature="2292:2373" placeholder="UPDATE djkab..." />
+            <marker date="1450672681365" expanded="true" signature="2568:2632" placeholder="DELETE FROM ..." />
+            <marker date="1450672681365" expanded="true" signature="2772:2821" placeholder="DROP TABLE I..." />
+            <marker date="1450672681365" expanded="true" signature="3013:3082" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
+            <marker date="1450672681365" expanded="true" signature="4131:4171" placeholder="SELECT Email..User..." />
           </folding>
         </state>
       </provider>
@@ -1098,7 +1134,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/css/main.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.8461537">
+        <state vertical-scroll-proportion="0.0">
           <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
           <folding />
         </state>
@@ -1106,35 +1142,34 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.818182">
+        <state vertical-scroll-proportion="-39.53846">
           <caret line="76" column="81" selection-start-line="76" selection-start-column="73" selection-end-line="76" selection-end-column="81" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/js/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-29.48276">
+          <caret line="75" column="14" selection-start-line="75" selection-start-column="14" selection-end-line="75" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/db.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.6">
-          <caret line="139" column="25" selection-start-line="139" selection-start-column="25" selection-end-line="139" selection-end-column="25" />
+        <state vertical-scroll-proportion="0.19466975">
+          <caret line="56" column="5" selection-start-line="56" selection-start-column="5" selection-end-line="56" selection-end-column="5" />
           <folding>
-            <marker date="1450589217126" expanded="true" signature="1595:1644" placeholder="DROP TABLE I..." />
-            <marker date="1450589217126" expanded="true" signature="1648:1777" placeholder="CREATE TABLE..IF..." />
-            <marker date="1450589217126" expanded="true" signature="1903:1968" placeholder="INSERT INTO djkabau1_petsignin.Unit_Test..." />
-            <marker date="1450589217126" expanded="true" signature="2128:2209" placeholder="UPDATE djkab..." />
-            <marker date="1450589217126" expanded="true" signature="2405:2469" placeholder="DELETE FROM ..." />
-            <marker date="1450589217126" expanded="true" signature="2610:2659" placeholder="DROP TABLE I..." />
-            <marker date="1450589217126" expanded="true" signature="2849:2918" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
-            <marker date="1450589217126" expanded="true" signature="3964:4005" placeholder="SELECT Email..Users..." />
-            <marker date="1450589217126" expanded="true" signature="3970:4005" placeholder="select Email..Users..." />
+            <marker date="1450672681365" expanded="true" signature="1761:1810" placeholder="DROP TABLE I..." />
+            <marker date="1450672681365" expanded="true" signature="1814:1943" placeholder="CREATE TABLE..IF..." />
+            <marker date="1450672681365" expanded="true" signature="2068:2133" placeholder="INSERT INTO djkabau1_petsignin.Unit_Test..." />
+            <marker date="1450672681365" expanded="true" signature="2292:2373" placeholder="UPDATE djkab..." />
+            <marker date="1450672681365" expanded="true" signature="2568:2632" placeholder="DELETE FROM ..." />
+            <marker date="1450672681365" expanded="true" signature="2772:2821" placeholder="DROP TABLE I..." />
+            <marker date="1450672681365" expanded="true" signature="3013:3082" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
+            <marker date="1450672681365" expanded="true" signature="4131:4171" placeholder="SELECT Email..User..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/js/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.27334082">
-          <caret line="75" column="36" selection-start-line="75" selection-start-column="36" selection-end-line="75" selection-end-column="36" />
-          <folding />
         </state>
       </provider>
     </entry>

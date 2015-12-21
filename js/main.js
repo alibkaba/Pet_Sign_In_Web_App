@@ -1,14 +1,14 @@
 $(document).ready(function() {
-    var Incoming_Ajax_Data;
     console.log("ready!");
     $.ajaxSetup({
         url: 'db.php',
         type: 'post',
         cache: 'false',
-		timeout: 5000,
+        timeout: 5000,
         async: true,
-        success: function(data) {
-            console.log(data, Incoming_Ajax_Data);
+        success: function(Ajax_Data) {
+            //console.log(Ajax_Data);
+            Validate_Ajax_Data(Ajax_Data);
         },
         error: function() {
             console.log('Ajax Failed');
@@ -21,6 +21,19 @@ function Start(){
     Unit_Test();
     Register_Button();
     Console_Log();
+}
+
+function Validate_Ajax_Data(Ajax_Data){
+    if (Ajax_Data instanceof Object) {
+        console.log('object');
+    }else{
+        console.log('not object');
+    }
+
+}
+
+function Response_Operation(){
+
 }
 
 function Console_Log(){
@@ -66,14 +79,20 @@ function Register_Button(){
     };
 }
 
+function Outgoing_Ajax(Ajax_Data) {
+    $.ajax({
+        data: Ajax_Data
+    });
+}
+
 function Check_Email(Email){
     var action = "Check_Email";
     var Ajax_Data = {
         Email: Email,
         action: action
     };
-    Ajax_Data = jQuery.parseJSON(Incoming_Ajax_Data);
-    console.log(Ajax_Data[0].Email);
+
+    Outgoing_Ajax(Ajax_Data);
 }
 
 function GUI_Handler(){
@@ -86,7 +105,7 @@ function Unit_Test() {
     var Ajax_Data = {
         action: action
     };
-    Outgoing_Ajax(Ajax_Data);
+    var Ajax_Data = Outgoing_Ajax(Ajax_Data);
 }
 
 function Generate_Company_ID(){
@@ -96,7 +115,6 @@ function Generate_Company_ID(){
         New_Company_ID: New_Company_ID
     };
     Outgoing_Ajax(Ajax_Data);
-    //Data = jQuery.parseJSON(Incoming_Ajax_Data);
     return New_Company_ID;
 }
 
@@ -114,12 +132,6 @@ function Validate_Email(Email) {
 }
 
 // RECYCLE LIST RECYCLE LIST RECYCLE LIST RECYCLE LIST RECYCLE LIST RECYCLE LIST RECYCLE LIST
-function Outgoing_Ajax(Ajax_Data) {
-    var Incoming_Ajax_Data = $.ajax({
-        data: Ajax_Data
-    }).responseText;
-    return Incoming_Ajax_Data;
-}
 
 function Display_Admin(){
     document.getElementById("Select_Districts").style.visibility="visible";

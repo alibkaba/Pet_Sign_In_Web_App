@@ -48,18 +48,22 @@ function DB_Operation($action){
 }
 
 function Execute($Statement){
-    if($Statement->execute()) {
-        echo nl2br("Statement pass \n");
+    if($Response = $Statement->execute()) {
+        //$Response = array('action' => $action, 'status' => 1);
+        echo json_encode($Response);
     }else{
-        echo nl2br("Statement failed \n");
+        echo json_encode($Response);
         Debugging();
     }
 }
 
 function Fetch($Statement){
-    if($Statement->fetchAll()) {
-        echo nl2br("Fetch pass \n");
-        //echo json_encode($Response);
+    global $action;
+    if($Response = $Statement->fetchAll()) {
+        echo json_encode(array($action => $Response));
+    }else{;
+        echo json_encode(array($action => $Response));
+        Debugging();
     }
 }
 
@@ -73,25 +77,25 @@ function Unit_Test(){
 	USE djkabau1_petsignin';
 	$Statement = $PDOconn->prepare($Query);
     Execute($Statement);
-	
+
 	$New_Value = "1";
 	$Query = 'INSERT INTO djkabau1_petsignin.Unit_Test (Test_Column) VALUES (?)';
 	$Statement = $PDOconn->prepare($Query);
 	$Statement->bindParam(1, $New_Value, PDO::PARAM_INT);
     Execute($Statement);
-	
+
 	$Updated_Value = "2";
 	$Query = 'UPDATE djkabau1_petsignin.Unit_Test set Test_Column = (?) where Test_Column = (?)';
 	$Statement = $PDOconn->prepare($Query);
 	$Statement->bindParam(1, $Updated_Value, PDO::PARAM_INT);
 	$Statement->bindParam(2, $New_Value, PDO::PARAM_INT);
     Execute($Statement);
-	
+
 	$Query = 'DELETE FROM djkabau1_petsignin.Unit_Test WHERE Test_Column = (?)';
 	$Statement = $PDOconn->prepare($Query);
 	$Statement->bindParam(1, $Updated_Value, PDO::PARAM_INT);
     Execute($Statement);
-	
+
 	$Query = 'DROP TABLE IF EXISTS djkabau1_petsignin.Unit_Test';
 	$Statement = $PDOconn->prepare($Query);
     Execute($Statement);
@@ -101,7 +105,7 @@ function Unit_Test(){
 function Debugging(){
     global $PDOconn;
     global $action;
-    $Email = 'testx';
+    $Email = 'a@a.com';
 
     $Query = 'INSERT INTO djkabau1_petsignin.Debugging (Email, Action) VALUES (?,?);';
     $Statement = $PDOconn->prepare($Query);
@@ -136,12 +140,11 @@ function Check_Email(){
     global $PDOconn;
     $Email = stripslashes($_POST["Email"]);
 
-	$Query = 'SELECT Email FROM Users WHERE Email = (?)';
-	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Query = 'SELECT Email FROM User WHERE Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     Execute($Statement);
-    $Response = $Statement->fetchAll();
-    echo json_encode($Response);
+    Fetch($Statement);
     $PDOconn = null;
 }
 
