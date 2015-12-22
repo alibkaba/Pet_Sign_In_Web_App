@@ -4,6 +4,7 @@ $(document).ready(function() {
         url: 'db.php',
         type: 'post',
         cache: 'false',
+        async: false,
         success: function(Ajax_Data) {
             console.log(Ajax_Data);
             console.log('finished');
@@ -59,6 +60,7 @@ function Register_Button(){
             var Company_ID = 1;
             var Status = 0;
             var action = "Register";
+            console.log('yo');
             var Ajax_Data = {
                 Email: Email,
                 Password: Password,
@@ -77,24 +79,17 @@ function Register_Button(){
 function Join_Create(){
     var Radio_Group = document.getElementById("Join_Create");
     Radio_Group.onchange = function () {
+        Hide_Join_Create();
         if (document.getElementById("Create").checked){
-            Display_Join_Create();
+            Join_Create_Clear();
         }else{
             Hide_Join_Create();
         }
     };
 }
-function Display_Join_Create() {
-    document.getElementById("Company_ID_DIV").style.visibility="visible";
-    document.getElementById("Company_ID_DIV").style.display="block";
-    document.getElementById("Company_ID").disabled=false;
-}
 
-function Hide_Join_Create() {
-    document.getElementById("Company_ID_DIV").style.visibility="hidden";
-    document.getElementById("Company_ID_DIV").style.display="none";
+function Join_Create_Clear() {
     document.getElementById("Company_ID").value = "";
-    document.getElementById("Company_ID").disabled=true;
 }
 
 function Outgoing_Ajax(Ajax_Data) {
