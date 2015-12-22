@@ -4,10 +4,9 @@ $(document).ready(function() {
         url: 'db.php',
         type: 'post',
         cache: 'false',
-        timeout: 5000,
-        async: true,
         success: function(Ajax_Data) {
             console.log(Ajax_Data);
+            console.log('finished');
             Validate_Ajax_Data(Ajax_Data);
         },
         error: function() {
@@ -20,12 +19,12 @@ $(document).ready(function() {
 function Start(){
     Unit_Test();
     Register_Button();
+    Join_Create();
     Console_Log();
 }
 
 function Validate_Ajax_Data(Ajax_Data){
-
-
+    //console.log(Ajax_Data[0].Email);
 }
 
 function Response_Operation(){
@@ -48,12 +47,11 @@ function Console_Log(){
 
 function Register_Button(){
     var Register_Button = document.getElementById("Register");
-    Register_Button['onclick'] = function () {
+    Register_Button.onclick = function () {
         try{
             var Email = document.getElementById("Email2").value;
             Validate_Email(Email);
             Check_Email(Email);
-            console.log('passed check email');
             var Password = document.getElementById("Password2").value;
             //validate password function 8-25 characters long
             var Admin = 0;
@@ -61,7 +59,6 @@ function Register_Button(){
             var Company_ID = 1;
             var Status = 0;
             var action = "Register";
-            console.log('passed register');
             var Ajax_Data = {
                 Email: Email,
                 Password: Password,
@@ -71,8 +68,30 @@ function Register_Button(){
                 action: action
             };
             Outgoing_Ajax(Ajax_Data);
-        }catch(e){}
+        }catch(e){
+            //do something here.
+        }
     };
+}
+
+function Join_Create(){
+    var Join_Create_Radio_Button = document.getElementById("Join_Create");
+    Join_Create_Radio_Button.onchange = function () {
+        try{
+            var CompanyID = document.getElementById("Join_Create").checked;
+            Display_Join_Create();
+            console.log(CompanyID);
+        }catch(e){
+            //do something here.
+        }
+    };
+}
+function Display_Join_Create() {
+    document.getElementById("Select_Schools").style.visibility="visible";
+}
+
+function Hide_Join_Create() {
+    document.getElementById("Select_Schools").style.visibility="hidden";
 }
 
 function Outgoing_Ajax(Ajax_Data) {

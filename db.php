@@ -56,7 +56,7 @@ function Execute($Statement){
             Debugging();
         }
     } catch (PDOException $e) {
-        echo 'Connection failed: ' . $e->getMessage() . "\n";
+        //echo 'Connection failed: ' . $e->getMessage() . "\n";
         $ErrorMSG = 'Connection failed: ' . $e->getMessage() . "\n";
         //echo $ErrorMSG;
         Debugging($ErrorMSG);
@@ -66,15 +66,16 @@ function Execute($Statement){
 function Fetch($Statement){
     global $action;
     try {
-        if($Response = $Statement->fetchAll()) {
-            echo json_encode(array($action => $Response));
+        if($Response = $Statement->fetch(PDO::FETCH_ASSOC)) {
+            //$Response = array('action' => $action, $Response);
+            echo json_encode($Response);
         }else{
-            $Response = array('action' => $action, 'status' => 0);
+            //$Response = array('action' => $action, 'status' => 0);
             echo json_encode($Response);
             Debugging();
     }
     } catch (PDOException $e) {
-        echo 'Connection failed: ' . $e->getMessage() . "\n";
+        //echo 'Connection failed: ' . $e->getMessage() . "\n";
         $ErrorMSG = $e->getMessage();
         Debugging($ErrorMSG);
     }
@@ -121,7 +122,7 @@ function Debugging($ErrorMSG){
     global $action;
     $Email = 'a@a.com';
 
-    $Query = 'INSERT INTO djkabau1_petsignin.Debugging (Email, Action, ErrorMSG) VALUES (?,?,?);';
+    $Query = 'INSERT INTO djkabau1_petsignin.Debugging (Email, Action, ErrorMSG) VALUES (?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $action, PDO::PARAM_STR, 45);
@@ -132,6 +133,7 @@ function Debugging($ErrorMSG){
 
 function Register(){
 	global $PDOconn;
+
 	$Email = stripslashes($_POST["Email"]);
 	$Password = stripslashes($_POST["Password"]);
 	$Company_ID = stripslashes($_POST["Company_ID"]);
@@ -140,7 +142,7 @@ function Register(){
 	$Admin = stripslashes($_POST["Admin"]);
 	$Status = stripslashes($_POST["Status"]);
 	
-	$Query = 'CALL Create_Account (?,?,?,?,?)';
+	$Query = 'INSERT INTO djkabau1_petsignin.User (Email, Password, CompanyID, Admin, Status) VALUES (?,?,?,?,?)';
 	$Statement = $PDOconn->prepare($Query);
 	$Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
 	$Statement->bindParam(2, $Password, PDO::PARAM_STR, 45);
@@ -153,6 +155,14 @@ function Register(){
 
 function Check_Email(){
     global $PDOconn;
+    $Email = stripslashes($_POST["Email"]);
+
+    $Query = 'SELECT Email FROM User WHERE Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    Execute($Statement);
+    Fetch($Statement);
+
     $Email = stripslashes($_POST["Email"]);
 
     $Query = 'SELECT Email FROM User WHERE Email = (?)';

@@ -2,7 +2,7 @@ body {
     background-color: #f2f2f3;
 }
 
-#Account, #Sign_Out, #Create_Button {
+#Account, #Sign_Out, #Create_Button, #Company_ID {
     display: none;
     visibility: hidden;
 }
