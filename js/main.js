@@ -75,23 +75,26 @@ function Register_Button(){
 }
 
 function Join_Create(){
-    var Join_Create_Radio_Button = document.getElementById("Join_Create");
-    Join_Create_Radio_Button.onchange = function () {
-        try{
-            var CompanyID = document.getElementById("Join_Create").checked;
+    var Radio_Group = document.getElementById("Join_Create");
+    Radio_Group.onchange = function () {
+        if (document.getElementById("Create").checked){
             Display_Join_Create();
-            console.log(CompanyID);
-        }catch(e){
-            //do something here.
+        }else{
+            Hide_Join_Create();
         }
     };
 }
 function Display_Join_Create() {
-    document.getElementById("Select_Schools").style.visibility="visible";
+    document.getElementById("Company_ID_DIV").style.visibility="visible";
+    document.getElementById("Company_ID_DIV").style.display="block";
+    document.getElementById("Company_ID").disabled=false;
 }
 
 function Hide_Join_Create() {
-    document.getElementById("Select_Schools").style.visibility="hidden";
+    document.getElementById("Company_ID_DIV").style.visibility="hidden";
+    document.getElementById("Company_ID_DIV").style.display="none";
+    document.getElementById("Company_ID").value = "";
+    document.getElementById("Company_ID").disabled=true;
 }
 
 function Outgoing_Ajax(Ajax_Data) {
