@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="css/main.css">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-<!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
-<script src="js/main.js" type="text/javascript"></script>
-<title>Pet Sign In</title>
-</head>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+        <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+        <script src="js/main.js" type="text/javascript"></script>
+        <title>Pet Sign In</title>
+    </head>
 <body>
 <nav class="navbar navbar-default">
     <div class="container-fluid">
@@ -34,19 +34,20 @@
         </div>
     </div>
 </nav>
-
+<p>Sign into your account</p>
 <div class="form-group">
-    <label for="Email1">Email Address: </label>
-    <input type="text" id="Email1" placeholder="Email">
+    <input type="text" id="Email1" placeholder="Email Address">
 </div>
 <div class="form-group">
-    <label for="Password1">Password:</label>
     <input type="password" id="Password1" placeholder="Password" autocomplete="off"><br>
 </div>
-<button type="button" class="btn btn-primary btn-sm" onclick="Sign_In();">Sign In</button>
+<button type="button" class="btn btn-primary btn-sm" id="Sign_In">Sign In</button>
+<br>
+<a href="#">can't access your account?</a>
 <br><br>
-<button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#RegisterModal">Register</button>
-
+<p>New to Pet Sign In?</p>
+<a href="#" data-toggle="modal" data-target="#RegisterModal">Register for a new account</a>
+<br><br>
 
 <div class="modal fade" id="RegisterModal" role="dialog">
     <div class="modal-dialog modal-sm">
@@ -56,21 +57,12 @@
                 <h4 class="modal-title">Register</h4>
             </div>
             <div class="modal-body">
+                <p>Enter an email and password</p>
                 <div class="form-group">
-                    <label for="Email2">Email Address: </label>
-                    <input type="text" id="Email2" placeholder="Email">
+                    <input type="text" id="Email2" placeholder="Email Address">
                 </div>
                 <div class="form-group">
-                    <label for="Password2">Password:</label>
                     <input type="password" id="Password2" placeholder="Password" autocomplete="off"><br>
-                </div>
-                <div id="Join_Create">
-                    <label><input type="radio" name="RadioGroup" id="Join" checked>Join a Company</label>
-                    <label><input type="radio" name="RadioGroup" id="Create">Create a Company</label>
-                </div>
-                <div class="form-group" id="Company_ID_DIV">
-                    <label for="Company_ID">Company ID: </label>
-                    <input type="text" id="Company_ID" placeholder="Company ID">
                 </div>
             </div>
             <div class="modal-footer">

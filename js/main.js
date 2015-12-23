@@ -6,12 +6,10 @@ $(document).ready(function() {
         cache: 'false',
         async: false,
         success: function(Ajax_Data) {
-            console.log(Ajax_Data);
-            console.log('finished');
-            Validate_Ajax_Data(Ajax_Data);
+            console.log('Ajax passed');
         },
         error: function() {
-            console.log('Ajax Failed');
+            console.log('Ajax failed');
         }
     });
     Start();
@@ -20,16 +18,7 @@ $(document).ready(function() {
 function Start(){
     Unit_Test();
     Register_Button();
-    Join_Create();
     Console_Log();
-}
-
-function Validate_Ajax_Data(Ajax_Data){
-    //console.log(Ajax_Data[0].Email);
-}
-
-function Response_Operation(){
-
 }
 
 function Console_Log(){
@@ -54,48 +43,30 @@ function Register_Button(){
             Validate_Email(Email);
             Check_Email(Email);
             var Password = document.getElementById("Password2").value;
-            //validate password function 8-25 characters long
+            Validate_Password(Password);
             var Admin = 0;
-            //var Company_ID = Company_ID();  -> validate function or generate function and validate function via php
-            var Company_ID = 1;
             var Status = 0;
             var action = "Register";
             console.log('yo');
             var Ajax_Data = {
                 Email: Email,
                 Password: Password,
-                Company_ID: Company_ID,
                 Admin: Admin,
                 Status: Status,
                 action: action
             };
             Outgoing_Ajax(Ajax_Data);
         }catch(e){
-            //do something here.
+            console.log('Error: '+e);
         }
     };
-}
-
-function Join_Create(){
-    var Radio_Group = document.getElementById("Join_Create");
-    Radio_Group.onchange = function () {
-        Hide_Join_Create();
-        if (document.getElementById("Create").checked){
-            Join_Create_Clear();
-        }else{
-            Hide_Join_Create();
-        }
-    };
-}
-
-function Join_Create_Clear() {
-    document.getElementById("Company_ID").value = "";
 }
 
 function Outgoing_Ajax(Ajax_Data) {
-    $.ajax({
+    Incoming_Ajax_Data = $.ajax({
         data: Ajax_Data
-    });
+    }).responseText;
+    return Incoming_Ajax_Data;
 }
 
 function Check_Email(Email){
@@ -104,8 +75,20 @@ function Check_Email(Email){
         Email: Email,
         action: action
     };
+    Response_Operation(Outgoing_Ajax(Ajax_Data));
+}
 
-    Outgoing_Ajax(Ajax_Data);
+*())$U#@*)O@QUEOI TRIAGE IF ITS 0 OR 1.
+
+function Response_Operation(Ajax_Data){
+    Ajax_Data = JSON.parse(Ajax_Data);
+    var action = Ajax_Data.action;
+    var status = Ajax_Data.status;
+    console.log(action);
+    switch(action) {
+        case "Check_Email":  throw e = "Email already exists";
+            break;
+    }
 }
 
 function GUI_Handler(){
@@ -121,26 +104,17 @@ function Unit_Test() {
     var Ajax_Data = Outgoing_Ajax(Ajax_Data);
 }
 
-function Generate_Company_ID(){
-    var New_Company_ID = Generator();
-    var action = "Check_Company_ID";
-    var Ajax_Data = {
-        New_Company_ID: New_Company_ID
-    };
-    Outgoing_Ajax(Ajax_Data);
-    return New_Company_ID;
-}
-
-function Generator(){
-    return Math.floor(100000 + Math.random() * 900000);
-}
-
 function Validate_Email(Email) {
     var atpos = Email.indexOf("@");
     var dotpos = Email.lastIndexOf(".");
     if (atpos<1 || dotpos<atpos+2 || dotpos+2>=Email.length) {
-        console.log('Not a valid e-mail address');
-        throw new Error();
+        throw e = "Not a valid e-mail address";
+    }
+}
+
+function Validate_Password(Password){
+    if(Password === 'undefined'){
+        throw e = "empty password";
     }
 }
 

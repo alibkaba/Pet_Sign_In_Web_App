@@ -42,8 +42,6 @@ function DB_Operation($action){
 			break;
         case "Check_Email": Check_Email();
             break;
-        case "Check_Company_ID": Check_Company_ID();
-            break;
 	}
 }
 
@@ -51,14 +49,12 @@ function Execute($Statement){
     global $action;
     try {
         if(!$Statement->execute()) {
-            $Response = array('action' => $action, 'status' => 0);
+            $Response = array('action' => $action, 'status' => "0");
             echo json_encode($Response);
-            Debugging();
         }
     } catch (PDOException $e) {
         //echo 'Connection failed: ' . $e->getMessage() . "\n";
         $ErrorMSG = 'Connection failed: ' . $e->getMessage() . "\n";
-        //echo $ErrorMSG;
         Debugging($ErrorMSG);
     }
 }
@@ -67,16 +63,15 @@ function Fetch($Statement){
     global $action;
     try {
         if($Response = $Statement->fetch(PDO::FETCH_ASSOC)) {
-            //$Response = array('action' => $action, $Response);
+            $Response = array('action' => $action, 'status' => "1", $Response);
             echo json_encode($Response);
         }else{
-            //$Response = array('action' => $action, 'status' => 0);
+            $Response = array('action' => $action, 'status' => "0");
             echo json_encode($Response);
-            Debugging();
     }
     } catch (PDOException $e) {
         //echo 'Connection failed: ' . $e->getMessage() . "\n";
-        $ErrorMSG = $e->getMessage();
+        $ErrorMSG = 'Connection failed: ' . $e->getMessage() . "\n";
         Debugging($ErrorMSG);
     }
 }
@@ -136,19 +131,16 @@ function Register(){
 
 	$Email = stripslashes($_POST["Email"]);
 	$Password = stripslashes($_POST["Password"]);
-	$Company_ID = stripslashes($_POST["Company_ID"]);
-    //validate company id
-    //generate company id
+
 	$Admin = stripslashes($_POST["Admin"]);
 	$Status = stripslashes($_POST["Status"]);
 	
-	$Query = 'INSERT INTO djkabau1_petsignin.User (Email, Password, CompanyID, Admin, Status) VALUES (?,?,?,?,?)';
+	$Query = 'INSERT INTO djkabau1_petsignin.User (Email, Password, Admin, Status) VALUES (?,?,?,?)';
 	$Statement = $PDOconn->prepare($Query);
 	$Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
 	$Statement->bindParam(2, $Password, PDO::PARAM_STR, 45);
-	$Statement->bindParam(3, $Company_ID, PDO::PARAM_INT, 6);
-	$Statement->bindParam(4, $Admin, PDO::PARAM_INT, 1);
-	$Statement->bindParam(5, $Status, PDO::PARAM_INT, 1);
+	$Statement->bindParam(3, $Admin, PDO::PARAM_INT, 1);
+	$Statement->bindParam(4, $Status, PDO::PARAM_INT, 1);
     Execute($Statement);
 	$PDOconn = null;
 }
@@ -162,25 +154,6 @@ function Check_Email(){
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     Execute($Statement);
     Fetch($Statement);
-
-    $Email = stripslashes($_POST["Email"]);
-
-    $Query = 'SELECT Email FROM User WHERE Email = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    Execute($Statement);
-    Fetch($Statement);
-    $PDOconn = null;
-}
-
-function Check_Company_ID(){
-    global $PDOconn;
-	$Company_ID = stripslashes($_POST["Company_ID"]);
-	
-	$Query = 'CALL Check_Company_ID (?)';
-	$Statement = $PDOconn->prepare($Query);
-	$Statement->bindParam(1, $New_Company_ID, PDO::PARAM_INT, 6);
-    Execute($Statement);
     $PDOconn = null;
 }
 ?>
