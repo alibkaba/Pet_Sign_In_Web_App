@@ -28,8 +28,6 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">About</a></li>
-                <li><a data-target="#Account_Modal" data-toggle="modal" href="#" id="Account"><span class="glyphicon glyphicon-user"></span>Account</a></li>
-                <li> <a href="#" id="Sign_Out" onclick="Sign_Out();"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
             </ul>
         </div>
     </div>
@@ -78,5 +76,4 @@
 </div>
 
 </body>
-</html>
 </html>

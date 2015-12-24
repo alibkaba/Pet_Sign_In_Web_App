@@ -34,8 +34,6 @@ function DB_Operation($action){
 			break;
 		case "Register": Register();
 			break;
-        case "Create_Company": Create_Company();
-            break;
         case "Create_Pet": Create_Pet();
             break;
 		case "Sign_In": Sign_In();
@@ -133,14 +131,14 @@ function Register(){
 	$Password = stripslashes($_POST["Password"]);
 
 	$Admin = stripslashes($_POST["Admin"]);
-	$Status = stripslashes($_POST["Status"]);
+    $Active = stripslashes($_POST["Active"]);
 	
-	$Query = 'INSERT INTO djkabau1_petsignin.User (Email, Password, Admin, Status) VALUES (?,?,?,?)';
+	$Query = 'INSERT INTO djkabau1_petsignin.Users (Email, Password, Admin, Active) VALUES (?,?,?,?)';
 	$Statement = $PDOconn->prepare($Query);
 	$Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
 	$Statement->bindParam(2, $Password, PDO::PARAM_STR, 45);
 	$Statement->bindParam(3, $Admin, PDO::PARAM_INT, 1);
-	$Statement->bindParam(4, $Status, PDO::PARAM_INT, 1);
+	$Statement->bindParam(4, $Active, PDO::PARAM_INT, 1);
     Execute($Statement);
 	$PDOconn = null;
 }
@@ -149,7 +147,7 @@ function Check_Email(){
     global $PDOconn;
     $Email = stripslashes($_POST["Email"]);
 
-    $Query = 'SELECT Email FROM User WHERE Email = (?)';
+    $Query = 'SELECT Email FROM Users WHERE Email = (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     Execute($Statement);

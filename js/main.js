@@ -40,26 +40,35 @@ function Register_Button(){
     Register_Button.onclick = function () {
         try{
             var Email = document.getElementById("Email2").value;
+            var Password = document.getElementById("Password2").value;
+            Empty(Email);
+            Empty(Password);
             Validate_Email(Email);
             Check_Email(Email);
-            var Password = document.getElementById("Password2").value;
             Validate_Password(Password);
             var Admin = 0;
-            var Status = 0;
+            var Active = 1;
             var action = "Register";
-            console.log('yo');
             var Ajax_Data = {
                 Email: Email,
                 Password: Password,
                 Admin: Admin,
-                Status: Status,
+                Active: Active,
                 action: action
             };
             Outgoing_Ajax(Ajax_Data);
+            console.log('Your account was created, you will now be signed in.');
+            //sign in
         }catch(e){
             console.log('Error: '+e);
         }
     };
+}
+
+function Empty(Field){
+    if(Field == null || Field == ""){
+        throw e = "Please Fill All Required Field";
+    }
 }
 
 function Outgoing_Ajax(Ajax_Data) {
@@ -78,15 +87,16 @@ function Check_Email(Email){
     Response_Operation(Outgoing_Ajax(Ajax_Data));
 }
 
-*())$U#@*)O@QUEOI TRIAGE IF ITS 0 OR 1.
-
 function Response_Operation(Ajax_Data){
     Ajax_Data = JSON.parse(Ajax_Data);
     var action = Ajax_Data.action;
     var status = Ajax_Data.status;
-    console.log(action);
+    console.log(status);
     switch(action) {
-        case "Check_Email":  throw e = "Email already exists";
+        case "Check_Email":
+            if(status == 1){
+                throw e = "That Email already exists, please use a different email or reset your password";
+            }
             break;
     }
 }
