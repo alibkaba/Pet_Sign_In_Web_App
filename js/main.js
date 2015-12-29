@@ -1,7 +1,7 @@
 $(document).ready(function() {
     console.log("ready!");
     $.ajaxSetup({
-        url: 'db.php',
+        url: 'operations.php',
         type: 'post',
         cache: 'false',
         async: false,
