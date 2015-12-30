@@ -22,33 +22,21 @@ include('operations.php');
 // else redirect
 session_set_cookie_params(1800,"/");
 session_start();
-$Session_IP=$_SERVER['REMOTE_ADDR'];
-
+$SessionIP=$_SERVER['REMOTE_ADDR'];
+$Time = $_SERVER["REQUEST_TIME"];
 $ua=GetBrowser();
-$Session_Browser = $ua['name'];
-$Session_Platform = $ua['platform'];
+$SessionBrowser = $ua['name'];
+$SessionPlatform = $ua['platform'];
 
-$Session_ID = md5(uniqid(rand(), true));
-$_SESSION["Session_ID"] = $Session_ID;
-echo "Session ID = $Session_ID";
+$SessionID = md5(uniqid(rand(), true));
+$_SESSION["Session_ID"] = $SessionID;
+echo "Session ID = $SessionID";
 echo " Email Address = $Email";
-echo " IP address = $Session_IP";
-echo " Browser = $Session_Browser";
-echo " Platform = $Session_Platform";
+echo " IP address = $SessionIP";
+echo " Browser = $SessionBrowser";
+echo " Platform = $Time";
 echo " Session ID is " . $_SESSION["Session_ID"] . "<br>";
 
-function CheckSession(){
-
-
-    // outdated session?
-    //$Time = $_SERVER["REQUEST_TIME"];
-    //$Timeout_Duration = 1800;
-    //if (isset($LastDate) && ($Time - $LastDate) > $Timeout_Duration) {
-        //session_unset();
-        //session_destroy();
-        //session_start();
-    //}
-}
 
 function GetBrowser()
 {
@@ -120,8 +108,8 @@ function GetBrowser()
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">About</a></li>
-                <li><a data-target="#Account_Modal" data-toggle="modal" href="#" id="Account"><span class="glyphicon glyphicon-user"></span>Account</a></li>
-                <li> <a href="#" id="Sign_Out"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
+                <li><a data-target="#AccountModal" data-toggle="modal" href="#" id="Account"><span class="glyphicon glyphicon-user"></span>Account</a></li>
+                <li> <a href="#" id="SignOut"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
             </ul>
         </div>
     </div>

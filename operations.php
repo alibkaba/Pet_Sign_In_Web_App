@@ -1,41 +1,41 @@
 <?php
 include('db.php');
-Validate_Ajax_Request();
+ValidateAjaxRequest();
 
-function Validate_Ajax_Request() {
+function ValidateAjaxRequest() {
     if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
-        Validate_action();
+        ValidateAction();
     }
 }
 
-function Validate_action(){
+function ValidateAction(){
     if (isset($_POST["action"]) && !empty($_POST["action"])) {
-        global $action;
-        $action = $_POST["action"];
-        DB_Operation($action);
+        global $Action;
+        $Action = $_POST["action"];
+        DBOperation($Action);
     }
 }
 
-function DB_Operation($action){
-    switch($action) {
-        case "Unit_Test": Unit_Test();
+function DBOperation($Action){
+    switch($Action) {
+        case "UnitTest": UnitTest();
             break;
         case "Register": Register();
             break;
-        case "Create_Pet": Create_Pet();
+        case "CreatePet": CreatePet();
             break;
-        case "Sign_In": Sign_In();
+        case "SignIn": SignIn();
             break;
-        case "Check_Email": Check_Email();
+        case "CheckEmail": CheckEmail();
             break;
     }
 }
 
 function Execute($Statement){
-    global $action;
+    global $Action;
     try {
         if(!$Statement->execute()) {
-            $Response = array('action' => $action, 'status' => "0");
+            $Response = array('action' => $Action, 'status' => "0");
             echo json_encode($Response);
         }
     } catch (PDOException $e) {
@@ -46,13 +46,13 @@ function Execute($Statement){
 }
 
 function Fetch($Statement){
-    global $action;
+    global $Action;
     try {
         if($Response = $Statement->fetch(PDO::FETCH_ASSOC)) {
-            $Response = array('action' => $action, 'status' => "1", $Response);
+            $Response = array('action' => $Action, 'status' => "1", $Response);
             echo json_encode($Response);
         }else{
-            $Response = array('action' => $action, 'status' => "0");
+            $Response = array('action' => $Action, 'status' => "0");
             echo json_encode($Response);
         }
     } catch (PDOException $e) {
@@ -62,76 +62,110 @@ function Fetch($Statement){
     }
 }
 
-function Unit_Test(){
+function UnitTest(){
     global $PDOconn;
-    $Query = 'DROP TABLE IF EXISTS djkabau1_petsignin.Unit_Test ;
-	CREATE TABLE IF NOT EXISTS djkabau1_petsignin.Unit_Test (
-	Test_Column INT NOT NULL,
-	PRIMARY KEY (Test_Column))
+    $Query = 'DROP TABLE IF EXISTS djkabau1_petsignin.UnitTest ;
+	CREATE TABLE IF NOT EXISTS djkabau1_petsignin.UnitTest (
+	TestColumn INT NOT NULL,
+	PRIMARY KEY (TestColumn))
 	ENGINE = InnoDB;
 	USE djkabau1_petsignin';
     $Statement = $PDOconn->prepare($Query);
     Execute($Statement);
 
-    $New_Value = "1";
-    $Query = 'INSERT INTO djkabau1_petsignin.Unit_Test (Test_Column) VALUES (?)';
+    $NewValue = "1";
+    $Query = 'INSERT INTO djkabau1_petsignin.UnitTest (TestColumn) VALUES (?)';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $New_Value, PDO::PARAM_INT);
+    $Statement->bindParam(1, $NewValue, PDO::PARAM_INT);
     Execute($Statement);
 
-    $Updated_Value = "2";
-    $Query = 'UPDATE djkabau1_petsignin.Unit_Test set Test_Column = (?) where Test_Column = (?)';
+    $UpdatedValue = "2";
+    $Query = 'UPDATE djkabau1_petsignin.UnitTest set TestColumn = (?) where TestColumn = (?)';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Updated_Value, PDO::PARAM_INT);
-    $Statement->bindParam(2, $New_Value, PDO::PARAM_INT);
+    $Statement->bindParam(1, $UpdatedValue, PDO::PARAM_INT);
+    $Statement->bindParam(2, $NewValue, PDO::PARAM_INT);
     Execute($Statement);
 
-    $Query = 'DELETE FROM djkabau1_petsignin.Unit_Test WHERE Test_Column = (?)';
+    $Query = 'DELETE FROM djkabau1_petsignin.UnitTest WHERE TestColumn = (?)';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Updated_Value, PDO::PARAM_INT);
+    $Statement->bindParam(1, $UpdatedValue, PDO::PARAM_INT);
     Execute($Statement);
 
-    $Query = 'DROP TABLE IF EXISTS djkabau1_petsignin.Unit_Test';
+    $Query = 'DROP TABLE IF EXISTS djkabau1_petsignin.UnitTest';
     $Statement = $PDOconn->prepare($Query);
     Execute($Statement);
     $PDOconn = null;
 }
 
-//this handles errors when an action fails on the database
 function Debugging($ErrorMSG){
     global $PDOconn;
-    global $action;
+    global $Action;
     $Email = 'a@a.com';
 
     $Query = 'INSERT INTO djkabau1_petsignin.Debugging (Email, Action, ErrorMSG) VALUES (?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    $Statement->bindParam(2, $action, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $Action, PDO::PARAM_STR, 45);
     $Statement->bindParam(3, $ErrorMSG, PDO::PARAM_STR, 100);
     $Statement->execute();
     $PDOconn = null;
 }
 
+function Audit($AuditMSG){
+    global $PDOconn;
+    global $Action;
+    CheckSession();
+    $Email = 'a@a.com';
+
+    $Query = 'INSERT INTO djkabau1_petsignin.Audit (Email, $AuditMSG) VALUES (?,?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $AuditMSG, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $PDOconn = null;
+}
+
+function HashIt($Password){
+    $HashedPassword = password_hash($Password, PASSWORD_DEFAULT);
+    return $HashedPassword;
+}
+
 function Register(){
     global $PDOconn;
-
     $Email = stripslashes($_POST["Email"]);
     $Password = stripslashes($_POST["Password"]);
-
+    $HashedPassword = HashIt($Password);
     $Admin = stripslashes($_POST["Admin"]);
     $Active = stripslashes($_POST["Active"]);
+
 
     $Query = 'INSERT INTO djkabau1_petsignin.Users (Email, Password, Admin, Active) VALUES (?,?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    $Statement->bindParam(2, $Password, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
     $Statement->bindParam(3, $Admin, PDO::PARAM_INT, 1);
     $Statement->bindParam(4, $Active, PDO::PARAM_INT, 1);
     Execute($Statement);
     $PDOconn = null;
 }
 
-function Check_Email(){
+function SignIn(){
+    global $PDOconn;
+    $Email = stripslashes($_POST["Email"]);
+    $Password = stripslashes($_POST["Password"]);
+    $HashedPassword = HashIt($Password);
+
+    $Query = 'SELECT count(*) FROM Users where Email = (?) and Password = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
+    Execute($Statement);
+    Fetch($Statement);
+
+    $PDOconn = null;
+}
+
+function CheckEmail(){
     global $PDOconn;
     $Email = stripslashes($_POST["Email"]);
 
@@ -140,5 +174,27 @@ function Check_Email(){
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     Execute($Statement);
     Fetch($Statement);
+    $PDOconn = null;
+}
+
+function CheckSession(){
+    $Time = $_SERVER["REQUEST_TIME"];
+    $Timeout_Duration = 1800;
+    if (isset($LastDate) && ($Time - $LastDate) > $Timeout_Duration) {
+    session_unset();
+    session_destroy();
+    session_start();
+    }
+}
+
+function DBTime(){
+    global $PDOconn;
+
+    $Query = 'SELECT NOW()';
+    $Statement = $PDOconn->prepare($Query);
+    Execute($Statement);
+    //Fetch($Statement);
+    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
+    return $Response;
     $PDOconn = null;
 }

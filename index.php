@@ -39,7 +39,7 @@
 <div class="form-group">
     <input type="password" id="Password1" placeholder="Password" autocomplete="off"><br>
 </div>
-<button type="button" class="btn btn-primary btn-sm" id="Sign_In">Sign In</button>
+<button type="button" class="btn btn-primary btn-sm" id="SignIn">Sign In</button>
 <br>
 <a href="#">can't access your account?</a>
 <br><br>
@@ -71,7 +71,7 @@
     </div>
 </div>
 
-<div id="Display_Log">
+<div id="DisplayLog">
 
 </div>
 
