@@ -7,6 +7,7 @@ $(document).ready(function() {
         async: false,
         success: function(AjaxData) {
             console.log('Ajax passed');
+            console.log(AjaxData);
         },
         error: function() {
             console.log('Ajax failed');
@@ -19,21 +20,7 @@ function Start(){
     UnitTest();
     Register();
     SignIn();
-    ConsoleLog();
-}
-
-function ConsoleLog(){
-    if (typeof console  != "undefined")
-        if (typeof console.log != 'undefined')
-            console.olog = console.log;
-        else
-            console.olog = function() {};
-
-    console.log = function(message) {
-        console.olog(message);
-        $('#DisplayLog').append('<p>' + message + '</p>');
-    };
-    console.error = console.debug = console.info =  console.log
+    //$("#AlertModal").modal();
 }
 
 function Register(){
@@ -75,7 +62,7 @@ function SignIn(){
                 Action: Action
             };
             OutgoingAjax(AjaxData);
-            console.log('Your account was created, you will now be signed in.');
+            console.log('Signed in etc etc');
         }catch(e){
             console.log('Error: '+e);
         }
@@ -89,7 +76,7 @@ function ValidateField(Field){
 }
 
 function OutgoingAjax(AjaxData) {
-    IncomingAjaxData = $.ajax({
+    var IncomingAjaxData = $.ajax({
         data: AjaxData
     }).responseText;
     return IncomingAjaxData;

@@ -1,5 +1,7 @@
 <?php
-include('db.php');
+require_once('db.php');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 ValidateAjaxRequest();
 
 function ValidateAjaxRequest() {
@@ -9,8 +11,8 @@ function ValidateAjaxRequest() {
 }
 
 function ValidateAction(){
-    if (isset($_POST["action"]) && !empty($_POST["action"])) {
-        $Action = $_POST["action"];
+    if (isset($_POST["Action"]) && !empty($_POST["Action"])) {
+        $Action = $_POST["Action"];
         DBOperation($Action);
     }
 }
@@ -28,16 +30,6 @@ function DBOperation($Action){
         case "StartSession": StartSession($Action);
             break;
     }
-}
-
-function Activate($Action){
-    $Activation = stripslashes($_POST["Activation"]);
-    global $PDOconn;
-    $Query = 'SELECT count(*) FROM djkabau1_petsignin.Users WHERE Activation = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Activation, PDO::PARAM_STR, 64);
-    Execute($Action,$Statement);
-    $PDOconn = null;
 }
 
 function Execute($Action,$Statement){
@@ -108,6 +100,7 @@ function UnitTest($Action){
     $Query = 'DROP TABLE IF EXISTS djkabau1_petsignin.UnitTest';
     $Statement = $PDOconn->prepare($Query);
     Execute($Action,$Statement);
+    echo json_encode("Unit Test successful");
     $PDOconn = null;
 }
 
@@ -160,7 +153,7 @@ function Register($Action){
     $Statement->bindParam(5, $Locked, PDO::PARAM_INT, 1);
     $Statement->bindParam(6, $Activation, PDO::PARAM_STR, 64);
     Execute($Action,$Statement);
-    mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/activate.php?confirm=$Activation");
+    //mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/activate.php?confirm=$Activation");
     $PDOconn = null;
 }
 
@@ -208,6 +201,16 @@ function CheckAttempts($Email){
 
 function FailedAttempt($Email){
 
+}
+
+function Activate($Action){
+    $Activation = stripslashes($_POST["Activation"]);
+    global $PDOconn;
+    $Query = 'SELECT count(*) FROM djkabau1_petsignin.Users WHERE Activation = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Activation, PDO::PARAM_STR, 64);
+    Execute($Action,$Statement);
+    $PDOconn = null;
 }
 
 function DBTime(){
