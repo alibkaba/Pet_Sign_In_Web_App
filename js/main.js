@@ -45,13 +45,10 @@ function Register(){
             ValidateField(Email);
             ValidateField(Password);
             ValidateEmail(Email);
-            CheckEmail(Email);
-            var Active = 1;
             var Action = "Register";
             var AjaxData = {
                 Email: Email,
                 Password: Password,
-                Active: Active,
                 Action: Action
             };
             OutgoingAjax(AjaxData);
@@ -71,7 +68,6 @@ function SignIn(){
             ValidateField(Email);
             ValidateField(Password);
             ValidateEmail(Email);
-            //CheckEmail(Email); do this in PHP
             var Action = "SignIn";
             var AjaxData = {
                 Email: Email,
@@ -99,13 +95,17 @@ function OutgoingAjax(AjaxData) {
     return IncomingAjaxData;
 }
 
-function CheckEmail(Email){
-    var Action = "CheckEmail";
-    var AjaxData = {
-        Email: Email,
-        Action: Action
-    };
-    ResponseOperation(OutgoingAjax(AjaxData));
+function Activate(Activation){
+    try{
+        var Action = "Activate";
+        var AjaxData = {
+            Activation: Activation,
+            Action: Action
+        };
+        OutgoingAjax(AjaxData);
+    }catch(e){
+        console.log('Error: '+e);
+    }
 }
 
 function ResponseOperation(AjaxData){
