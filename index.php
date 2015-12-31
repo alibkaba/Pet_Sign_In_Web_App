@@ -46,7 +46,8 @@
 <p>New to Pet Sign In?</p>
 <a href="#" data-toggle="modal" data-target="#RegisterModal">Register for a new account</a>
 <br><br>
-
+javascript handles all the UI, php handles the logic
+<br><br>
 <div class="modal fade" id="RegisterModal" role="dialog">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">

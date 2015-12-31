@@ -17,7 +17,8 @@ $(document).ready(function() {
 
 function Start(){
     UnitTest();
-    RegisterButton();
+    Register();
+    SignIn();
     ConsoleLog();
 }
 
@@ -35,39 +36,59 @@ function ConsoleLog(){
     console.error = console.debug = console.info =  console.log
 }
 
-function RegisterButton(){
+function Register(){
     var RegisterButton = document.getElementById("Register");
     RegisterButton.onclick = function () {
         try{
             var Email = document.getElementById("Email2").value;
             var Password = document.getElementById("Password2").value;
-            Empty(Email);
-            Empty(Password);
+            ValidateField(Email);
+            ValidateField(Password);
             ValidateEmail(Email);
             CheckEmail(Email);
-            ValidatePassword(Password);
-            var Admin = 0;
             var Active = 1;
             var Action = "Register";
             var AjaxData = {
                 Email: Email,
                 Password: Password,
-                Admin: Admin,
                 Active: Active,
                 Action: Action
             };
             OutgoingAjax(AjaxData);
             console.log('Your account was created, you will now be signed in.');
-            //sign in
         }catch(e){
             console.log('Error: '+e);
         }
     };
 }
 
-function Empty(Field){
+function SignIn(){
+    var SignInButton = document.getElementById("SignIn");
+    SignInButton.onclick = function () {
+        try{
+            var Email = document.getElementById("Email1").value;
+            var Password = document.getElementById("Password1").value;
+            ValidateField(Email);
+            ValidateField(Password);
+            ValidateEmail(Email);
+            //CheckEmail(Email); do this in PHP
+            var Action = "SignIn";
+            var AjaxData = {
+                Email: Email,
+                Password: Password,
+                Action: Action
+            };
+            OutgoingAjax(AjaxData);
+            console.log('Your account was created, you will now be signed in.');
+        }catch(e){
+            console.log('Error: '+e);
+        }
+    };
+}
+
+function ValidateField(Field){
     if(Field == null || Field == ""){
-        throw e = "Please Fill All Required Field";
+        throw e = "Please fill all required field";
     }
 }
 
@@ -98,6 +119,13 @@ function ResponseOperation(AjaxData){
                 throw e = "That Email already exists, please use a different email or reset your password";
             }
             break;
+        case "SignIn":
+            if(status == 1){
+                throw e = "login works";
+            }else{
+                throw e = "login fails";
+            }
+            break;
     }
 }
 
@@ -114,11 +142,5 @@ function ValidateEmail(Email) {
     var dotpos = Email.lastIndexOf(".");
     if (atpos<1 || dotpos<atpos+2 || dotpos+2>=Email.length) {
         throw e = "Not a valid e-mail address";
-    }
-}
-
-function ValidatePassword(Password){
-    if(Password === 'undefined'){
-        throw e = "empty password";
     }
 }

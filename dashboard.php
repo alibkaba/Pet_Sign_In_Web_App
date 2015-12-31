@@ -20,79 +20,7 @@ include('operations.php');
 //if session exists
 //  CheckSession function and etc
 // else redirect
-session_set_cookie_params(1800,"/");
-session_start();
-$SessionIP=$_SERVER['REMOTE_ADDR'];
-$Time = $_SERVER["REQUEST_TIME"];
-$ua=GetBrowser();
-$SessionBrowser = $ua['name'];
-$SessionPlatform = $ua['platform'];
 
-$SessionID = md5(uniqid(rand(), true));
-$_SESSION["Session_ID"] = $SessionID;
-echo "Session ID = $SessionID";
-echo " Email Address = $Email";
-echo " IP address = $SessionIP";
-echo " Browser = $SessionBrowser";
-echo " Platform = $Time";
-echo " Session ID is " . $_SESSION["Session_ID"] . "<br>";
-
-
-function GetBrowser()
-{
-    $u_agent = $_SERVER['HTTP_USER_AGENT'];
-    $bname = 'Unknown';
-    $platform = 'Unknown';
-    $version= "";
-
-    //First get the platform?
-    if (preg_match('/linux/i', $u_agent)) {
-        $platform = 'Linux';
-    }
-    elseif (preg_match('/macintosh|mac os x/i', $u_agent)) {
-        $platform = 'Mac';
-    }
-    elseif (preg_match('/windows|win32/i', $u_agent)) {
-        $platform = 'Windows';
-    }
-
-    // Next get the name of the useragent yes seperately and for good reason
-    if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent))
-    {
-        $bname = 'Internet Explorer';
-        $ub = "MSIE";
-    }
-    elseif(preg_match('/Firefox/i',$u_agent))
-    {
-        $bname = 'Mozilla Firefox';
-        $ub = "Firefox";
-    }
-    elseif(preg_match('/Chrome/i',$u_agent))
-    {
-        $bname = 'Google Chrome';
-        $ub = "Chrome";
-    }
-    elseif(preg_match('/Safari/i',$u_agent))
-    {
-        $bname = 'Apple Safari';
-        $ub = "Safari";
-    }
-    elseif(preg_match('/Opera/i',$u_agent))
-    {
-        $bname = 'Opera';
-        $ub = "Opera";
-    }
-    elseif(preg_match('/Netscape/i',$u_agent))
-    {
-        $bname = 'Netscape';
-        $ub = "Netscape";
-    }
-
-    return array(
-        'name'      => $bname,
-        'platform'  => $platform
-    );
-}
 ?>
 <nav class="navbar navbar-default">
     <div class="container-fluid">
