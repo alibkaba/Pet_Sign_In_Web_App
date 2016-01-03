@@ -33,8 +33,8 @@
     </div>
 </nav>
 <script type='text/javascript'>
-    Activation = <?php $Activation = $_GET["confirm"];?>;
-    Activate(Activation);
-    //window.location.href = 'dashboard.php';</script>
+    ActivationCode = <?php $Activation = $_GET["confirm"];?>;
+    Activate(ActivationCode);
+</script>
 </body>
 </html>

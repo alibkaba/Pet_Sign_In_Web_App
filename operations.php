@@ -2,6 +2,7 @@
 require_once('db.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+
 ValidateAjaxRequest();
 
 function ValidateAjaxRequest() {
@@ -48,15 +49,38 @@ function Execute($Action,$Statement){
     }
 }
 
-function Fetch($Return,$Action,$Statement){
+function Activate($Action){
+    $ActivationCode = stripslashes($_POST["Activation"]);
+    CheckActivationCode($ActivationCode);
+    global $PDOconn;
+    $Query = 'UPDATE djkabau1_petsignin.UnitTest set Active = (?) where ActivationCode = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Active, PDO::PARAM_STR, 64);
+    $Statement->bindParam(2, $ActivationCode, PDO::PARAM_STR, 64);
+    Execute($Action,$Statement);
+    $PDOconn = null;
+}
+
+function CheckActivationCode($ActivationCode){
+    $Action1 = "CheckActivationNumber";
+    $CanExit = 1;
+    global $PDOconn;
+    $Query = 'SELECT count(*) FROM djkabau1_petsignin.Users WHERE Activation NOT IN (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $ActivationCode, PDO::PARAM_STR, 64);
+    Execute($Action1,$Statement);
+    Fetch($CanExit,$Action1,$Statement);
+    $PDOconn = null;
+}
+
+function Fetch($CanExit,$Action,$Statement){
     try {
         //same here except I may need to return data in the else portion
         if(!$Response = $Statement->fetch(PDO::FETCH_ASSOC)) {
             $Response = array('action' => $Action, 'status' => "0");
             echo json_encode($Response);
         }else{
-            //this will return data if $Return is 1, else it will just ignore it and continue
-            if($Return == 1){
+            if($CanExit == 1){
                 $Response = array('action' => $Action, 'status' => "1", $Response);
                 echo json_encode($Response);
             }
@@ -66,6 +90,17 @@ function Fetch($Return,$Action,$Statement){
         $ErrorMSG = 'Fetch statement failed: ' . $e->getMessage() . "\n";
         Debugging($ErrorMSG);
     }
+}
+
+function CheckEmail($Email){
+    $Action1 = "CheckEmail";
+    $CanExit = 1;
+    global $PDOconn;
+    $Query = 'SELECT count(*) FROM Users where Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    Execute($Action1,$Statement);
+    Fetch($CanExit,$Action1,$Statement);
 }
 
 function UnitTest($Action){
@@ -145,7 +180,8 @@ function Register($Action){
     $Activation = hash('sha256', uniqid(rand(), true));
     global $PDOconn;
     $Query = 'INSERT INTO djkabau1_petsignin.Users (Email, Password, Admin, Active, Locked, Activation) VALUES (?,?,?,?,?,?)';
-    $Statement = $PDOconn->prepare($Query);
+    echo $Query;
+    $Statement = $PDOconn->prepare($Query); //handle this
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
     $Statement->bindParam(3, $Admin, PDO::PARAM_INT, 1);
@@ -153,25 +189,14 @@ function Register($Action){
     $Statement->bindParam(5, $Locked, PDO::PARAM_INT, 1);
     $Statement->bindParam(6, $Activation, PDO::PARAM_STR, 64);
     Execute($Action,$Statement);
-    //mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/activate.php?confirm=$Activation");
+    mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/activate.php?confirm=$Activation");
     $PDOconn = null;
 }
 
-function CheckEmail($Email){
-    $Action = "CheckEmail";
-    $Return = 0;
-    global $PDOconn;
-    $Query = 'SELECT count(*) FROM Users where Email = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    Execute($Action,$Statement);
-    Fetch($Return,$Action,$Statement);
-    $PDOconn = null;
-}
-
-function MailOut($Email, $Subject, $EmailMSG){
-    $From = "alibkaba@gmail.com";
-    $Headers = "From:" . $From;
+function MailOut($Email, $Subject, $EmailMSG){ //fix this later, from and reply not working
+    $Headers = 'From: alibkaba@alibkaba.com' . " " .
+        'Reply-To: alibkaba@gmail.com' . " " .
+        'X-Mailer: PHP/' . phpversion();
     mail($Email,$Subject,$EmailMSG,$Headers);
 }
 
@@ -201,16 +226,6 @@ function CheckAttempts($Email){
 
 function FailedAttempt($Email){
 
-}
-
-function Activate($Action){
-    $Activation = stripslashes($_POST["Activation"]);
-    global $PDOconn;
-    $Query = 'SELECT count(*) FROM djkabau1_petsignin.Users WHERE Activation = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Activation, PDO::PARAM_STR, 64);
-    Execute($Action,$Statement);
-    $PDOconn = null;
 }
 
 function DBTime(){

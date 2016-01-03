@@ -82,7 +82,7 @@ function OutgoingAjax(AjaxData) {
     return IncomingAjaxData;
 }
 
-function Activate(Activation){
+function Activate(ActivationCode){
     try{
         var Action = "Activate";
         var AjaxData = {
@@ -104,6 +104,11 @@ function ResponseOperation(AjaxData){
         case "CheckEmail":
             if(status == 1){
                 throw e = "That Email already exists, please use a different email or reset your password";
+            }
+            break;
+        case "CheckActivationCode":
+            if(status == 1){
+                throw e = "You account is already activated";
             }
             break;
         case "SignIn":
