@@ -33,11 +33,10 @@ function DBOperation($Action){
     }
 }
 
-function Execute($Action,$Statement){
+function Execute($Action,$Email,$Statement){
     try {
         //Ali, don't touch this anymore
-        //this if statement is to let the main.js know which action execute failed so I can figure out what to say
-        //otherwise I can remove the if and just put $Statement->execute()
+        //if statement fails, report to javascript the action name
         if(!$Statement->execute()) {
             $Response = array('action' => $Action, 'status' => "0");
             echo json_encode($Response);
@@ -45,8 +44,39 @@ function Execute($Action,$Statement){
     } catch (PDOException $e) {
         //echo 'Connection failed: ' . $e->getMessage() . "\n";
         $ErrorMSG = 'Execute statement failed: ' . $e->getMessage() . "\n";
-        Debugging($ErrorMSG);
+        Debugging($Action,$Email,$ErrorMSG);
     }
+}
+
+function Fetch($Action,$Email,$Statement,$Return){
+    try {
+        //if statement fails, report to javascript the action name
+        if(!$Response = $Statement->fetch(PDO::FETCH_ASSOC)) {
+            $Response = array('action' => $Action, 'status' => "0");
+            echo json_encode($Response);
+        }else{
+            if($Return == 1){
+                $Response = array('action' => $Action, 'status' => "1", $Response);
+                echo json_encode($Response);
+            }elseif ($Return == 2){
+
+            }
+        }
+    } catch (PDOException $e) {
+        //echo 'Connection failed: ' . $e->getMessage() . "\n";
+        $ErrorMSG = 'Fetch statement failed: ' . $e->getMessage() . "\n";
+        Debugging($Action,$Email,$ErrorMSG);
+    }
+}
+
+function CheckEmail($Return,$Email){
+    $Action1 = "CheckEmail";
+    global $PDOconn;
+    $Query = 'SELECT count(*) as Count FROM Users where Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    Execute($Action1,$Email,$Statement);
+    Fetch($Action1,$Email,$Statement,$Return);
 }
 
 function Activate($Action){
@@ -63,44 +93,15 @@ function Activate($Action){
 
 function CheckActivationCode($ActivationCode){
     $Action1 = "CheckActivationNumber";
-    $CanExit = 1;
+    $Return = 1;
     global $PDOconn;
-    $Query = 'SELECT count(*) FROM djkabau1_petsignin.Users WHERE Activation NOT IN (?)';
+    //$Query = 'SELECT count(*) as Count FROM djkabau1_petsignin.Users WHERE Activation NOT IN (?)';
+    $Query = 'SELECT Email FROM djkabau1_petsignin.Users WHERE Activation NOT IN (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $ActivationCode, PDO::PARAM_STR, 64);
     Execute($Action1,$Statement);
-    Fetch($CanExit,$Action1,$Statement);
+    Fetch($Return,$Action1,$Statement);
     $PDOconn = null;
-}
-
-function Fetch($CanExit,$Action,$Statement){
-    try {
-        //same here except I may need to return data in the else portion
-        if(!$Response = $Statement->fetch(PDO::FETCH_ASSOC)) {
-            $Response = array('action' => $Action, 'status' => "0");
-            echo json_encode($Response);
-        }else{
-            if($CanExit == 1){
-                $Response = array('action' => $Action, 'status' => "1", $Response);
-                echo json_encode($Response);
-            }
-        }
-    } catch (PDOException $e) {
-        //echo 'Connection failed: ' . $e->getMessage() . "\n";
-        $ErrorMSG = 'Fetch statement failed: ' . $e->getMessage() . "\n";
-        Debugging($ErrorMSG);
-    }
-}
-
-function CheckEmail($Email){
-    $Action1 = "CheckEmail";
-    $CanExit = 1;
-    global $PDOconn;
-    $Query = 'SELECT count(*) FROM Users where Email = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    Execute($Action1,$Statement);
-    Fetch($CanExit,$Action1,$Statement);
 }
 
 function UnitTest($Action){
@@ -139,10 +140,12 @@ function UnitTest($Action){
     $PDOconn = null;
 }
 
-function Debugging($Action,$ErrorMSG){
-    global $PDOconn;
-    $Email = 'a@a.com';
+function Debugging($Action,$Email,$ErrorMSG){
+    $Return = 0;
+    $Email = "a@a.com";
+    //CheckEmail($Return,$Email);
 
+    global $PDOconn;
     $Query = 'INSERT INTO djkabau1_petsignin.Debugging (Email, Action, ErrorMSG) VALUES (?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
@@ -171,7 +174,8 @@ function HashIt($Password){
 
 function Register($Action){
     $Email = stripslashes($_POST["Email"]);
-    CheckEmail($Action,$Email);
+    $Return = 1;
+    CheckEmail($Return,$Email);
     $Password = stripslashes($_POST["Password"]);
     $HashedPassword = HashIt($Password);
     $Admin = 0;
@@ -180,7 +184,6 @@ function Register($Action){
     $Activation = hash('sha256', uniqid(rand(), true));
     global $PDOconn;
     $Query = 'INSERT INTO djkabau1_petsignin.Users (Email, Password, Admin, Active, Locked, Activation) VALUES (?,?,?,?,?,?)';
-    echo $Query;
     $Statement = $PDOconn->prepare($Query); //handle this
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
@@ -188,7 +191,7 @@ function Register($Action){
     $Statement->bindParam(4, $Active, PDO::PARAM_INT, 1);
     $Statement->bindParam(5, $Locked, PDO::PARAM_INT, 1);
     $Statement->bindParam(6, $Activation, PDO::PARAM_STR, 64);
-    Execute($Action,$Statement);
+    Execute($Action,$Email,$Statement);
     mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/activate.php?confirm=$Activation");
     $PDOconn = null;
 }
@@ -206,7 +209,7 @@ function SignIn($Action){
     $Password = stripslashes($_POST["Password"]);
     $HashedPassword = HashIt($Password);
 
-    $Query = 'SELECT count(*) FROM Users where Email = (?) and Password = (?)';
+    $Query = 'SELECT count(*) as Count FROM Users where Email = (?) and Password = (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
@@ -259,7 +262,7 @@ function StartSession($Action){
     echo " Platform = $Time";
     echo " Session ID is " . $_SESSION["Session_ID"] . "<br>";
 
-    $Query = 'SELECT count(*) FROM Users where Email = (?) and Password = (?)';
+    $Query = 'SELECT count(*) as Count FROM Users where Email = (?) and Password = (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);

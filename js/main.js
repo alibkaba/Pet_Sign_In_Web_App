@@ -101,6 +101,7 @@ function ResponseOperation(AjaxData){
     var status = AjaxData.status;
     console.log(status);
     switch(Action) {
+        // 0 means it failed at execute/fetch
         case "CheckEmail":
             if(status == 1){
                 throw e = "That Email already exists, please use a different email or reset your password";
