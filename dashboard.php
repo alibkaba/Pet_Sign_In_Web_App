@@ -42,12 +42,30 @@ include('operations.php');
         </div>
     </div>
 </nav>
+<div id="Alert">Alert/important messages will be displayed here. they can be closed. e.g. new update, new policy, etc.  I may need to create a disabled field (disabled functions). disabled if you don't read policy. active is only touched one. maybe change from active to verified.</div>
+Need to find a way to sign in pet in 1 or 2 steps.
 
-<button type="button" onclick="">Sign In Pet</button><br>
+<button type="button" onclick="">Pets</button><br>
 Pet Name (Pet info (pet table)), Pet activity (sign ins, edits to pet info in great detail), delete pet (5 days delay or right away by HR)<br>
-<button type="button" onclick="">Account</button><br>
-Personal info (email, password), Activity (logins, edits to personal account and if a pet was edited), close account, delete account (5 days delay or right away by HR)<br>
 
+<div class="modal fade" id="AccountModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Account</h4>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-primary">Personal Info</button>
+                <button type="button" class="btn btn-primary">Activity</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="Register">Register</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
