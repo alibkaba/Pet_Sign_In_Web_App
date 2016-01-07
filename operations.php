@@ -161,6 +161,15 @@ function HashIt($Password){
     $HashedPassword = password_hash($Password, PASSWORD_DEFAULT);
     return $HashedPassword;
 }
+//grab data. data not there? excellent, exit and register
+//data there?
+//check attempt count. if x<5
+//else add attempt made and msg client account already exists
+
+function CheckAttempts($UserData){
+    global $PDOconn;
+
+}
 
 function Register($Action){
     $Email = stripslashes($_POST["Email"]);
@@ -223,19 +232,6 @@ function SignIn($Action){
     Execute($Action,$Statement);
     Fetch($Action,$Statement);
     $PDOconn = null;
-}
-
-function CheckAttempts($Email){
-    global $PDOconn;
-    $Query = 'SELECT Locked FROM Users where Email = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    Execute($Statement);
-    Fetch($Statement);
-}
-
-function FailedAttempt($Email){
-
 }
 
 function DBTime(){

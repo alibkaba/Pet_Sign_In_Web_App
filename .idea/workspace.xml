@@ -55,25 +55,24 @@
       <file leaf-file-name="operations.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/operations.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.34994206">
-              <caret line="135" column="33" selection-start-line="135" selection-start-column="33" selection-end-line="135" selection-end-column="33" />
+            <state vertical-scroll-proportion="0.36995515">
+              <caret line="169" column="20" selection-start-line="169" selection-start-column="20" selection-end-line="169" selection-end-column="20" />
               <folding>
-                <marker date="1452136422640" expanded="true" signature="2311:2389" placeholder="UPDATE djkab..." />
-                <marker date="1452136422640" expanded="true" signature="2859:2929" placeholder="SELECT Email..Users..." />
-                <marker date="1452136422640" expanded="true" signature="3204:3252" placeholder="DROP TABLE I..." />
-                <marker date="1452136422640" expanded="true" signature="3256:3382" placeholder="CREATE TABLE..IF..." />
-                <marker date="1452136422640" expanded="true" signature="3523:3586" placeholder="INSERT INTO djkabau1_petsignin.UnitTest..." />
-                <marker date="1452136422640" expanded="true" signature="3763:3841" placeholder="UPDATE djkab..." />
-                <marker date="1452136422640" expanded="true" signature="4054:4116" placeholder="DELETE FROM ..." />
-                <marker date="1452136422640" expanded="true" signature="4272:4320" placeholder="DROP TABLE I..." />
-                <marker date="1452136422640" expanded="true" signature="4627:4708" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
-                <marker date="1452136422640" expanded="true" signature="5087:5155" placeholder="INSERT INTO djkabau1_petsignin.Audit..." />
-                <marker date="1452136422640" expanded="true" signature="5869:5979" placeholder="INSERT INTO djkabau1_petsignin.Users..." />
-                <marker date="1452136422640" expanded="true" signature="6688:6741" placeholder="SELECT count..." />
-                <marker date="1452136422640" expanded="true" signature="6942:6995" placeholder="SELECT count..." />
-                <marker date="1452136422640" expanded="true" signature="7670:7742" placeholder="SELECT count..Users..." />
-                <marker date="1452136422640" expanded="true" signature="8070:8112" placeholder="SELECT Locke..Users..." />
-                <marker date="1452136422640" expanded="true" signature="9213:9285" placeholder="SELECT count..Users..." />
+                <marker date="1452158521483" expanded="true" signature="2311:2389" placeholder="UPDATE djkab..." />
+                <marker date="1452158521483" expanded="true" signature="2859:2929" placeholder="SELECT Email..Users..." />
+                <marker date="1452158521483" expanded="true" signature="3204:3252" placeholder="DROP TABLE I..." />
+                <marker date="1452158521483" expanded="true" signature="3256:3382" placeholder="CREATE TABLE..IF..." />
+                <marker date="1452158521483" expanded="true" signature="3523:3586" placeholder="INSERT INTO djkabau1_petsignin.UnitTest..." />
+                <marker date="1452158521483" expanded="true" signature="3763:3841" placeholder="UPDATE djkab..." />
+                <marker date="1452158521483" expanded="true" signature="4054:4116" placeholder="DELETE FROM ..." />
+                <marker date="1452158521483" expanded="true" signature="4272:4320" placeholder="DROP TABLE I..." />
+                <marker date="1452158521483" expanded="true" signature="4627:4708" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
+                <marker date="1452158521483" expanded="true" signature="5087:5155" placeholder="INSERT INTO djkabau1_petsignin.Audit..." />
+                <marker date="1452158521483" expanded="true" signature="6093:6203" placeholder="INSERT INTO djkabau1_petsignin.Users..." />
+                <marker date="1452158521483" expanded="true" signature="6912:6965" placeholder="SELECT count..." />
+                <marker date="1452158521483" expanded="true" signature="7166:7219" placeholder="SELECT count..." />
+                <marker date="1452158521483" expanded="true" signature="7894:7966" placeholder="SELECT count..Users..." />
+                <marker date="1452158521483" expanded="true" signature="9136:9208" placeholder="SELECT count..Users..." />
               </folding>
             </state>
           </provider>
@@ -339,6 +338,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -387,9 +389,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
-      <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -878,11 +877,12 @@
       <workItem from="1451962078890" duration="744000" />
       <workItem from="1452044843917" duration="1387000" />
       <workItem from="1452134170889" duration="1573000" />
+      <workItem from="1452154211547" duration="1970000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="166732000" />
+    <option name="totallyTimeSpent" value="168702000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -940,22 +940,21 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
           <folding>
-            <marker date="1452136422640" expanded="true" signature="2311:2389" placeholder="UPDATE djkab..." />
-            <marker date="1452136422640" expanded="true" signature="2859:2929" placeholder="SELECT Email..Users..." />
-            <marker date="1452136422640" expanded="true" signature="3204:3252" placeholder="DROP TABLE I..." />
-            <marker date="1452136422640" expanded="true" signature="3256:3382" placeholder="CREATE TABLE..IF..." />
-            <marker date="1452136422640" expanded="true" signature="3523:3586" placeholder="INSERT INTO djkabau1_petsignin.UnitTest..." />
-            <marker date="1452136422640" expanded="true" signature="3763:3841" placeholder="UPDATE djkab..." />
-            <marker date="1452136422640" expanded="true" signature="4054:4116" placeholder="DELETE FROM ..." />
-            <marker date="1452136422640" expanded="true" signature="4272:4320" placeholder="DROP TABLE I..." />
-            <marker date="1452136422640" expanded="true" signature="4627:4708" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
-            <marker date="1452136422640" expanded="true" signature="5087:5155" placeholder="INSERT INTO djkabau1_petsignin.Audit..." />
-            <marker date="1452136422640" expanded="true" signature="5869:5979" placeholder="INSERT INTO djkabau1_petsignin.Users..." />
-            <marker date="1452136422640" expanded="true" signature="6688:6741" placeholder="SELECT count..." />
-            <marker date="1452136422640" expanded="true" signature="6942:6995" placeholder="SELECT count..." />
-            <marker date="1452136422640" expanded="true" signature="7670:7742" placeholder="SELECT count..Users..." />
-            <marker date="1452136422640" expanded="true" signature="8070:8112" placeholder="SELECT Locke..Users..." />
-            <marker date="1452136422640" expanded="true" signature="9213:9285" placeholder="SELECT count..Users..." />
+            <marker date="1452158521483" expanded="true" signature="2311:2389" placeholder="UPDATE djkab..." />
+            <marker date="1452158521483" expanded="true" signature="2859:2929" placeholder="SELECT Email..Users..." />
+            <marker date="1452158521483" expanded="true" signature="3204:3252" placeholder="DROP TABLE I..." />
+            <marker date="1452158521483" expanded="true" signature="3256:3382" placeholder="CREATE TABLE..IF..." />
+            <marker date="1452158521483" expanded="true" signature="3523:3586" placeholder="INSERT INTO djkabau1_petsignin.UnitTest..." />
+            <marker date="1452158521483" expanded="true" signature="3763:3841" placeholder="UPDATE djkab..." />
+            <marker date="1452158521483" expanded="true" signature="4054:4116" placeholder="DELETE FROM ..." />
+            <marker date="1452158521483" expanded="true" signature="4272:4320" placeholder="DROP TABLE I..." />
+            <marker date="1452158521483" expanded="true" signature="4627:4708" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
+            <marker date="1452158521483" expanded="true" signature="5087:5155" placeholder="INSERT INTO djkabau1_petsignin.Audit..." />
+            <marker date="1452158521483" expanded="true" signature="6093:6203" placeholder="INSERT INTO djkabau1_petsignin.Users..." />
+            <marker date="1452158521483" expanded="true" signature="6912:6965" placeholder="SELECT count..." />
+            <marker date="1452158521483" expanded="true" signature="7166:7219" placeholder="SELECT count..." />
+            <marker date="1452158521483" expanded="true" signature="7894:7966" placeholder="SELECT count..Users..." />
+            <marker date="1452158521483" expanded="true" signature="9136:9208" placeholder="SELECT count..Users..." />
           </folding>
         </state>
       </provider>
@@ -1354,25 +1353,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/operations.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.34994206">
-          <caret line="135" column="33" selection-start-line="135" selection-start-column="33" selection-end-line="135" selection-end-column="33" />
+        <state vertical-scroll-proportion="0.36995515">
+          <caret line="169" column="20" selection-start-line="169" selection-start-column="20" selection-end-line="169" selection-end-column="20" />
           <folding>
-            <marker date="1452136422640" expanded="true" signature="2311:2389" placeholder="UPDATE djkab..." />
-            <marker date="1452136422640" expanded="true" signature="2859:2929" placeholder="SELECT Email..Users..." />
-            <marker date="1452136422640" expanded="true" signature="3204:3252" placeholder="DROP TABLE I..." />
-            <marker date="1452136422640" expanded="true" signature="3256:3382" placeholder="CREATE TABLE..IF..." />
-            <marker date="1452136422640" expanded="true" signature="3523:3586" placeholder="INSERT INTO djkabau1_petsignin.UnitTest..." />
-            <marker date="1452136422640" expanded="true" signature="3763:3841" placeholder="UPDATE djkab..." />
-            <marker date="1452136422640" expanded="true" signature="4054:4116" placeholder="DELETE FROM ..." />
-            <marker date="1452136422640" expanded="true" signature="4272:4320" placeholder="DROP TABLE I..." />
-            <marker date="1452136422640" expanded="true" signature="4627:4708" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
-            <marker date="1452136422640" expanded="true" signature="5087:5155" placeholder="INSERT INTO djkabau1_petsignin.Audit..." />
-            <marker date="1452136422640" expanded="true" signature="5869:5979" placeholder="INSERT INTO djkabau1_petsignin.Users..." />
-            <marker date="1452136422640" expanded="true" signature="6688:6741" placeholder="SELECT count..." />
-            <marker date="1452136422640" expanded="true" signature="6942:6995" placeholder="SELECT count..." />
-            <marker date="1452136422640" expanded="true" signature="7670:7742" placeholder="SELECT count..Users..." />
-            <marker date="1452136422640" expanded="true" signature="8070:8112" placeholder="SELECT Locke..Users..." />
-            <marker date="1452136422640" expanded="true" signature="9213:9285" placeholder="SELECT count..Users..." />
+            <marker date="1452158521483" expanded="true" signature="2311:2389" placeholder="UPDATE djkab..." />
+            <marker date="1452158521483" expanded="true" signature="2859:2929" placeholder="SELECT Email..Users..." />
+            <marker date="1452158521483" expanded="true" signature="3204:3252" placeholder="DROP TABLE I..." />
+            <marker date="1452158521483" expanded="true" signature="3256:3382" placeholder="CREATE TABLE..IF..." />
+            <marker date="1452158521483" expanded="true" signature="3523:3586" placeholder="INSERT INTO djkabau1_petsignin.UnitTest..." />
+            <marker date="1452158521483" expanded="true" signature="3763:3841" placeholder="UPDATE djkab..." />
+            <marker date="1452158521483" expanded="true" signature="4054:4116" placeholder="DELETE FROM ..." />
+            <marker date="1452158521483" expanded="true" signature="4272:4320" placeholder="DROP TABLE I..." />
+            <marker date="1452158521483" expanded="true" signature="4627:4708" placeholder="INSERT INTO djkabau1_petsignin.Debugging..." />
+            <marker date="1452158521483" expanded="true" signature="5087:5155" placeholder="INSERT INTO djkabau1_petsignin.Audit..." />
+            <marker date="1452158521483" expanded="true" signature="6093:6203" placeholder="INSERT INTO djkabau1_petsignin.Users..." />
+            <marker date="1452158521483" expanded="true" signature="6912:6965" placeholder="SELECT count..." />
+            <marker date="1452158521483" expanded="true" signature="7166:7219" placeholder="SELECT count..." />
+            <marker date="1452158521483" expanded="true" signature="7894:7966" placeholder="SELECT count..Users..." />
+            <marker date="1452158521483" expanded="true" signature="9136:9208" placeholder="SELECT count..Users..." />
           </folding>
         </state>
       </provider>
