@@ -69,16 +69,6 @@ function Fetch($Action,$Email,$Statement,$Return){
     }
 }
 
-function CheckEmail($Return,$Email){
-    $Action1 = "CheckEmail";
-    global $PDOconn;
-    $Query = 'SELECT count(*) as Count FROM Users where Email = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    Execute($Action1,$Email,$Statement);
-    Fetch($Action1,$Email,$Statement,$Return);
-}
-
 function Activate($Action){
     $ActivationCode = stripslashes($_POST["Activation"]);
     CheckActivationCode($ActivationCode);
@@ -174,8 +164,8 @@ function HashIt($Password){
 
 function Register($Action){
     $Email = stripslashes($_POST["Email"]);
-    $Return = 1;
-    CheckEmail($Return,$Email);
+    $UserData = GrabUserData($Email);
+    CheckEmail($Email);
     $Password = stripslashes($_POST["Password"]);
     $HashedPassword = HashIt($Password);
     $Admin = 0;
@@ -194,6 +184,23 @@ function Register($Action){
     Execute($Action,$Email,$Statement);
     mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/activate.php?confirm=$Activation");
     $PDOconn = null;
+}
+
+function GrabUserData($Email){
+    global $PDOconn;
+    $Query = 'SELECT count(*) as Count FROM Users where Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+}
+
+function CheckEmail($Email){
+    $Action1 = "CheckEmail";
+    global $PDOconn;
+    $Query = 'SELECT count(*) as Count FROM Users where Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    Execute($Action1,$Email,$Statement);
+    Fetch($Action1,$Email,$Statement,$Return);
 }
 
 function MailOut($Email, $Subject, $EmailMSG){ //fix this later, from and reply not working
