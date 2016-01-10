@@ -5,6 +5,7 @@ $p = "v,w_v;cpxzag";
 try {
     $PDOconn = new PDO($dsn, $u, $p);
     $PDOconn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	echo "onnection failed:";
 } catch (PDOException $e) {
     echo 'Connection failed: ' . $e->getMessage() . "\n";
 }

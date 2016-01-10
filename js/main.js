@@ -29,9 +29,9 @@ function Register(){
         try{
             var Email = document.getElementById("Email2").value;
             var Password = document.getElementById("Password2").value;
-            ValidateField(Email);
-            ValidateField(Password);
-            ValidateEmail(Email);
+            IsFieldFilled(Email);
+            IsFieldFilled(Password);
+            ValidateEmailDomain(Email);
             var Action = "Register";
             var AjaxData = {
                 Email: Email,
@@ -52,9 +52,9 @@ function SignIn(){
         try{
             var Email = document.getElementById("Email1").value;
             var Password = document.getElementById("Password1").value;
-            ValidateField(Email);
-            ValidateField(Password);
-            ValidateEmail(Email);
+            IsFieldFilled(Email);
+            IsFieldFilled(Password);
+            ValidateEmailDomain(Email);
             var Action = "SignIn";
             var AjaxData = {
                 Email: Email,
@@ -69,7 +69,7 @@ function SignIn(){
     };
 }
 
-function ValidateField(Field){
+function IsFieldFilled(Field){
     if(Field == null || Field == ""){
         throw e = "Please fill all required field";
     }
@@ -130,10 +130,13 @@ function UnitTest() {
     var AjaxData = OutgoingAjax(AjaxData);
 }
 
-function ValidateEmail(Email) {
-    var atpos = Email.indexOf("@");
-    var dotpos = Email.lastIndexOf(".");
-    if (atpos<1 || dotpos<atpos+2 || dotpos+2>=Email.length) {
-        throw e = "Not a valid e-mail address";
+function ValidateEmailDomain(email) {
+    var re = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
+    if (re.test(Email)) {
+        if (!Email.indexOf('@gmail.com', Email.length - '@gmail.com'.length) !== -1) {
+            alert('Email must be a GMAIL e-mail address (your.name@gmail.com).');
+        }
+    } else {
+        alert('Not a valid e-mail address.');
     }
 }

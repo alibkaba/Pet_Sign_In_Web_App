@@ -33,42 +33,6 @@ function DBOperation($Action){
     }
 }
 
-function Execute($Action,$Email,$Statement){
-    try {
-        //Ali, don't touch this anymore
-        //if statement fails, report to javascript the action name
-        if(!$Statement->execute()) {
-            $Response = array('action' => $Action, 'status' => "0");
-            echo json_encode($Response);
-        }
-    } catch (PDOException $e) {
-        //echo 'Connection failed: ' . $e->getMessage() . "\n";
-        $ErrorMSG = 'Execute statement failed: ' . $e->getMessage() . "\n";
-        Debugging($Action,$Email,$ErrorMSG);
-    }
-}
-
-function Fetch($Action,$Email,$Statement,$Return){
-    try {
-        //if statement fails, report to javascript the action name
-        if(!$Response = $Statement->fetch(PDO::FETCH_ASSOC)) {
-            $Response = array('action' => $Action, 'status' => "0");
-            echo json_encode($Response);
-        }else{
-            if($Return == 1){
-                $Response = array('action' => $Action, 'status' => "1", $Response);
-                echo json_encode($Response);
-            }elseif ($Return == 2){
-
-            }
-        }
-    } catch (PDOException $e) {
-        //echo 'Connection failed: ' . $e->getMessage() . "\n";
-        $ErrorMSG = 'Fetch statement failed: ' . $e->getMessage() . "\n";
-        Debugging($Action,$Email,$ErrorMSG);
-    }
-}
-
 function Activate($Action){
     $ActivationCode = stripslashes($_POST["Activation"]);
     CheckActivationCode($ActivationCode);
@@ -166,50 +130,91 @@ function HashIt($Password){
 //check attempt count. if x<5
 //else add attempt made and msg client account already exists
 
-function CheckAttempts($UserData){
+function AddAttempt($UserData){
     global $PDOconn;
-
+    $Query = 'UPDATE djkabau1_petsignin.Users set Attempts = (?) where Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Attempts, PDO::PARAM_INT, 1);
+    $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
+    Execute($Statement,$Email,$Action);
+    Fetch($Statement,$Email,$Action);
 }
 
 function Register($Action){
     $Email = stripslashes($_POST["Email"]);
-    $UserData = GrabUserData($Email);
-    CheckEmail($Email);
     $Password = stripslashes($_POST["Password"]);
+    $UserData = GrabUserData($Email);
+    if($Email == $UserData['Email']){
+        if($UserData['Attempts'] > 4){
+            $MSG = "locked";
+            ReturnToUser(MSG);
+        }
+        AddAttempt($Email);
+        $MSG = "exists";
+        ReturnToUser(MSG);
+    }
     $HashedPassword = HashIt($Password);
-    $Admin = 0;
     $Active = 0;
+    $AdminCode = 0;
+    $Attempts = 0;
     $Locked = 0;
     $Activation = hash('sha256', uniqid(rand(), true));
     global $PDOconn;
-    $Query = 'INSERT INTO djkabau1_petsignin.Users (Email, Password, Admin, Active, Locked, Activation) VALUES (?,?,?,?,?,?)';
-    $Statement = $PDOconn->prepare($Query); //handle this
+    $Query = 'INSERT INTO djkabau1_petsignin.Users (Email, Password, Active, Attempts, AdminCode, Locked, Activation) VALUES (?,?,?,?,?,?,?)';
+    $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
-    $Statement->bindParam(3, $Admin, PDO::PARAM_INT, 1);
-    $Statement->bindParam(4, $Active, PDO::PARAM_INT, 1);
-    $Statement->bindParam(5, $Locked, PDO::PARAM_INT, 1);
-    $Statement->bindParam(6, $Activation, PDO::PARAM_STR, 64);
-    Execute($Action,$Email,$Statement);
+    $Statement->bindParam(3, $Active, PDO::PARAM_INT, 1);
+    $Statement->bindParam(4, $Attempts, PDO::PARAM_INT, 1);
+    $Statement->bindParam(5, $AdminCode, PDO::PARAM_INT, 1);
+    $Statement->bindParam(6, $Locked, PDO::PARAM_INT, 1);
+    $Statement->bindParam(7, $Activation, PDO::PARAM_STR, 64);
+    Execute($Statement,$Email,$Action);
+    Fetch($Statement,$Email,$Action);
     mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/activate.php?confirm=$Activation");
     $PDOconn = null;
 }
 
 function GrabUserData($Email){
     global $PDOconn;
-    $Query = 'SELECT count(*) as Count FROM Users where Email = (?)';
+    $Action1 = "GrabUserData";
+    $Query = 'SELECT * FROM djkabau1_petsignin.Users where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    Execute($Statement,$Email);
+    Fetch($Statement,$Email);
 }
 
-function CheckEmail($Email){
-    $Action1 = "CheckEmail";
-    global $PDOconn;
-    $Query = 'SELECT count(*) as Count FROM Users where Email = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    Execute($Action1,$Email,$Statement);
-    Fetch($Action1,$Email,$Statement,$Return);
+function ReturnToUser($MSG){
+    exit;
+}
+
+function Execute($Statement,$Email,$Action){
+    try {
+        //Ali, don't touch this anymore
+        //if statement fails, report to javascript the action name
+        if(!$Statement->execute()) {
+            $Response = array('action' => $Action, 'status' => "0");
+            echo json_encode($Response);
+        }
+    } catch (PDOException $e) {
+        //echo 'Connection failed: ' . $e->getMessage() . "\n";
+        $ErrorMSG = 'Execute statement failed: ' . $e->getMessage() . "\n";
+        Debugging($Action,$Email,$ErrorMSG);
+    }
+}
+
+function Fetch($Statement,$Email,$Action){
+    try {
+        //if statement fails, report to javascript the action name
+        if(!$Response = $Statement->fetch(PDO::FETCH_ASSOC)) {
+
+        }
+    } catch (PDOException $e) {
+        //echo 'Connection failed: ' . $e->getMessage() . "\n";
+        $ErrorMSG = 'Fetch statement failed: ' . $e->getMessage() . "\n";
+        Debugging($Action,$Email,$ErrorMSG);
+    }
 }
 
 function MailOut($Email, $Subject, $EmailMSG){ //fix this later, from and reply not working
