@@ -30,7 +30,22 @@ function DBOperation($Action){
             break;
         case "StartSession": StartSession($Action);
             break;
+        case "Debug": Debug($Action);
+            break;
+        case "JSDebug": JSDebug($Action);
+            break;
     }
+}
+
+function JSDebug($Action){
+    $ErrorMSG = $_POST["ErrorMSG"];
+    global $PDOconn;
+    $Query = 'INSERT INTO djkabau1_petsignin.Debug (Action, ErrorMSG) VALUES (?,?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Action, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $ErrorMSG, PDO::PARAM_STR, 100);
+    $Statement->execute();
+    $PDOconn = null;
 }
 
 function Activate($Action){
@@ -94,13 +109,12 @@ function UnitTest($Action){
     $PDOconn = null;
 }
 
-function Debugging($Action,$Email,$ErrorMSG){
-    $Return = 0;
-    $Email = "a@a.com";
-    //CheckEmail($Return,$Email);
-
+function Debug($Action,$ErrorMSG,$Email){
+    if (!isset($Email)) {
+        $Email = NULL;
+    }
     global $PDOconn;
-    $Query = 'INSERT INTO djkabau1_petsignin.Debugging (Email, Action, ErrorMSG) VALUES (?,?,?)';
+    $Query = 'INSERT INTO djkabau1_petsignin.Debug (Email, Action, ErrorMSG) VALUES (?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $Action, PDO::PARAM_STR, 45);
@@ -200,7 +214,7 @@ function Execute($Statement,$Email,$Action){
     } catch (PDOException $e) {
         //echo 'Connection failed: ' . $e->getMessage() . "\n";
         $ErrorMSG = 'Execute statement failed: ' . $e->getMessage() . "\n";
-        Debugging($Action,$Email,$ErrorMSG);
+        Debug($Action,$Email,$ErrorMSG);
     }
 }
 
@@ -213,7 +227,7 @@ function Fetch($Statement,$Email,$Action){
     } catch (PDOException $e) {
         //echo 'Connection failed: ' . $e->getMessage() . "\n";
         $ErrorMSG = 'Fetch statement failed: ' . $e->getMessage() . "\n";
-        Debugging($Action,$Email,$ErrorMSG);
+        Debug($Action,$Email,$ErrorMSG);
     }
 }
 

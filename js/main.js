@@ -26,12 +26,12 @@ function Start(){
 function Register(){
     var RegisterButton = document.getElementById("Register");
     RegisterButton.onclick = function () {
+        var Email = document.getElementById("Email2").value;
+        var Password = document.getElementById("Password2").value;
+        IsFieldFilled(Email);
+        IsFieldFilled(Password);
+        ValidateEmailDomain(Email);
         try{
-            var Email = document.getElementById("Email2").value;
-            var Password = document.getElementById("Password2").value;
-            IsFieldFilled(Email);
-            IsFieldFilled(Password);
-            ValidateEmailDomain(Email);
             var Action = "Register";
             var AjaxData = {
                 Email: Email,
@@ -41,7 +41,15 @@ function Register(){
             OutgoingAjax(AjaxData);
             console.log('Your account was created, you will now be signed in.');
         }catch(e){
-            console.log('Error: '+e);
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+            var ErrorMSG = "R1: "+e;
+            var Action = "JSDebug";
+            var AjaxData = {
+                Email: Email,
+                ErrorMSG: ErrorMSG,
+                Action: Action
+            };
+            OutgoingAjax(AjaxData);
         }
     };
 }
@@ -71,6 +79,7 @@ function SignIn(){
 
 function IsFieldFilled(Field){
     if(Field == null || Field == ""){
+        alert('Please fill all required field.');
         throw e = "Please fill all required field";
     }
 }
@@ -130,13 +139,15 @@ function UnitTest() {
     var AjaxData = OutgoingAjax(AjaxData);
 }
 
-function ValidateEmailDomain(email) {
+function ValidateEmailDomain(Email) {
     var re = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
     if (re.test(Email)) {
-        if (!Email.indexOf('@gmail.com', Email.length - '@gmail.com'.length) !== -1) {
-            alert('Email must be a GMAIL e-mail address (your.name@gmail.com).');
+        if (Email.indexOf('@gmail.com', Email.length - '@gmail.com'.length) == -1) {
+            alert('Email must be a GMAIL e-mail address (your.name@gmail.com)');
+            throw e = "Email must be a GMAIL e-mail address (your.name@gmail.com)";
         }
     } else {
-        alert('Not a valid e-mail address.');
+        alert('Not a valid e-mail address');
+        throw e = "Not a valid e-mail address";
     }
 }
