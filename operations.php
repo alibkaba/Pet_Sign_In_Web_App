@@ -37,76 +37,36 @@ function DBOperation($Action){
     }
 }
 
-function JSDebug($Action){
-    $ErrorMSG = $_POST["ErrorMSG"];
-    global $PDOconn;
-    $Query = 'INSERT INTO djkabau1_petsignin.Debug (Action, ErrorMSG) VALUES (?,?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Action, PDO::PARAM_STR, 45);
-    $Statement->bindParam(2, $ErrorMSG, PDO::PARAM_STR, 100);
-    $Statement->execute();
-    $PDOconn = null;
+//needs attention
+//$Statement = $PDOconn->prepare($Query);           needs an error handling procedure
+//$Statement->execute();                            needs an error handling procedure
+//$Statement->fetch(PDO::FETCH_ASSOC);              needs an error handling procedure
+
+
+//Multiple use
+function Execute($Statement,$Action,$Email){
+    try {
+        if(!$Statement->execute()) {
+            $Response = array('action' => $Action, 'status' => "0");
+            echo json_encode($Response);
+        }
+    } catch (PDOException $e) {
+        //echo 'Connection failed: ' . $e->getMessage() . "\n";
+        $ErrorMSG = 'Execute statement failed: ' . $e->getMessage() . "\n";
+        Debug($Action,$Email,$ErrorMSG);
+    }
 }
 
-function Activate($Action){
-    $ActivationCode = stripslashes($_POST["Activation"]);
-    CheckActivationCode($ActivationCode);
-    global $PDOconn;
-    $Query = 'UPDATE djkabau1_petsignin.UnitTest set Active = (?) where ActivationCode = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Active, PDO::PARAM_STR, 64);
-    $Statement->bindParam(2, $ActivationCode, PDO::PARAM_STR, 64);
-    Execute($Action,$Statement);
-    $PDOconn = null;
-}
+function Fetch($Statement,$Action,$Email){
+    try {
+        if(!$Response = $Statement->fetch(PDO::FETCH_ASSOC)) {
 
-function CheckActivationCode($ActivationCode){
-    $Action1 = "CheckActivationNumber";
-    $Return = 1;
-    global $PDOconn;
-    //$Query = 'SELECT count(*) as Count FROM djkabau1_petsignin.Users WHERE Activation NOT IN (?)';
-    $Query = 'SELECT Email FROM djkabau1_petsignin.Users WHERE Activation NOT IN (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $ActivationCode, PDO::PARAM_STR, 64);
-    Execute($Action1,$Statement);
-    Fetch($Return,$Action1,$Statement);
-    $PDOconn = null;
-}
-
-function UnitTest($Action){
-    global $PDOconn;
-    $Query = 'DROP TABLE IF EXISTS djkabau1_petsignin.UnitTest ;
-	CREATE TABLE IF NOT EXISTS djkabau1_petsignin.UnitTest (
-	TestColumn INT NOT NULL,
-	PRIMARY KEY (TestColumn))
-	ENGINE = InnoDB;
-	USE djkabau1_petsignin';
-    $Statement = $PDOconn->prepare($Query);
-    Execute($Action,$Statement);
-
-    $NewValue = "1";
-    $Query = 'INSERT INTO djkabau1_petsignin.UnitTest (TestColumn) VALUES (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $NewValue, PDO::PARAM_INT);
-    Execute($Action,$Statement);
-
-    $UpdatedValue = "2";
-    $Query = 'UPDATE djkabau1_petsignin.UnitTest set TestColumn = (?) where TestColumn = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $UpdatedValue, PDO::PARAM_INT);
-    $Statement->bindParam(2, $NewValue, PDO::PARAM_INT);
-    Execute($Action,$Statement);
-
-    $Query = 'DELETE FROM djkabau1_petsignin.UnitTest WHERE TestColumn = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $UpdatedValue, PDO::PARAM_INT);
-    Execute($Action,$Statement);
-
-    $Query = 'DROP TABLE IF EXISTS djkabau1_petsignin.UnitTest';
-    $Statement = $PDOconn->prepare($Query);
-    Execute($Action,$Statement);
-    echo json_encode("Unit Test successful");
-    $PDOconn = null;
+        }
+    } catch (PDOException $e) {
+        //echo 'Connection failed: ' . $e->getMessage() . "\n";
+        $ErrorMSG = 'Fetch statement failed: ' . $e->getMessage() . "\n";
+        Debug($Action,$Email,$ErrorMSG);
+    }
 }
 
 function Debug($Action,$ErrorMSG,$Email){
@@ -123,15 +83,24 @@ function Debug($Action,$ErrorMSG,$Email){
     $PDOconn = null;
 }
 
-function Audit($Action,$Email,$AuditMSG){
+function JSDebug($Action){
+    $ErrorMSG = $_POST["ErrorMSG"];
     global $PDOconn;
-    $Email = 'a@a.com';
+    $Query = 'INSERT INTO djkabau1_petsignin.Debug (Action, ErrorMSG) VALUES (?,?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Action, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $ErrorMSG, PDO::PARAM_STR, 100);
+    $Statement->execute();
+    $PDOconn = null;
+}
 
-    $Query = 'INSERT INTO djkabau1_petsignin.Audit (Email, $AuditMSG) VALUES (?,?)';
+function Audit($Email,$AuditMSG){
+    global $PDOconn;
+    $Query = 'INSERT INTO djkabau1_petsignin.Audit (Email, AuditMSG) VALUES (?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $AuditMSG, PDO::PARAM_STR, 45);
-    Execute($Action,$Statement);
+    $Statement->execute();
     $PDOconn = null;
 }
 
@@ -139,19 +108,53 @@ function HashIt($Password){
     $HashedPassword = password_hash($Password, PASSWORD_DEFAULT);
     return $HashedPassword;
 }
-//grab data. data not there? excellent, exit and register
-//data there?
-//check attempt count. if x<5
-//else add attempt made and msg client account already exists
 
-function AddAttempt($UserData){
+//Single use
+function UnitTest($Action){
+    global $PDOconn;
+    $Query = 'DROP TABLE IF EXISTS djkabau1_petsignin.UnitTest ;
+	CREATE TABLE IF NOT EXISTS djkabau1_petsignin.UnitTest (
+	TestColumn INT NOT NULL,
+	PRIMARY KEY (TestColumn))
+	ENGINE = InnoDB;
+	USE djkabau1_petsignin';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->execute();
+
+    $Value = "1";
+    $Query = 'INSERT INTO djkabau1_petsignin.UnitTest (TestColumn) VALUES (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Value, PDO::PARAM_INT);
+    $Statement->execute();
+
+    $UpdatedValue = "2";
+    $Query = 'UPDATE djkabau1_petsignin.UnitTest set TestColumn = (?) where TestColumn = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $UpdatedValue, PDO::PARAM_INT);
+    $Statement->bindParam(2, $Value, PDO::PARAM_INT);
+    $Statement->execute();
+
+    $Query = 'DELETE FROM djkabau1_petsignin.UnitTest WHERE TestColumn = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $UpdatedValue, PDO::PARAM_INT);
+    $Statement->execute();
+
+    $Query = 'DROP TABLE IF EXISTS djkabau1_petsignin.UnitTest';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->execute();
+    echo json_encode("Unit Test successful");//do I need try and catch for unit test? do I need to fetch?
+    $PDOconn = null;
+}
+
+function AddAttempt($UserData,$Email){
+    $NewAttempt = $UserData['Attempts'];
+    $NewAttempt++;
     global $PDOconn;
     $Query = 'UPDATE djkabau1_petsignin.Users set Attempts = (?) where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Attempts, PDO::PARAM_INT, 1);
+    $Statement->bindParam(1, $NewAttempt, PDO::PARAM_INT, 1);
     $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
-    Execute($Statement,$Email,$Action);
-    Fetch($Statement,$Email,$Action);
+    $Statement->execute();
 }
 
 function Register($Action){
@@ -160,75 +163,46 @@ function Register($Action){
     $UserData = GrabUserData($Email);
     if($Email == $UserData['Email']){
         if($UserData['Attempts'] > 4){
-            $MSG = "locked";
-            ReturnToUser(MSG);
+            $AuditMSG = "Registration attempt made on email.  This account currently locked out.";
+            Audit($Email,$AuditMSG);
+            echo "account locked";
+            exit;
         }
-        AddAttempt($Email);
-        $MSG = "exists";
-        ReturnToUser(MSG);
+        AddAttempt($UserData,$Email);
+        $AuditMSG = "Registration attempt made on email.  This account will locked out when it reaches 5 attempts.";
+        Audit($Email,$AuditMSG);
+        echo "account exists";
+        exit;
     }
     $HashedPassword = HashIt($Password);
     $Active = 0;
-    $AdminCode = 0;
+    $Disabled = 0;
     $Attempts = 0;
-    $Locked = 0;
-    $Activation = hash('sha256', uniqid(rand(), true));
+    $AdminCode = 0;
+    $ActivationCode = hash('sha256', uniqid(rand(), true));
     global $PDOconn;
-    $Query = 'INSERT INTO djkabau1_petsignin.Users (Email, Password, Active, Attempts, AdminCode, Locked, Activation) VALUES (?,?,?,?,?,?,?)';
+    $Query = 'INSERT INTO djkabau1_petsignin.Users (Email, Password, Active, Disabled, Attempts, AdminCode, ActivationCode) VALUES (?,?,?,?,?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
     $Statement->bindParam(3, $Active, PDO::PARAM_INT, 1);
-    $Statement->bindParam(4, $Attempts, PDO::PARAM_INT, 1);
-    $Statement->bindParam(5, $AdminCode, PDO::PARAM_INT, 1);
-    $Statement->bindParam(6, $Locked, PDO::PARAM_INT, 1);
-    $Statement->bindParam(7, $Activation, PDO::PARAM_STR, 64);
-    Execute($Statement,$Email,$Action);
-    Fetch($Statement,$Email,$Action);
-    mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/activate.php?confirm=$Activation");
+    $Statement->bindParam(4, $Disabled, PDO::PARAM_STR, 64);
+    $Statement->bindParam(5, $Attempts, PDO::PARAM_INT, 1);
+    $Statement->bindParam(6, $AdminCode, PDO::PARAM_INT, 1);
+    $Statement->bindParam(7, $ActivationCode, PDO::PARAM_INT, 1);
+    $Statement->execute();
+    //mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/activate.php?confirm=$Activation");
     $PDOconn = null;
 }
 
 function GrabUserData($Email){
     global $PDOconn;
-    $Action1 = "GrabUserData";
     $Query = 'SELECT * FROM djkabau1_petsignin.Users where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    Execute($Statement,$Email);
-    Fetch($Statement,$Email);
-}
-
-function ReturnToUser($MSG){
-    exit;
-}
-
-function Execute($Statement,$Email,$Action){
-    try {
-        //Ali, don't touch this anymore
-        //if statement fails, report to javascript the action name
-        if(!$Statement->execute()) {
-            $Response = array('action' => $Action, 'status' => "0");
-            echo json_encode($Response);
-        }
-    } catch (PDOException $e) {
-        //echo 'Connection failed: ' . $e->getMessage() . "\n";
-        $ErrorMSG = 'Execute statement failed: ' . $e->getMessage() . "\n";
-        Debug($Action,$Email,$ErrorMSG);
-    }
-}
-
-function Fetch($Statement,$Email,$Action){
-    try {
-        //if statement fails, report to javascript the action name
-        if(!$Response = $Statement->fetch(PDO::FETCH_ASSOC)) {
-
-        }
-    } catch (PDOException $e) {
-        //echo 'Connection failed: ' . $e->getMessage() . "\n";
-        $ErrorMSG = 'Fetch statement failed: ' . $e->getMessage() . "\n";
-        Debug($Action,$Email,$ErrorMSG);
-    }
+    $Statement->execute();
+    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
+    return $Response;
 }
 
 function MailOut($Email, $Subject, $EmailMSG){ //fix this later, from and reply not working
@@ -262,6 +236,31 @@ function DBTime(){
     //Fetch($Statement);
     $Response = $Statement->fetch(PDO::FETCH_ASSOC);
     return $Response;
+    $PDOconn = null;
+}
+
+function Activate($Action){
+    $ActivationCode = stripslashes($_POST["Activation"]);
+    CheckActivationCode($ActivationCode);
+    global $PDOconn;
+    $Query = 'UPDATE djkabau1_petsignin.UnitTest set Active = (?) where ActivationCode = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Active, PDO::PARAM_STR, 64);
+    $Statement->bindParam(2, $ActivationCode, PDO::PARAM_STR, 64);
+    Execute($Action,$Statement);
+    $PDOconn = null;
+}
+
+function CheckActivationCode($ActivationCode){
+    $Action1 = "CheckActivationNumber";
+    $Return = 1;
+    global $PDOconn;
+    //$Query = 'SELECT count(*) as Count FROM djkabau1_petsignin.Users WHERE Activation NOT IN (?)';
+    $Query = 'SELECT Email FROM djkabau1_petsignin.Users WHERE Activation NOT IN (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $ActivationCode, PDO::PARAM_STR, 64);
+    Execute($Action1,$Statement);
+    Fetch($Return,$Action1,$Statement);
     $PDOconn = null;
 }
 

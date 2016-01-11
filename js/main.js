@@ -16,11 +16,35 @@ $(document).ready(function() {
     Start();
 });
 
+//Multiple use
+function IsFieldFilled(Field){
+    if(Field == null || Field == ""){
+        alert('Please fill all required field.');
+        throw e = "Please fill all required field";
+    }
+}
+
+function OutgoingAjax(AjaxData) {
+    var IncomingAjaxData = $.ajax({
+        data: AjaxData
+    }).responseText;
+    return IncomingAjaxData;
+}
+
+//Single use
 function Start(){
     UnitTest();
     Register();
     SignIn();
     //$("#AlertModal").modal();
+}
+
+function UnitTest() {
+    var Action = "UnitTest";
+    var AjaxData = {
+        Action: Action
+    };
+    var AjaxData = OutgoingAjax(AjaxData);
 }
 
 function Register(){
@@ -31,6 +55,7 @@ function Register(){
         IsFieldFilled(Email);
         IsFieldFilled(Password);
         ValidateEmailDomain(Email);
+        ValidatePassword(Password);
         try{
             var Action = "Register";
             var AjaxData = {
@@ -39,7 +64,7 @@ function Register(){
                 Action: Action
             };
             OutgoingAjax(AjaxData);
-            console.log('Your account was created, you will now be signed in.');
+            console.log('back to js register');
         }catch(e){
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
             var ErrorMSG = "R1: "+e;
@@ -75,20 +100,6 @@ function SignIn(){
             console.log('Error: '+e);
         }
     };
-}
-
-function IsFieldFilled(Field){
-    if(Field == null || Field == ""){
-        alert('Please fill all required field.');
-        throw e = "Please fill all required field";
-    }
-}
-
-function OutgoingAjax(AjaxData) {
-    var IncomingAjaxData = $.ajax({
-        data: AjaxData
-    }).responseText;
-    return IncomingAjaxData;
 }
 
 function Activate(ActivationCode){
@@ -131,14 +142,6 @@ function ResponseOperation(AjaxData){
     }
 }
 
-function UnitTest() {
-    var Action = "UnitTest";
-    var AjaxData = {
-        Action: Action
-    };
-    var AjaxData = OutgoingAjax(AjaxData);
-}
-
 function ValidateEmailDomain(Email) {
     var re = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
     if (re.test(Email)) {
@@ -150,4 +153,8 @@ function ValidateEmailDomain(Email) {
         alert('Not a valid e-mail address');
         throw e = "Not a valid e-mail address";
     }
+}
+
+function ValidatePassword(Password){
+    //length, complexity, etc.
 }
