@@ -287,8 +287,8 @@ function StartSession($Action){
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
-    Execute($Action,$Statement);
-    Fetch($Action,$Statement);
+    $Statement->execute();
+    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
     $PDOconn = null;
 
     function GetBrowser()
