@@ -20,7 +20,7 @@ $(document).ready(function() {
 function IsFieldFilled(Field){
     if(Field == null || Field == ""){
         alert('Please fill all required field.');
-        throw e = "Please fill all required field";
+        throw e = "Error: Please fill all required field";
     }
 }
 
@@ -55,7 +55,7 @@ function Register(){
         IsFieldFilled(Email);
         IsFieldFilled(Password);
         ValidateEmailDomain(Email);
-        ValidatePassword(Password);
+        ValidatePassword(Email,Password);
         try{
             var Action = "Register";
             var AjaxData = {
@@ -155,6 +155,28 @@ function ValidateEmailDomain(Email) {
     }
 }
 
-function ValidatePassword(Password){
-    //length, complexity, etc.
+function ValidatePassword(Email,Password){
+    if(Password.length < 6) {
+        alert("Error: Password must contain at least six characters!");
+        throw e = "Error: Password must contain at least six characters!";
+    }
+    if(Password == Email) {
+        alert("Error: Password must be different from your email!");
+        throw e = "Error: Password must be different from your email!";
+    }
+    re = /[0-9]/;
+    if(!re.test(Password)) {
+        alert("Error: password must contain at least one number (0-9)!");
+        throw e = "Error: password must contain at least one number (0-9)!";
+    }
+    re = /[a-z]/;
+    if(!re.test(Password)) {
+        alert("Error: password must contain at least one lowercase letter (a-z)!");
+        throw e = "Error: password must contain at least one lowercase letter (a-z)!";
+    }
+    re = /[A-Z]/;
+    if(!re.test(Password)) {
+        alert("Error: password must contain at least one uppercase letter (A-Z)!");
+        throw e = "Error: password must contain at least one uppercase letter (A-Z)!";
+    }
 }
