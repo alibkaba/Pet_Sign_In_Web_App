@@ -34,7 +34,23 @@ function DBOperation($Action){
             break;
         case "JSDebug": JSDebug($Action);
             break;
+        case "AccountActivity": AccountActivity($Action);
+            break;
     }
+}
+
+function AccountActivity($Action){
+    if (!isset($Email)) {
+        $Email = "blenjar@gmail.com"; //GRAB EMAIL FROM SESSION function
+    }
+    global $PDOconn;
+    $Query = 'SELECT AuditMSG, LogDate FROM djkabau1_petsignin.Audit where Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
+    echo json_encode($Response);
+    $PDOconn = null;
 }
 
 //needs attention
@@ -163,13 +179,13 @@ function Register($Action){
     $UserData = GrabUserData($Email);
     if($Email == $UserData['Email']){
         if($UserData['Attempts'] > 4){
-            $AuditMSG = "Registration attempt made on email.  This account currently locked out.";
+            $AuditMSG = "Someone attempted to register an account using your email 5 times so your account was locked out.";
             Audit($Email,$AuditMSG);
             echo "account locked";
             exit;
         }
         AddAttempt($UserData,$Email);
-        $AuditMSG = "Registration attempt made on email.  This account will locked out when it reaches 5 attempts.";
+        $AuditMSG = "Someone attempted to register an account using your email.  Your account will be locked out when 5 attempts are made.";
         Audit($Email,$AuditMSG);
         echo "account exists";
         exit;

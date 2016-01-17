@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" type="text/css" href="css/main.css">
+        <!--<link rel="stylesheet" type="text/css" href="css/main.css">-->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
         <!--<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.5/jquery.mobile.min.css">-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -56,11 +56,59 @@ Pet Name (Pet info (pet table)), Pet activity (sign ins, edits to pet info in gr
                 <h4 class="modal-title">Account</h4>
             </div>
             <div class="modal-body">
-                <button type="button" class="btn btn-primary">Personal Info</button>
-                <button type="button" class="btn btn-primary">Activity</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#PersonalInfoModal" data-toggle="modal" id="PersonalInfoButton">Personal Info</button>
+                <br>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#AccountActivityModal" data-toggle="modal" id="AccountActivityButton">Account Activity</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="PersonalInfoModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Account</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <input type="text" id="Email">
+                </div>
+                <div class="form-group">
+                    <input type="text" id="Email">
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary btn-sm" id="Register">Register</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="AccountActivityModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Account</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered" id="DisplayAccountActivity">
+                    <thead>
+                    <tr>
+                        <th>Activity</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-target="#AccountModal" data-toggle="modal">Back</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>

@@ -36,8 +36,36 @@ function Start(){
     UnitTest();
     Register();
     SignIn();
-    //$("#AlertModal").modal();
+
+    //dashboard stuff
+    AccountActivity();
+    if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == 'dashboard.php') {
+
+    }
 }
+
+function AccountActivity(){
+    var AccountActivityButton = document.getElementById("AccountActivityButton");
+    AccountActivityButton.onclick = function () {
+        try{
+            var Action = "AccountActivity";
+            var AjaxData = {
+                Action: Action
+            };
+            OutgoingAjax(AjaxData);
+            //var Response_Data = jQuery.parseJSON(Incoming_Ajax_Data);
+        }catch(e){
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+            var ErrorMSG = "A1: "+e;
+            var Action = "JSDebug";
+            var AjaxData = {
+                ErrorMSG: ErrorMSG,
+                Action: Action
+            };
+        }
+    }
+    //document.getElementById("Update_District_Name").value = District_Data[0].DISTRICT_NAME;
+};
 
 function UnitTest() {
     var Action = "UnitTest";
@@ -74,7 +102,6 @@ function Register(){
                 ErrorMSG: ErrorMSG,
                 Action: Action
             };
-            OutgoingAjax(AjaxData);
         }
     };
 }
