@@ -35,12 +35,12 @@ function OutgoingAjax(AjaxData) {
 function Start(){
     UnitTest();
     Register();
-    SignIn();
+    if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == '' || window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == 'index.php') {
+        SignIn();
+    }
 
-    //dashboard stuff
-    AccountActivity();
     if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == 'dashboard.php') {
-
+        AccountActivity();
     }
 }
 
@@ -52,8 +52,15 @@ function AccountActivity(){
             var AjaxData = {
                 Action: Action
             };
-            OutgoingAjax(AjaxData);
-            //var Response_Data = jQuery.parseJSON(Incoming_Ajax_Data);
+            //OutgoingAjax(AjaxData);
+            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            console.log(Response_Data);
+            var text = '{firstName:"John",lastName:"Doe"}';
+
+            obj = JSON.parse(text);
+            console.log(obj);
+            //console.log(Response_Data[0].AuditMSG);
+            DisplayAccountActivityFunction(Response_Data);
         }catch(e){
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
             var ErrorMSG = "A1: "+e;
@@ -66,6 +73,16 @@ function AccountActivity(){
     }
     //document.getElementById("Update_District_Name").value = District_Data[0].DISTRICT_NAME;
 };
+
+function DisplayAccountActivityFunction(Response_Data){
+    var DisplayAccountActivity = '<thead><tr><th>Activity</th><th>Date</th></tr></thead><tbody>';
+    for (var i = 0; i < Response_Data.length; i++) {
+        DisplayAccountActivity += '<tr><td>' + Response_Data[i].AuditMSG + '</td><td>' + Response_Data[i].LogDate + '</td></tr>';
+        alert(Response_Data[i].AuditMSG);
+    }
+    DisplayAccountActivity += '</tbody>';
+    document.getElementById("DisplayAccountActivity").innerHTML = DisplayAccountActivity;
+}
 
 function UnitTest() {
     var Action = "UnitTest";
