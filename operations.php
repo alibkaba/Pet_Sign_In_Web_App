@@ -48,7 +48,7 @@ function AccountActivity($Action){
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
-    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
+    $Response = $Statement->fetchAll();
     echo json_encode($Response);
     $PDOconn = null;
 }
