@@ -34,12 +34,12 @@ function DBOperation($Action){
             break;
         case "JSDebug": JSDebug($Action);
             break;
-        case "AccountActivity": AccountActivity($Action);
+        case "AccountAudit": AccountAudit($Action);
             break;
     }
 }
 
-function AccountActivity($Action){
+function AccountAudit($Action){
     if (!isset($Email)) {
         $Email = "blenjar@gmail.com"; //GRAB EMAIL FROM SESSION function
     }

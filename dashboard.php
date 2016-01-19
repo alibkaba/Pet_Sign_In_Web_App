@@ -59,6 +59,8 @@ Pet Name (Pet info (pet table)), Pet activity (sign ins, edits to pet info in gr
                 <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#PersonalInfoModal" data-toggle="modal" id="PersonalInfoButton">Personal Info</button>
                 <br>
                 <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#AccountActivityModal" data-toggle="modal" id="AccountActivityButton">Account Activity</button>
+                <br>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ErrorLoggingModal" data-toggle="modal" id="ErrorLoggingButton">Error Logging</button>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -102,6 +104,31 @@ Pet Name (Pet info (pet table)), Pet activity (sign ins, edits to pet info in gr
                     <thead>
                     <tr>
                         <th>Activity</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-target="#AccountModal" data-toggle="modal">Back</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ErrorLoggingModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Account</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered" id="DisplayErrorLogging">
+                    <thead>
+                    <tr>
+                        <th>Debug Message</th>
                         <th>Date</th>
                     </tr>
                     </thead>

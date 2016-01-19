@@ -40,48 +40,74 @@ function Start(){
     }
 
     if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == 'dashboard.php') {
-        AccountActivity();
+        AccountAudit();
     }
 }
 
-function AccountActivity(){
+function AccountAudit(){
     var AccountActivityButton = document.getElementById("AccountActivityButton");
     AccountActivityButton.onclick = function () {
         try{
-            var Action = "AccountActivity";
+            var Action = "AccountAudit";
             var AjaxData = {
                 Action: Action
             };
             //OutgoingAjax(AjaxData);
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
-            console.log(Response_Data);
-            var text = '{firstName:"John",lastName:"Doe"}';
-
-            obj = JSON.parse(text);
-            console.log(obj);
-            //console.log(Response_Data[0].AuditMSG);
-            DisplayAccountActivityFunction(Response_Data);
+            DisplayAccountAudit(Response_Data);
         }catch(e){
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-            var ErrorMSG = "A1: "+e;
+            var ErrorMSG = "AccountAudit: "+e;
             var Action = "JSDebug";
             var AjaxData = {
                 ErrorMSG: ErrorMSG,
                 Action: Action
             };
         }
-    }
+    };
     //document.getElementById("Update_District_Name").value = District_Data[0].DISTRICT_NAME;
-};
+}
 
-function DisplayAccountActivityFunction(Response_Data){
+function DisplayAccountAudit(Response_Data){
     var DisplayAccountActivity = '<thead><tr><th>Activity</th><th>Date</th></tr></thead><tbody>';
     for (var i = 0; i < Response_Data.length; i++) {
         DisplayAccountActivity += '<tr><td>' + Response_Data[i].AuditMSG + '</td><td>' + Response_Data[i].LogDate + '</td></tr>';
-        alert(Response_Data[i].AuditMSG);
     }
     DisplayAccountActivity += '</tbody>';
     document.getElementById("DisplayAccountActivity").innerHTML = DisplayAccountActivity;
+}
+
+function ErrorLogging(){
+    var DebugMSGButton = document.getElementById("DebugMSGButton");
+    DebugMSGButton.onclick = function () {
+        try{
+            var Action = "DebugMSG";
+            var AjaxData = {
+                Action: Action
+            };
+            //OutgoingAjax(AjaxData);
+            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            DisplayAccountAudit(Response_Data);
+        }catch(e){
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+            var ErrorMSG = "DebugMSG: "+e;
+            var Action = "JSDebug";
+            var AjaxData = {
+                ErrorMSG: ErrorMSG,
+                Action: Action
+            };
+        }
+    };
+    //document.getElementById("Update_District_Name").value = District_Data[0].DISTRICT_NAME;
+}
+
+function DisplayDebugMSG(Response_Data){
+    var DisplayDebugMSG = '<thead><tr><th>Message</th><th>Date</th></tr></thead><tbody>';
+    for (var i = 0; i < Response_Data.length; i++) {
+        DisplayDebugMSG += '<tr><td>' + Response_Data[i].Email +  '<tr><td>' + Response_Data[i].Action + '<tr><td>' + Response_Data[i].ErrorMSG + '</td><td>' + Response_Data[i].LogDate + '</td></tr>';
+    }
+    DisplayDebugMSG += '</tbody>';
+    document.getElementById("DisplayDebugMSG").innerHTML = DisplayDebugMSG;
 }
 
 function UnitTest() {
@@ -112,7 +138,7 @@ function Register(){
             console.log('back to js register');
         }catch(e){
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-            var ErrorMSG = "R1: "+e;
+            var ErrorMSG = "Register: "+e;
             var Action = "JSDebug";
             var AjaxData = {
                 Email: Email,
@@ -141,7 +167,14 @@ function SignIn(){
             OutgoingAjax(AjaxData);
             console.log('Signed in etc etc');
         }catch(e){
-            console.log('Error: '+e);
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+            var ErrorMSG = "SignIn: "+e;
+            var Action = "JSDebug";
+            var AjaxData = {
+                Email: Email,
+                ErrorMSG: ErrorMSG,
+                Action: Action
+            };
         }
     };
 }
@@ -155,34 +188,14 @@ function Activate(ActivationCode){
         };
         OutgoingAjax(AjaxData);
     }catch(e){
-        console.log('Error: '+e);
-    }
-}
-
-function ResponseOperation(AjaxData){
-    AjaxData = JSON.parse(AjaxData);
-    var Action = AjaxData.Action;
-    var status = AjaxData.status;
-    console.log(status);
-    switch(Action) {
-        // 0 means it failed at execute/fetch
-        case "CheckEmail":
-            if(status == 1){
-                throw e = "That Email already exists, please use a different email or reset your password";
-            }
-            break;
-        case "CheckActivationCode":
-            if(status == 1){
-                throw e = "You account is already activated";
-            }
-            break;
-        case "SignIn":
-            if(status == 1){
-                throw e = "login works";
-            }else{
-                throw e = "login fails";
-            }
-            break;
+        alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        var ErrorMSG = "Activate: "+e;
+        var Action = "JSDebug";
+        var AjaxData = {
+            Email: Email,
+            ErrorMSG: ErrorMSG,
+            Action: Action
+        };
     }
 }
 
