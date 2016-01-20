@@ -34,31 +34,31 @@ function OutgoingAjax(AjaxData) {
 //Single use
 function Start(){
     UnitTest();
-    Register();
     if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == '' || window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == 'index.php') {
+        Register();
         SignIn();
     }
 
     if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == 'dashboard.php') {
-        AccountAudit();
+        Activity();
     }
 }
 
-function AccountAudit(){
-    var AccountActivityButton = document.getElementById("AccountActivityButton");
-    AccountActivityButton.onclick = function () {
+function Activity(){
+    var ActivityButton = document.getElementById("ActivityButton");
+    ActivityButton.onclick = function () {
         try{
-            var Action = "AccountAudit";
+            var Action = "FetchActivity";
             var AjaxData = {
                 Action: Action
             };
             //OutgoingAjax(AjaxData);
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
-            DisplayAccountAudit(Response_Data);
+            DisplayActivity(Response_Data);
         }catch(e){
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-            var ErrorMSG = "AccountAudit: "+e;
-            var Action = "JSDebug";
+            var ErrorMSG = "FetchActivity: "+e;
+            var Action = "InsertJSError";
             var AjaxData = {
                 ErrorMSG: ErrorMSG,
                 Action: Action
@@ -68,20 +68,20 @@ function AccountAudit(){
     //document.getElementById("Update_District_Name").value = District_Data[0].DISTRICT_NAME;
 }
 
-function DisplayAccountAudit(Response_Data){
-    var DisplayAccountActivity = '<thead><tr><th>Activity</th><th>Date</th></tr></thead><tbody>';
+function DisplayActivity(Response_Data){
+    var DisplayActivity = '<thead><tr><th>Activity</th><th>Date</th></tr></thead><tbody>';
     for (var i = 0; i < Response_Data.length; i++) {
-        DisplayAccountActivity += '<tr><td>' + Response_Data[i].AuditMSG + '</td><td>' + Response_Data[i].LogDate + '</td></tr>';
+        DisplayActivity += '<tr><td>' + Response_Data[i].ActivityMSG + '</td><td>' + Response_Data[i].LogDate + '</td></tr>';
     }
-    DisplayAccountActivity += '</tbody>';
-    document.getElementById("DisplayAccountActivity").innerHTML = DisplayAccountActivity;
+    DisplayActivity += '</tbody>';
+    document.getElementById("DisplayActivity").innerHTML = DisplayActivity;
 }
 
-function ErrorLogging(){
-    var DebugMSGButton = document.getElementById("DebugMSGButton");
-    DebugMSGButton.onclick = function () {
+function Error(){
+    var ErrorButton = document.getElementById("ErrorButton");
+    ErrorButton.onclick = function () {
         try{
-            var Action = "DebugMSG";
+            var Action = "FetchError";
             var AjaxData = {
                 Action: Action
             };
@@ -90,8 +90,8 @@ function ErrorLogging(){
             DisplayAccountAudit(Response_Data);
         }catch(e){
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-            var ErrorMSG = "DebugMSG: "+e;
-            var Action = "JSDebug";
+            var ErrorMSG = "FetchError: "+e;
+            var Action = "InsertJSError";
             var AjaxData = {
                 ErrorMSG: ErrorMSG,
                 Action: Action
@@ -101,13 +101,13 @@ function ErrorLogging(){
     //document.getElementById("Update_District_Name").value = District_Data[0].DISTRICT_NAME;
 }
 
-function DisplayDebugMSG(Response_Data){
-    var DisplayDebugMSG = '<thead><tr><th>Message</th><th>Date</th></tr></thead><tbody>';
+function DisplayError(Response_Data){
+    var DisplayError = '<thead><tr><th>Account</th><th>Action</th><th>Error Message</th><th>Date</th></tr></thead><tbody>';
     for (var i = 0; i < Response_Data.length; i++) {
-        DisplayDebugMSG += '<tr><td>' + Response_Data[i].Email +  '<tr><td>' + Response_Data[i].Action + '<tr><td>' + Response_Data[i].ErrorMSG + '</td><td>' + Response_Data[i].LogDate + '</td></tr>';
+        DisplayError += '<tr><td>' + Response_Data[i].Email +  '<tr><td>' + Response_Data[i].Action + '<tr><td>' + Response_Data[i].ErrorMSG + '</td><td>' + Response_Data[i].LogDate + '</td></tr>';
     }
-    DisplayDebugMSG += '</tbody>';
-    document.getElementById("DisplayDebugMSG").innerHTML = DisplayDebugMSG;
+    DisplayError += '</tbody>';
+    document.getElementById("DisplayError").innerHTML = DisplayError;
 }
 
 function UnitTest() {
@@ -135,11 +135,11 @@ function Register(){
                 Action: Action
             };
             OutgoingAjax(AjaxData);
-            console.log('back to js register');
+            console.log('Account was registered, need to activate activate account.');
         }catch(e){
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
             var ErrorMSG = "Register: "+e;
-            var Action = "JSDebug";
+            var Action = "InsertJSError";
             var AjaxData = {
                 Email: Email,
                 ErrorMSG: ErrorMSG,
@@ -169,7 +169,7 @@ function SignIn(){
         }catch(e){
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
             var ErrorMSG = "SignIn: "+e;
-            var Action = "JSDebug";
+            var Action = "InsertJSError";
             var AjaxData = {
                 Email: Email,
                 ErrorMSG: ErrorMSG,
@@ -190,7 +190,7 @@ function Activate(ActivationCode){
     }catch(e){
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         var ErrorMSG = "Activate: "+e;
-        var Action = "JSDebug";
+        var Action = "InsertJSError";
         var AjaxData = {
             Email: Email,
             ErrorMSG: ErrorMSG,

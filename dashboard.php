@@ -56,11 +56,9 @@ Pet Name (Pet info (pet table)), Pet activity (sign ins, edits to pet info in gr
                 <h4 class="modal-title">Account</h4>
             </div>
             <div class="modal-body">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#PersonalInfoModal" data-toggle="modal" id="PersonalInfoButton">Personal Info</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ActivityModal" data-toggle="modal" id="ActivityButton">Account Activity</button>
                 <br>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#AccountActivityModal" data-toggle="modal" id="AccountActivityButton">Account Activity</button>
-                <br>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ErrorLoggingModal" data-toggle="modal" id="ErrorLoggingButton">Error Logging</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ErrorModal" data-toggle="modal" id="ErrorButton">Error Logging</button>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -69,38 +67,15 @@ Pet Name (Pet info (pet table)), Pet activity (sign ins, edits to pet info in gr
     </div>
 </div>
 
-<div class="modal fade" id="PersonalInfoModal" role="dialog">
-    <div class="modal-dialog modal-sm">
+<div class="modal fade" id="ActivityModal" role="dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Account</h4>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <input type="text" id="Email">
-                </div>
-                <div class="form-group">
-                    <input type="text" id="Email">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-sm" id="Register">Register</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="AccountActivityModal" role="dialog">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Account</h4>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered" id="DisplayAccountActivity">
+                <table class="table table-bordered" id="DisplayActivity">
                     <thead>
                     <tr>
                         <th>Activity</th>
@@ -117,18 +92,20 @@ Pet Name (Pet info (pet table)), Pet activity (sign ins, edits to pet info in gr
     </div>
 </div>
 
-<div class="modal fade" id="ErrorLoggingModal" role="dialog">
-    <div class="modal-dialog modal-sm">
+<div class="modal fade" id="ErrorModal" role="dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                 <h4 class="modal-title">Account</h4>
             </div>
             <div class="modal-body">
-                <table class="table table-bordered" id="DisplayErrorLogging">
+                <table class="table table-bordered" id="DisplayError">
                     <thead>
                     <tr>
-                        <th>Debug Message</th>
+                        <th>Account</th>
+                        <th>Action</th>
+                        <th>Error Message</th>
                         <th>Date</th>
                     </tr>
                     </thead>

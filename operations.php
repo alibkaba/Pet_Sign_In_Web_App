@@ -30,21 +30,21 @@ function DBOperation($Action){
             break;
         case "StartSession": StartSession($Action);
             break;
-        case "Debug": Debug($Action);
+        case "FetchError": FetchError($Action);
             break;
-        case "JSDebug": JSDebug($Action);
+        case "InsertJSError": InsertJSError($Action);
             break;
-        case "AccountAudit": AccountAudit($Action);
+        case "FetchActivity": FetchActivity($Action);
             break;
     }
 }
 
-function AccountAudit($Action){
+function FetchActivity($Action){
     if (!isset($Email)) {
         $Email = "blenjar@gmail.com"; //GRAB EMAIL FROM SESSION function
     }
     global $PDOconn;
-    $Query = 'SELECT AuditMSG, LogDate FROM djkabau1_petsignin.Audit where Email = (?)';
+    $Query = 'SELECT ActivityMSG, LogDate FROM djkabau1_petsignin.Activity where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
@@ -69,7 +69,7 @@ function Execute($Statement,$Action,$Email){
     } catch (PDOException $e) {
         //echo 'Connection failed: ' . $e->getMessage() . "\n";
         $ErrorMSG = 'Execute statement failed: ' . $e->getMessage() . "\n";
-        Debug($Action,$Email,$ErrorMSG);
+        Error($Action,$Email,$ErrorMSG);
     }
 }
 
@@ -81,16 +81,16 @@ function Fetch($Statement,$Action,$Email){
     } catch (PDOException $e) {
         //echo 'Connection failed: ' . $e->getMessage() . "\n";
         $ErrorMSG = 'Fetch statement failed: ' . $e->getMessage() . "\n";
-        Debug($Action,$Email,$ErrorMSG);
+        Error($Action,$Email,$ErrorMSG);
     }
 }
 
-function Debug($Action,$ErrorMSG,$Email){
+function Error($Action,$ErrorMSG,$Email){
     if (!isset($Email)) {
         $Email = NULL;
     }
     global $PDOconn;
-    $Query = 'INSERT INTO djkabau1_petsignin.Debug (Email, Action, ErrorMSG) VALUES (?,?,?)';
+    $Query = 'INSERT INTO djkabau1_petsignin.Error (Email, Action, ErrorMSG) VALUES (?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $Action, PDO::PARAM_STR, 45);
@@ -99,10 +99,10 @@ function Debug($Action,$ErrorMSG,$Email){
     $PDOconn = null;
 }
 
-function JSDebug($Action){
+function InsertJSError($Action){
     $ErrorMSG = $_POST["ErrorMSG"];
     global $PDOconn;
-    $Query = 'INSERT INTO djkabau1_petsignin.Debug (Action, ErrorMSG) VALUES (?,?)';
+    $Query = 'INSERT INTO djkabau1_petsignin.Error (Action, ErrorMSG) VALUES (?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Action, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $ErrorMSG, PDO::PARAM_STR, 100);
@@ -110,12 +110,12 @@ function JSDebug($Action){
     $PDOconn = null;
 }
 
-function Audit($Email,$AuditMSG){
+function InsertActivity($Email,$ActivityMSG){
     global $PDOconn;
-    $Query = 'INSERT INTO djkabau1_petsignin.Audit (Email, AuditMSG) VALUES (?,?)';
+    $Query = 'INSERT INTO djkabau1_petsignin.Activity (Email, ActivityMSG) VALUES (?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    $Statement->bindParam(2, $AuditMSG, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $ActivityMSG, PDO::PARAM_STR, 45);
     $Statement->execute();
     $PDOconn = null;
 }
@@ -166,7 +166,7 @@ function AddAttempt($UserData,$Email){
     $NewAttempt = $UserData['Attempts'];
     $NewAttempt++;
     global $PDOconn;
-    $Query = 'UPDATE djkabau1_petsignin.Users set Attempts = (?) where Email = (?)';
+    $Query = 'UPDATE djkabau1_petsignin.Account set Attempts = (?) where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $NewAttempt, PDO::PARAM_INT, 1);
     $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
@@ -179,14 +179,14 @@ function Register($Action){
     $UserData = GrabUserData($Email);
     if($Email == $UserData['Email']){
         if($UserData['Attempts'] > 4){
-            $AuditMSG = "Someone attempted to register an account using your email 5 times so your account was locked out.";
-            Audit($Email,$AuditMSG);
+            $ActivityMSG = "Someone attempted to register an account using your email 5 times so your account was locked out.";
+            InsertActivity($Email,$ActivityMSG);
             echo "account locked";
             exit;
         }
         AddAttempt($UserData,$Email);
-        $AuditMSG = "Someone attempted to register an account using your email.  Your account will be locked out when 5 attempts are made.";
-        Audit($Email,$AuditMSG);
+        $ActivityMSG = "Someone attempted to register an account using your email.  Your account will be locked out when 5 attempts are made.";
+        InsertActivity($Email,$ActivityMSG);
         echo "account exists";
         exit;
     }
@@ -197,7 +197,7 @@ function Register($Action){
     $AdminCode = 0;
     $ActivationCode = hash('sha256', uniqid(rand(), true));
     global $PDOconn;
-    $Query = 'INSERT INTO djkabau1_petsignin.Users (Email, Password, Active, Disabled, Attempts, AdminCode, ActivationCode) VALUES (?,?,?,?,?,?,?)';
+    $Query = 'INSERT INTO djkabau1_petsignin.Account (Email, Password, Active, Disabled, Attempts, AdminCode, ActivationCode) VALUES (?,?,?,?,?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
@@ -213,7 +213,7 @@ function Register($Action){
 
 function GrabUserData($Email){
     global $PDOconn;
-    $Query = 'SELECT * FROM djkabau1_petsignin.Users where Email = (?)';
+    $Query = 'SELECT * FROM djkabau1_petsignin.Account where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
@@ -234,7 +234,7 @@ function SignIn($Action){
     $Password = stripslashes($_POST["Password"]);
     $HashedPassword = HashIt($Password);
 
-    $Query = 'SELECT count(*) as Count FROM Users where Email = (?) and Password = (?)';
+    $Query = 'SELECT count(*) as Count FROM Account where Email = (?) and Password = (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
@@ -271,8 +271,8 @@ function CheckActivationCode($ActivationCode){
     $Action1 = "CheckActivationNumber";
     $Return = 1;
     global $PDOconn;
-    //$Query = 'SELECT count(*) as Count FROM djkabau1_petsignin.Users WHERE Activation NOT IN (?)';
-    $Query = 'SELECT Email FROM djkabau1_petsignin.Users WHERE Activation NOT IN (?)';
+    //$Query = 'SELECT count(*) as Count FROM djkabau1_petsignin.Account WHERE Activation NOT IN (?)';
+    $Query = 'SELECT Email FROM djkabau1_petsignin.Account WHERE Activation NOT IN (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $ActivationCode, PDO::PARAM_STR, 64);
     Execute($Action1,$Statement);
@@ -299,7 +299,7 @@ function StartSession($Action){
     echo " Platform = $Time";
     echo " Session ID is " . $_SESSION["Session_ID"] . "<br>";
 
-    $Query = 'SELECT count(*) as Count FROM Users where Email = (?) and Password = (?)';
+    $Query = 'SELECT count(*) as Count FROM Account where Email = (?) and Password = (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
