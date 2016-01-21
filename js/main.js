@@ -41,7 +41,43 @@ function Start(){
 
     if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == 'dashboard.php') {
         Activity();
+        FetchPet();
     }
+}
+
+function SignInPet(){
+    alert('pet signed in.');
+}
+
+function FetchPet(){
+    //grab session etc.
+    try{
+        var Action = "FetchPet";
+        var AjaxData = {
+            Action: Action
+        };
+        var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+        if (Response_Data !== "") {
+            DisplayPet(Response_Data);
+            console.log(Response_Data[0].Name);
+        }
+    }catch(e){
+        alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        var ErrorMSG = "FetchPet: "+e;
+        var Action = "InsertJSError";
+        var AjaxData = {
+            ErrorMSG: ErrorMSG,
+            Action: Action
+        };
+    }
+}
+
+function DisplayPet(Response_Data){
+    var DisplayPet = "";
+    for (var i = 0; i < Response_Data.length; i++) {
+        DisplayPet += '<button type="button" class="btn btn-primary btn-sm" value="' + Response_Data[i].Name + '" onclick="SignInPet()">' + Response_Data[i].Name + '</button><br>';
+    }
+    document.getElementById("DisplayPet").innerHTML = DisplayPet;
 }
 
 function Activity(){
@@ -52,7 +88,6 @@ function Activity(){
             var AjaxData = {
                 Action: Action
             };
-            //OutgoingAjax(AjaxData);
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
             DisplayActivity(Response_Data);
         }catch(e){
@@ -65,7 +100,6 @@ function Activity(){
             };
         }
     };
-    //document.getElementById("Update_District_Name").value = District_Data[0].DISTRICT_NAME;
 }
 
 function DisplayActivity(Response_Data){
@@ -85,7 +119,6 @@ function Error(){
             var AjaxData = {
                 Action: Action
             };
-            //OutgoingAjax(AjaxData);
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
             DisplayAccountAudit(Response_Data);
         }catch(e){
@@ -98,7 +131,6 @@ function Error(){
             };
         }
     };
-    //document.getElementById("Update_District_Name").value = District_Data[0].DISTRICT_NAME;
 }
 
 function DisplayError(Response_Data){
@@ -134,8 +166,14 @@ function Register(){
                 Password: Password,
                 Action: Action
             };
-            OutgoingAjax(AjaxData);
-            console.log('Account was registered, need to activate activate account.');
+            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            if(Response_Data = "0"){
+                alert("This account has been locked.  Contact the administrator.");
+            }else if (Response_Data = "1"){
+                alert("This account will be locked soon.  Reset your password or contact the administrator.");
+            }else{
+                alert("Please check your email to activate your account");
+            }
         }catch(e){
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
             var ErrorMSG = "Register: "+e;

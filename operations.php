@@ -36,13 +36,27 @@ function DBOperation($Action){
             break;
         case "FetchActivity": FetchActivity($Action);
             break;
+        case "FetchPet": FetchPet($Action);
+            break;
     }
 }
 
+function FetchPet($Action){
+    $Email = "blenjar@gmail.com"; //GRAB EMAIL FROM SESSION function
+
+    global $PDOconn;
+    $Query = 'SELECT * FROM djkabau1_petsignin.Pet where Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $Response = $Statement->fetchAll();
+    echo json_encode($Response);
+    $PDOconn = null;
+}
+
 function FetchActivity($Action){
-    if (!isset($Email)) {
-        $Email = "blenjar@gmail.com"; //GRAB EMAIL FROM SESSION function
-    }
+    $Email = "blenjar@gmail.com"; //GRAB EMAIL FROM SESSION function
+
     global $PDOconn;
     $Query = 'SELECT ActivityMSG, LogDate FROM djkabau1_petsignin.Activity where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
@@ -181,13 +195,13 @@ function Register($Action){
         if($UserData['Attempts'] > 4){
             $ActivityMSG = "Someone attempted to register an account using your email 5 times so your account was locked out.";
             InsertActivity($Email,$ActivityMSG);
-            echo "account locked";
+            echo json_encode("0");
             exit;
         }
         AddAttempt($UserData,$Email);
         $ActivityMSG = "Someone attempted to register an account using your email.  Your account will be locked out when 5 attempts are made.";
         InsertActivity($Email,$ActivityMSG);
-        echo "account exists";
+        echo json_encode("1");
         exit;
     }
     $HashedPassword = HashIt($Password);
@@ -208,6 +222,7 @@ function Register($Action){
     $Statement->bindParam(7, $ActivationCode, PDO::PARAM_INT, 1);
     $Statement->execute();
     //mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/activate.php?confirm=$Activation");
+    echo json_encode("2");
     $PDOconn = null;
 }
 

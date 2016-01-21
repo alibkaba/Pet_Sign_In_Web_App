@@ -14,14 +14,6 @@
         <title>Pet Sign In</title>
     </head>
 <body>
-<?php
-include('db.php');
-include('operations.php');
-//if session exists
-//  CheckSession function and etc
-// else redirect
-
-?>
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -42,6 +34,14 @@ include('operations.php');
         </div>
     </div>
 </nav>
+<?php
+include('db.php');
+include('operations.php');
+//if session exists
+//  CheckSession function and etc
+// else redirect
+?>
+<div id="DisplayPet"></div>
 <div id="Alert">Alert/important messages will be displayed here. they can be closed. e.g. new update, new policy, etc.  I may need to create a disabled field (disabled functions). disabled if you don't read policy. active is only touched one. maybe change from active to verified.</div>
 Need to find a way to sign in pet in 1 or 2 steps.
 
