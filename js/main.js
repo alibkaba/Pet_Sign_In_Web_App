@@ -34,12 +34,13 @@ function OutgoingAjax(AjaxData) {
 //Single use
 function Start(){
     UnitTest();
-    if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == '' || window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == 'index.php') {
+    CheckSession();
+    if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == '' || window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == 'index.html') {
         Register();
         SignIn();
     }
 
-    if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == 'dashboard.php') {
+    if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == 'dashboard.html') {
         Activity();
         FetchPet();
     }
@@ -49,8 +50,35 @@ function SignInPet(){
     alert('pet signed in.');
 }
 
+function CheckSession(){
+    if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == 'dashboard.html'){
+        var Page = "dashboard";
+    }else{
+        var Page = "index";
+    }
+    try{
+        var Action = "CheckSession";
+        var AjaxData = {
+            Page: Page,
+            Action: Action
+        };
+        var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+        if (Response_Data == "0") {
+            alert("You need to login to access this page.  You are being redirected to the front page.");
+            //window.location = "/index.html";
+        }
+    }catch(e){
+        alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        var ErrorMSG = "CheckSession: "+e;
+        var Action = "InsertJSError";
+        var AjaxData = {
+            ErrorMSG: ErrorMSG,
+            Action: Action
+        };
+    }
+}
+
 function FetchPet(){
-    //grab session etc.
     try{
         var Action = "FetchPet";
         var AjaxData = {
@@ -59,7 +87,6 @@ function FetchPet(){
         var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
         if (Response_Data !== "") {
             DisplayPet(Response_Data);
-            console.log(Response_Data[0].Name);
         }
     }catch(e){
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
@@ -120,7 +147,7 @@ function Error(){
                 Action: Action
             };
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
-            DisplayAccountAudit(Response_Data);
+            DisplayError(Response_Data);
         }catch(e){
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
             var ErrorMSG = "FetchError: "+e;
@@ -167,9 +194,9 @@ function Register(){
                 Action: Action
             };
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
-            if(Response_Data = "0"){
+            if(Response_Data == "0"){
                 alert("This account has been locked.  Contact the administrator.");
-            }else if (Response_Data = "1"){
+            }else if (Response_Data == "1"){
                 alert("This account will be locked soon.  Reset your password or contact the administrator.");
             }else{
                 alert("Please check your email to activate your account");
@@ -221,7 +248,7 @@ function Activate(ActivationCode){
     try{
         var Action = "Activate";
         var AjaxData = {
-            Activation: Activation,
+            Activation: ActivationCode,
             Action: Action
         };
         OutgoingAjax(AjaxData);

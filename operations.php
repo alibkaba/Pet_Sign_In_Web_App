@@ -24,8 +24,6 @@ function DBOperation($Action){
             break;
         case "Register": Register($Action);
             break;
-        case "Activate": Activate($Action);
-            break;
         case "SignIn": SignIn($Action);
             break;
         case "StartSession": StartSession($Action);
@@ -37,6 +35,8 @@ function DBOperation($Action){
         case "FetchActivity": FetchActivity($Action);
             break;
         case "FetchPet": FetchPet($Action);
+            break;
+        case "CheckSession": CheckSession();
             break;
     }
 }
@@ -205,23 +205,23 @@ function Register($Action){
         exit;
     }
     $HashedPassword = HashIt($Password);
-    $Active = 0;
+    $ValidateEmail = 0;
     $Disabled = 0;
     $Attempts = 0;
     $AdminCode = 0;
     $ActivationCode = hash('sha256', uniqid(rand(), true));
     global $PDOconn;
-    $Query = 'INSERT INTO djkabau1_petsignin.Account (Email, Password, Active, Disabled, Attempts, AdminCode, ActivationCode) VALUES (?,?,?,?,?,?,?)';
+    $Query = 'INSERT INTO djkabau1_petsignin.Account (Email, Password, ValidateEmail, Disabled, Attempts, AdminCode, ActivationCode) VALUES (?,?,?,?,?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
-    $Statement->bindParam(3, $Active, PDO::PARAM_INT, 1);
+    $Statement->bindParam(3, $ValidateEmail, PDO::PARAM_INT, 1);
     $Statement->bindParam(4, $Disabled, PDO::PARAM_STR, 64);
     $Statement->bindParam(5, $Attempts, PDO::PARAM_INT, 1);
     $Statement->bindParam(6, $AdminCode, PDO::PARAM_INT, 1);
     $Statement->bindParam(7, $ActivationCode, PDO::PARAM_INT, 1);
     $Statement->execute();
-    //mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/activate.php?confirm=$Activation");
+    mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/activate.php?confirm=$ActivationCode");
     echo json_encode("2");
     $PDOconn = null;
 }
@@ -258,46 +258,23 @@ function SignIn($Action){
     $PDOconn = null;
 }
 
-function DBTime(){
-    global $PDOconn;
+function CheckSession(){
+    echo "111";
+    $Page = stripslashes($_POST["Page"]);
+    if (session_status() == PHP_SESSION_ACTIVE && $Page == "dashboard"){
+        echo json_encode("0");
+        //redirect to index
+    }elseif (session_status() == PHP_SESSION_ACTIVE && $Page == "dashboard"){
+        echo json_encode("0");
+        //redirect to index
+    }elseif (session_status() == PHP_SESSION_ACTIVE && $Page == "dashboard"){
 
-    $Query = 'SELECT NOW()';
-    $Statement = $PDOconn->prepare($Query);
-    Execute($Statement);
-    //Fetch($Statement);
-    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
-    return $Response;
-    $PDOconn = null;
-}
-
-function Activate($Action){
-    $ActivationCode = stripslashes($_POST["Activation"]);
-    CheckActivationCode($ActivationCode);
-    global $PDOconn;
-    $Query = 'UPDATE djkabau1_petsignin.UnitTest set Active = (?) where ActivationCode = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Active, PDO::PARAM_STR, 64);
-    $Statement->bindParam(2, $ActivationCode, PDO::PARAM_STR, 64);
-    Execute($Action,$Statement);
-    $PDOconn = null;
-}
-
-function CheckActivationCode($ActivationCode){
-    $Action1 = "CheckActivationNumber";
-    $Return = 1;
-    global $PDOconn;
-    //$Query = 'SELECT count(*) as Count FROM djkabau1_petsignin.Account WHERE Activation NOT IN (?)';
-    $Query = 'SELECT Email FROM djkabau1_petsignin.Account WHERE Activation NOT IN (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $ActivationCode, PDO::PARAM_STR, 64);
-    Execute($Action1,$Statement);
-    Fetch($Return,$Action1,$Statement);
-    $PDOconn = null;
+    }
 }
 
 function StartSession($Action){
-    global $PDOconn;
-    session_set_cookie_params(1800,"/");
+    ini_set('session.cookie_lifetime', 1800);
+    ini_set('session.gc_maxlifetime', 1800);
     session_start();
     $SessionIP=$_SERVER['REMOTE_ADDR'];
     $Time = $_SERVER["REQUEST_TIME"];
@@ -314,6 +291,7 @@ function StartSession($Action){
     echo " Platform = $Time";
     echo " Session ID is " . $_SESSION["Session_ID"] . "<br>";
 
+    global $PDOconn;
     $Query = 'SELECT count(*) as Count FROM Account where Email = (?) and Password = (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
@@ -375,15 +353,5 @@ function StartSession($Action){
             'name'      => $bname,
             'platform'  => $platform
         );
-    }
-}
-
-function CheckSession(){
-    $Time = $_SERVER["REQUEST_TIME"];
-    $Timeout_Duration = 1800;
-    if (isset($LastDate) && ($Time - $LastDate) > $Timeout_Duration) {
-        session_unset();
-        session_destroy();
-        session_start();
     }
 }
