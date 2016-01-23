@@ -259,8 +259,15 @@ function SignIn($Action){
 }
 
 function CheckSession(){
-    echo "111";
     $Page = stripslashes($_POST["Page"]);
+    ini_set('session.cookie_lifetime', 1800); //client side
+    ini_set('session.gc_maxlifetime', 1800); //server size
+    session_start();
+    $SessionID = $_SESSION["Session_ID"];
+    $_SESSION["Session_ID"] = "test";
+    if($SessionID == null){
+        echo "test";
+    }
     if (session_status() == PHP_SESSION_ACTIVE && $Page == "dashboard"){
         echo json_encode("0");
         //redirect to index
@@ -273,11 +280,10 @@ function CheckSession(){
 }
 
 function StartSession($Action){
-    ini_set('session.cookie_lifetime', 1800);
-    ini_set('session.gc_maxlifetime', 1800);
+    ini_set('session.cookie_lifetime', 1800); //client side
+    ini_set('session.gc_maxlifetime', 1800); //server size
     session_start();
     $SessionIP=$_SERVER['REMOTE_ADDR'];
-    $Time = $_SERVER["REQUEST_TIME"];
     $ua=GetBrowser();
     $SessionBrowser = $ua['name'];
     $SessionPlatform = $ua['platform'];
@@ -286,18 +292,21 @@ function StartSession($Action){
     $_SESSION["Session_ID"] = $SessionID;
     echo "Session ID = $SessionID";
     //echo " Email Address = $Email";
-    echo " IP address = $SessionIP";
-    echo " Browser = $SessionBrowser";
-    echo " Platform = $Time";
-    echo " Session ID is " . $_SESSION["Session_ID"] . "<br>";
+    echo "IP address = $SessionIP";
+    echo "Browser = $SessionBrowser";
+    echo "Platform = $Platform";
+    echo "Session ID is " . $_SESSION["Session_ID"] . "<br>";
 
+    $Email = "blenjar@gmail.com";
     global $PDOconn;
-    $Query = 'SELECT count(*) as Count FROM Account where Email = (?) and Password = (?)';
+    $Query = 'INSERT INTO djkabau1_petsignin.Session (SessionID, Email, IPAddress, Browser, Platform) VALUES (?,?,?,?,?)';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
+    $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
+    $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
+    $Statement->bindParam(3, $IPAddress, PDO::PARAM_STR, 45);
+    $Statement->bindParam(4, $Browser, PDO::PARAM_STR, 45);
+    $Statement->bindParam(5, $Platform, PDO::PARAM_STR, 45);
     $Statement->execute();
-    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
     $PDOconn = null;
 
     function GetBrowser()
