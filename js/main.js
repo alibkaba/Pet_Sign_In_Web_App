@@ -8,8 +8,8 @@ $(document).ready(function() {
         success: function(AjaxData) {
             console.log('Ajax passed');
         },
-        error: function() {
-            console.log('Ajax failed');
+        error: function(xhr, status, error) {
+            console.log("Error: " + xhr.status);
         }
     });
     Start();
@@ -28,6 +28,16 @@ function OutgoingAjax(AjaxData) {
         data: AjaxData
     }).responseText;
     return IncomingAjaxData;
+}
+
+function InsertJSError(FailedAction, ErrorMSG){
+    var Action = "InsertJSError";
+    var AjaxData = {
+        FailedAction: FailedAction,
+        ErrorMSG: ErrorMSG,
+        Action: Action
+    };
+    OutgoingAjax(AjaxData);
 }
 
 //Single use
@@ -55,38 +65,36 @@ function CheckSession(){
     }else{
         var Page = "index";
     }
-
+    var Action = "CheckSession";
+    var IsActivity = "0";
     try{
-        var Action = "CheckSession";
         var AjaxData = {
             Page: Page,
+            IsActivity: IsActivity,
             Action: Action
         };
         var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+        console.log(Response_Data);
         if (Response_Data == "0") {
             alert("You need to have an account to access this page.  Please sign in again.");
             window.location = "/petsignin/";
         }else if(Response_Data == "1"){
-            alert("There seem to be to some discrepancies with your session.  Please sign in again.");
+            alert("Your session either expired or you sign in somewhere else.  Please sign in again.");
             window.location = "/petsignin/";
         }else if(Response_Data == "2"){
             window.location = "/petsignin/dashboard.html";
         }else{}
     }catch(e){
+        var ErrorMSG = e;
+        var FailedAction = Action;
+        InsertJSError(FailedAction,ErrorMSG);
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        console.log(ErrorMSG = "CheckSession: "+e);
-        var ErrorMSG = "CheckSession: "+e;
-        var Action = "InsertJSError";
-        var AjaxData = {
-            ErrorMSG: ErrorMSG,
-            Action: Action
-        };
     }
 }
 
 function FetchPet(){
+    var Action = "FetchPet";
     try{
-        var Action = "FetchPet";
         var AjaxData = {
             Action: Action
         };
@@ -95,13 +103,10 @@ function FetchPet(){
             DisplayPet(Response_Data);
         }
     }catch(e){
+        var ErrorMSG = e;
+        var FailedAction = Action;
+        InsertJSError(FailedAction,ErrorMSG);
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        var ErrorMSG = "FetchPet: "+e;
-        var Action = "InsertJSError";
-        var AjaxData = {
-            ErrorMSG: ErrorMSG,
-            Action: Action
-        };
     }
 }
 
@@ -116,21 +121,18 @@ function DisplayPet(Response_Data){
 function Activity(){
     var ActivityButton = document.getElementById("ActivityButton");
     ActivityButton.onclick = function () {
+        var Action = "FetchActivity";
         try{
-            var Action = "FetchActivity";
             var AjaxData = {
                 Action: Action
             };
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
             DisplayActivity(Response_Data);
         }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            InsertJSError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-            var ErrorMSG = "FetchActivity: "+e;
-            var Action = "InsertJSError";
-            var AjaxData = {
-                ErrorMSG: ErrorMSG,
-                Action: Action
-            };
         }
     };
 }
@@ -147,21 +149,18 @@ function DisplayActivity(Response_Data){
 function Error(){
     var ErrorButton = document.getElementById("ErrorButton");
     ErrorButton.onclick = function () {
+        var Action = "FetchError";
         try{
-            var Action = "FetchError";
             var AjaxData = {
                 Action: Action
             };
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
             DisplayError(Response_Data);
         }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            InsertJSError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-            var ErrorMSG = "FetchError: "+e;
-            var Action = "InsertJSError";
-            var AjaxData = {
-                ErrorMSG: ErrorMSG,
-                Action: Action
-            };
         }
     };
 }
@@ -192,8 +191,8 @@ function Register(){
         IsFieldFilled(Password);
         ValidateEmailDomain(Email);
         ValidatePassword(Email,Password);
+        var Action = "Register";
         try{
-            var Action = "Register";
             var AjaxData = {
                 Email: Email,
                 Password: Password,
@@ -211,14 +210,10 @@ function Register(){
                 alert("Please check your email to activate your account");
             }
         }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            InsertJSError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-            var ErrorMSG = "Register: "+e;
-            var Action = "InsertJSError";
-            var AjaxData = {
-                Email: Email,
-                ErrorMSG: ErrorMSG,
-                Action: Action
-            };
         }
     };
 }
@@ -226,13 +221,13 @@ function Register(){
 function SignIn(){
     var SignInButton = document.getElementById("SignIn");
     SignInButton.onclick = function () {
+        var Email = document.getElementById("Email1").value;
+        var Password = document.getElementById("Password1").value;
+        IsFieldFilled(Email);
+        IsFieldFilled(Password);
+        ValidateEmailDomain(Email);
+        var Action = "SignIn";
         try{
-            var Email = document.getElementById("Email1").value;
-            var Password = document.getElementById("Password1").value;
-            IsFieldFilled(Email);
-            IsFieldFilled(Password);
-            ValidateEmailDomain(Email);
-            var Action = "SignIn";
             var AjaxData = {
                 Email: Email,
                 Password: Password,
@@ -249,35 +244,27 @@ function SignIn(){
                 alert("Please check your email to activate your account");
             }
         }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            InsertJSError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-            var ErrorMSG = "SignIn: "+e;
-            var Action = "InsertJSError";
-            var AjaxData = {
-                Email: Email,
-                ErrorMSG: ErrorMSG,
-                Action: Action
-            };
         }
     };
 }
 
 function Activate(ActivationCode){
+    var Action = "Activate";
     try{
-        var Action = "Activate";
         var AjaxData = {
             Activation: ActivationCode,
             Action: Action
         };
         OutgoingAjax(AjaxData);
     }catch(e){
+        var ErrorMSG = e;
+        var FailedAction = Action;
+        InsertJSError(FailedAction,ErrorMSG);
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        var ErrorMSG = "Activate: "+e;
-        var Action = "InsertJSError";
-        var AjaxData = {
-            Email: Email,
-            ErrorMSG: ErrorMSG,
-            Action: Action
-        };
     }
 }
 

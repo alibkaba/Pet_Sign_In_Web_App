@@ -22,27 +22,25 @@ function DBOperation($Action){
     switch($Action) {
         case "UnitTest": UnitTest($Action);
             break;
-        case "Register": Register($Action);
+        case "Register": Register();
             break;
-        case "SignIn": SignIn($Action);
+        case "SignIn": SignIn();
             break;
         case "StartSession": StartSession($Action);
             break;
-        case "FetchError": FetchError($Action);
+        case "FetchError": FetchError();
             break;
-        case "InsertJSError": InsertJSError($Action);
+        case "InsertJSError": InsertJSError();
             break;
-        case "FetchActivity": FetchActivity($Action);
+        case "FetchActivity": FetchActivity();
             break;
-        case "FetchPet": FetchPet($Action);
+        case "FetchPet": FetchPet();
             break;
         case "CheckSession": CheckSession();
             break;
         case "ResetActivationCode": ResetActivationCode();
             break;
         case "ResetPassword": ResetPassword();
-            break;
-        case "ChangePassword": ChangePassword();
             break;
     }
 }
@@ -73,7 +71,7 @@ function ResetPassword(){
     $PDOconn = null;
 }
 
-function FetchPet($Action){
+function FetchPet(){
     $Email = "blenjar@gmail.com";
     global $PDOconn;
     $Query = 'SELECT * FROM djkabau1_petsignin.Pet where Email = (?)';
@@ -85,10 +83,26 @@ function FetchPet($Action){
     $PDOconn = null;
 }
 
-function FetchActivity($Action){
+function FetchActivity(){
+    //$Page = "dashboard";
+    CheckSession();
+    //GrabSessionData($SessionID);
+
     $Email = "blenjar@gmail.com";
     global $PDOconn;
     $Query = 'SELECT ActivityMSG, LogDate FROM djkabau1_petsignin.Activity where Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $Response = $Statement->fetchAll();
+    echo json_encode($Response);
+    $PDOconn = null;
+}
+
+function FetchError(){
+    $Email = "blenjar@gmail.com";
+    global $PDOconn;
+    $Query = 'SELECT Action, ErrorMSG, LogDate FROM djkabau1_petsignin.Error where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
@@ -104,6 +118,7 @@ function FetchActivity($Action){
 
 
 //Multiple use
+/*
 function Execute($Statement,$Action,$Email){
     try {
         if(!$Statement->execute()) {
@@ -128,7 +143,7 @@ function Fetch($Statement,$Action,$Email){
         Error($Action,$Email,$ErrorMSG);
     }
 }
-
+*/
 function Error($Action,$ErrorMSG,$Email){
     if (!isset($Email)) {
         $Email = NULL;
@@ -143,12 +158,13 @@ function Error($Action,$ErrorMSG,$Email){
     $PDOconn = null;
 }
 
-function InsertJSError($Action){
-    $ErrorMSG = $_POST["ErrorMSG"];
+function InsertJSError(){
+    $FailedAction = stripslashes($_POST["FailedAction"]);
+    $ErrorMSG = stripslashes($_POST["ErrorMSG"]);
     global $PDOconn;
     $Query = 'INSERT INTO djkabau1_petsignin.Error (Action, ErrorMSG) VALUES (?,?)';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Action, PDO::PARAM_STR, 45);
+    $Statement->bindParam(1, $FailedAction, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $ErrorMSG, PDO::PARAM_STR, 100);
     $Statement->execute();
     $PDOconn = null;
@@ -224,9 +240,8 @@ function ValidatePassword($Password,$HashedPassword){
     }
 }
 
-function SignIn($Action){
+function SignIn(){
     $Email = stripslashes($_POST["Email"]);
-    $UserData['ValidateEmail'] = 1;
     $Password = stripslashes($_POST["Password"]);
     $UserData = GrabUserData($Email);
     $HashedPassword = $UserData['Password'];
@@ -254,7 +269,6 @@ function SignIn($Action){
             InsertActivity($Email,$ActivityMSG);
             echo json_encode("0");
             $PDOconn = null;
-            exit;
         }
     }else{
         if($UserData['Attempts'] < 5){
@@ -263,13 +277,11 @@ function SignIn($Action){
             InsertActivity($Email,$ActivityMSG);
             echo json_encode("1");
             $PDOconn = null;
-            exit;
         }else{
             $ActivityMSG = "Your account is locked out because someone attempted to sign in with your email 5 times in a row.";
             InsertActivity($Email,$ActivityMSG);
             echo json_encode("0");
             $PDOconn = null;
-            exit;
         }
     }
 }
@@ -282,7 +294,7 @@ function ResetAttempts($Email){
     $Statement->execute();
 }
 
-function Register($Action){
+function Register(){
     $Email = stripslashes($_POST["Email"]);
     $Password = stripslashes($_POST["Password"]);
     $UserData = GrabUserData($Email);
@@ -344,36 +356,82 @@ function SignOut(){
     session_destroy();
 }
 
+function GrabSessionData($SessionID){
+    global $PDOconn;
+    $Query = 'SELECT * FROM djkabau1_petsignin.Session WHERE SessionID = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
+    $Statement->execute();
+    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
+    return $Response;
+}
+
 function CheckSession(){
     $Page = stripslashes($_POST["Page"]);
+    $IsActivity = stripslashes($_POST["IsActivity"]);
     ini_set('session.cookie_lifetime', 1800);
     ini_set('session.gc_maxlifetime', 1800);
     session_start();
     if(isset($_SESSION['Session_ID'])){
         $SessionID = $_SESSION["Session_ID"];
-        $SessionData = GrabSessionData($SessionID);
+        $SessionData = GrabDBSessionData($SessionID);
+        $Email = $SessionData['Email'];
         $BrowserData = GetBrowserData();
+        DeleteSession($Email);
         if($SessionData['IP'] !== $BrowserData['IP'] && $SessionData['Browser'] !== $BrowserData['Browser'] && $SessionData['Platform'] !== $BrowserData['Platform']){
-            echo json_encode("1");
+            if($Page == "dashboard"){
+                echo json_encode("1");
+                //expired or logged somewhere else
+                $PDOconn = null;
+            }else{
+                echo json_encode("3");
+                //you are not logged and in index, do nothing
+                $PDOconn = null;
+            }
         }else{
             if($Page == "index"){
                 echo json_encode("2");
+                //logged but kicked to dashboard
+                $PDOconn = null;
             }else{
-                echo json_encode("3");
+                if($IsActivity == 0){
+                    echo json_encode("3");
+                    //you are logged and in dashboard, do nothing
+                    $PDOconn = null;
+                }else{
+                    return $SessionID;
+                }
             }
         }
     }else{
         if($Page == "dashboard"){
             echo json_encode("0");
+            //do nothing
         }else{
             echo json_encode("4");
         }
     }
 }
 
-function GrabSessionData($SessionID){
+function DeleteSession($Email){
     global $PDOconn;
-    $Query = 'SELECT * FROM djkabau1_petsignin.Session SessionID Email = (?)';
+    $Query = 'SELECT * FROM djkabau1_petsignin.Session WHERE Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $Response = $Statement->rowCount();
+
+    if($Response > 1){
+        $Query = 'DELETE FROM djkabau1_petsignin.Session WHERE Email = (?) AND LogDate ORDER BY LogDate ASC LIMIT 1';
+        $Statement = $PDOconn->prepare($Query);
+        $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+        $Statement->execute();
+    }
+}
+
+function GrabDBSessionData($SessionID){
+    global $PDOconn;
+    $Query = 'SELECT * FROM djkabau1_petsignin.Session WHERE SessionID = (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
     $Statement->execute();
@@ -423,32 +481,26 @@ function GetBrowserData(){
     if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent))
     {
         $BrowserName = 'Internet Explorer';
-        $ub = "MSIE";
     }
     elseif(preg_match('/Firefox/i',$u_agent))
     {
         $BrowserName = 'Mozilla Firefox';
-        $ub = "Firefox";
     }
     elseif(preg_match('/Chrome/i',$u_agent))
     {
         $BrowserName = 'Google Chrome';
-        $ub = "Chrome";
     }
     elseif(preg_match('/Safari/i',$u_agent))
     {
         $BrowserName = 'Apple Safari';
-        $ub = "Safari";
     }
     elseif(preg_match('/Opera/i',$u_agent))
     {
         $BrowserName = 'Opera';
-        $ub = "Opera";
     }
     elseif(preg_match('/Netscape/i',$u_agent))
     {
         $BrowserName = 'Netscape';
-        $ub = "Netscape";
     }
 
     return array(
