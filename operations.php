@@ -38,12 +38,43 @@ function DBOperation($Action){
             break;
         case "CheckSession": CheckSession();
             break;
+        case "ResetActivationCode": ResetActivationCode();
+            break;
+        case "ResetPassword": ResetPassword();
+            break;
+        case "ChangePassword": ChangePassword();
+            break;
     }
 }
 
-function FetchPet($Action){
-    $Email = "blenjar@gmail.com"; //GRAB EMAIL FROM SESSION function
+function ResetActivationCode(){
+    $Email = stripslashes($_POST["Email"]);
+    $ActivationCode = hash('sha256', uniqid(rand(), true));
+    global $PDOconn;
+    $Query = 'UPDATE djkabau1_petsignin.Account set ActivationCode = (?) where Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $ActivationCode, PDO::PARAM_INT, 64);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/petsignin/activate.php?confirm=$ActivationCode");
+    echo json_encode("0");
+    $PDOconn = null;
+}
 
+function ResetPassword(){
+    $Email = stripslashes($_POST["Email"]);
+    $ActivationCode = hash('sha256', uniqid(rand(), true));
+    global $PDOconn;
+    $Query = 'UPDATE djkabau1_petsignin.Account set ActivationCode = (?) where Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $ActivationCode, PDO::PARAM_INT, 64);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/petsignin/activate.php?confirm=$ActivationCode");
+    echo json_encode("0");
+    $PDOconn = null;
+}
+
+function FetchPet($Action){
+    $Email = "blenjar@gmail.com";
     global $PDOconn;
     $Query = 'SELECT * FROM djkabau1_petsignin.Pet where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
@@ -55,8 +86,7 @@ function FetchPet($Action){
 }
 
 function FetchActivity($Action){
-    $Email = "blenjar@gmail.com"; //GRAB EMAIL FROM SESSION function
-
+    $Email = "blenjar@gmail.com";
     global $PDOconn;
     $Query = 'SELECT ActivityMSG, LogDate FROM djkabau1_petsignin.Activity where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
@@ -131,7 +161,6 @@ function InsertActivity($Email,$ActivityMSG){
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $ActivityMSG, PDO::PARAM_STR, 45);
     $Statement->execute();
-    $PDOconn = null;
 }
 
 function HashIt($Password){
@@ -187,22 +216,89 @@ function AddAttempt($UserData,$Email){
     $Statement->execute();
 }
 
+function ValidatePassword($Password,$HashedPassword){
+    if (password_verify($Password, $HashedPassword)) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+function SignIn($Action){
+    $Email = stripslashes($_POST["Email"]);
+    $UserData['ValidateEmail'] = 1;
+    $Password = stripslashes($_POST["Password"]);
+    $UserData = GrabUserData($Email);
+    $HashedPassword = $UserData['Password'];
+    $PasswordResponse = ValidatePassword($Password,$HashedPassword);
+    if($Email == $UserData['Email'] && $PasswordResponse == 1){
+        if($UserData['Attempts'] < 5){
+            if($UserData['ValidateEmail'] == 0) {
+                AddAttempt($UserData,$Email);
+                $ActivityMSG = "You attempted to sign in but your account wasn't activated.";
+                InsertActivity($Email,$ActivityMSG);
+                echo json_encode("3");
+                $PDOconn = null;
+                exit;
+            }else{
+                ResetAttempts($Email);
+                $ActivityMSG = "You signed in.";
+                InsertActivity($Email,$ActivityMSG);
+                StartSession($Email);
+                echo json_encode("2");
+                $PDOconn = null;
+                exit;
+            }
+        }else{
+            $ActivityMSG = "Your account is locked out because someone attempted to sign in with your email 5 times in a row.";
+            InsertActivity($Email,$ActivityMSG);
+            echo json_encode("0");
+            $PDOconn = null;
+            exit;
+        }
+    }else{
+        if($UserData['Attempts'] < 5){
+            AddAttempt($UserData,$Email);
+            $ActivityMSG = "Your account will be locked out if you fail to sign in 5 times in a row.";
+            InsertActivity($Email,$ActivityMSG);
+            echo json_encode("1");
+            $PDOconn = null;
+            exit;
+        }else{
+            $ActivityMSG = "Your account is locked out because someone attempted to sign in with your email 5 times in a row.";
+            InsertActivity($Email,$ActivityMSG);
+            echo json_encode("0");
+            $PDOconn = null;
+            exit;
+        }
+    }
+}
+
+function ResetAttempts($Email){
+    global $PDOconn;
+    $Query = 'UPDATE djkabau1_petsignin.Account set Attempts = ("0") where Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+}
+
 function Register($Action){
     $Email = stripslashes($_POST["Email"]);
     $Password = stripslashes($_POST["Password"]);
     $UserData = GrabUserData($Email);
     if($Email == $UserData['Email']){
-        if($UserData['Attempts'] > 4){
-            $ActivityMSG = "Someone attempted to register an account using your email 5 times so your account was locked out.";
+        if($UserData['Attempts'] < 5){
+            AddAttempt($UserData,$Email);
+            $ActivityMSG = "Your account will be locked out when someone attempts to register with you account 5 times in a row.";
+            InsertActivity($Email,$ActivityMSG);
+            echo json_encode("1");
+            exit;
+        }else{
+            $ActivityMSG = "Your account is locked out because someone attempted to register an account using your email 5 times in a row.";
             InsertActivity($Email,$ActivityMSG);
             echo json_encode("0");
             exit;
         }
-        AddAttempt($UserData,$Email);
-        $ActivityMSG = "Someone attempted to register an account using your email.  Your account will be locked out when 5 attempts are made.";
-        InsertActivity($Email,$ActivityMSG);
-        echo json_encode("1");
-        exit;
     }
     $HashedPassword = HashIt($Password);
     $ValidateEmail = 0;
@@ -221,7 +317,7 @@ function Register($Action){
     $Statement->bindParam(6, $AdminCode, PDO::PARAM_INT, 1);
     $Statement->bindParam(7, $ActivationCode, PDO::PARAM_INT, 1);
     $Statement->execute();
-    mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/activate.php?confirm=$ActivationCode");
+    mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/petsignin/activate.php?confirm=$ActivationCode");
     echo json_encode("2");
     $PDOconn = null;
 }
@@ -243,124 +339,121 @@ function MailOut($Email, $Subject, $EmailMSG){ //fix this later, from and reply 
     mail($Email,$Subject,$EmailMSG,$Headers);
 }
 
-function SignIn($Action){
-    global $PDOconn;
-    $Email = stripslashes($_POST["Email"]);
-    $Password = stripslashes($_POST["Password"]);
-    $HashedPassword = HashIt($Password);
-
-    $Query = 'SELECT count(*) as Count FROM Account where Email = (?) and Password = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
-    Execute($Action,$Statement);
-    Fetch($Action,$Statement);
-    $PDOconn = null;
+function SignOut(){
+    session_unset();
+    session_destroy();
 }
 
 function CheckSession(){
     $Page = stripslashes($_POST["Page"]);
-    ini_set('session.cookie_lifetime', 1800); //client side
-    ini_set('session.gc_maxlifetime', 1800); //server size
+    ini_set('session.cookie_lifetime', 1800);
+    ini_set('session.gc_maxlifetime', 1800);
     session_start();
-    $SessionID = $_SESSION["Session_ID"];
-    $_SESSION["Session_ID"] = "test";
-    if($SessionID == null){
-        echo "test";
-    }
-    if (session_status() == PHP_SESSION_ACTIVE && $Page == "dashboard"){
-        echo json_encode("0");
-        //redirect to index
-    }elseif (session_status() == PHP_SESSION_ACTIVE && $Page == "dashboard"){
-        echo json_encode("0");
-        //redirect to index
-    }elseif (session_status() == PHP_SESSION_ACTIVE && $Page == "dashboard"){
-
+    if(isset($_SESSION['Session_ID'])){
+        $SessionID = $_SESSION["Session_ID"];
+        $SessionData = GrabSessionData($SessionID);
+        $BrowserData = GetBrowserData();
+        if($SessionData['IP'] !== $BrowserData['IP'] && $SessionData['Browser'] !== $BrowserData['Browser'] && $SessionData['Platform'] !== $BrowserData['Platform']){
+            echo json_encode("1");
+        }else{
+            if($Page == "index"){
+                echo json_encode("2");
+            }else{
+                echo json_encode("3");
+            }
+        }
+    }else{
+        if($Page == "dashboard"){
+            echo json_encode("0");
+        }else{
+            echo json_encode("4");
+        }
     }
 }
 
-function StartSession($Action){
+function GrabSessionData($SessionID){
+    global $PDOconn;
+    $Query = 'SELECT * FROM djkabau1_petsignin.Session SessionID Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
+    $Statement->execute();
+    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
+    return $Response;
+}
+
+function StartSession($Email){
     ini_set('session.cookie_lifetime', 1800); //client side
     ini_set('session.gc_maxlifetime', 1800); //server size
     session_start();
-    $SessionIP=$_SERVER['REMOTE_ADDR'];
-    $ua=GetBrowser();
-    $SessionBrowser = $ua['name'];
-    $SessionPlatform = $ua['platform'];
-
+    $BrowserData = GetBrowserData();
     $SessionID = hash('sha256', uniqid(rand(), true));
     $_SESSION["Session_ID"] = $SessionID;
-    echo "Session ID = $SessionID";
-    //echo " Email Address = $Email";
-    echo "IP address = $SessionIP";
-    echo "Browser = $SessionBrowser";
-    echo "Platform = $Platform";
-    echo "Session ID is " . $_SESSION["Session_ID"] . "<br>";
+    $SessionIP = $BrowserData['IP'];
+    $SessionBrowser = $BrowserData['Browser'];
+    $SessionPlatform = $BrowserData['Platform'];
 
-    $Email = "blenjar@gmail.com";
     global $PDOconn;
-    $Query = 'INSERT INTO djkabau1_petsignin.Session (SessionID, Email, IPAddress, Browser, Platform) VALUES (?,?,?,?,?)';
+    $Query = 'INSERT INTO djkabau1_petsignin.Session (SessionID, Email, IP, Browser, Platform) VALUES (?,?,?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
     $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
-    $Statement->bindParam(3, $IPAddress, PDO::PARAM_STR, 45);
-    $Statement->bindParam(4, $Browser, PDO::PARAM_STR, 45);
-    $Statement->bindParam(5, $Platform, PDO::PARAM_STR, 45);
+    $Statement->bindParam(3, $SessionIP, PDO::PARAM_STR, 45);
+    $Statement->bindParam(4, $SessionBrowser, PDO::PARAM_STR, 45);
+    $Statement->bindParam(5, $SessionPlatform, PDO::PARAM_STR, 45);
     $Statement->execute();
-    $PDOconn = null;
+}
 
-    function GetBrowser()
-    {
-        $u_agent = $_SERVER['HTTP_USER_AGENT'];
-        $bname = 'Unknown';
-        $platform = 'Unknown';
+function GetBrowserData(){
+    $SessionIP = $_SERVER['REMOTE_ADDR'];
+    $u_agent = $_SERVER['HTTP_USER_AGENT'];
+    $BrowserName = 'Unknown';
+    $Platform = 'Unknown';
 
-        //First get the platform?
-        if (preg_match('/linux/i', $u_agent)) {
-            $platform = 'Linux';
-        }
-        elseif (preg_match('/macintosh|mac os x/i', $u_agent)) {
-            $platform = 'Mac';
-        }
-        elseif (preg_match('/windows|win32/i', $u_agent)) {
-            $platform = 'Windows';
-        }
-
-        // Next get the name of the useragent yes seperately and for good reason
-        if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent))
-        {
-            $bname = 'Internet Explorer';
-            $ub = "MSIE";
-        }
-        elseif(preg_match('/Firefox/i',$u_agent))
-        {
-            $bname = 'Mozilla Firefox';
-            $ub = "Firefox";
-        }
-        elseif(preg_match('/Chrome/i',$u_agent))
-        {
-            $bname = 'Google Chrome';
-            $ub = "Chrome";
-        }
-        elseif(preg_match('/Safari/i',$u_agent))
-        {
-            $bname = 'Apple Safari';
-            $ub = "Safari";
-        }
-        elseif(preg_match('/Opera/i',$u_agent))
-        {
-            $bname = 'Opera';
-            $ub = "Opera";
-        }
-        elseif(preg_match('/Netscape/i',$u_agent))
-        {
-            $bname = 'Netscape';
-            $ub = "Netscape";
-        }
-
-        return array(
-            'name'      => $bname,
-            'platform'  => $platform
-        );
+    if (preg_match('/linux/i', $u_agent)) {
+        $Platform = 'Linux';
     }
+    elseif (preg_match('/macintosh|mac os x/i', $u_agent)) {
+        $Platform = 'Mac';
+    }
+    elseif (preg_match('/windows|win32/i', $u_agent)) {
+        $Platform = 'Windows';
+    }
+
+    // Next get the name of the useragent yes seperately and for good reason
+    if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent))
+    {
+        $BrowserName = 'Internet Explorer';
+        $ub = "MSIE";
+    }
+    elseif(preg_match('/Firefox/i',$u_agent))
+    {
+        $BrowserName = 'Mozilla Firefox';
+        $ub = "Firefox";
+    }
+    elseif(preg_match('/Chrome/i',$u_agent))
+    {
+        $BrowserName = 'Google Chrome';
+        $ub = "Chrome";
+    }
+    elseif(preg_match('/Safari/i',$u_agent))
+    {
+        $BrowserName = 'Apple Safari';
+        $ub = "Safari";
+    }
+    elseif(preg_match('/Opera/i',$u_agent))
+    {
+        $BrowserName = 'Opera';
+        $ub = "Opera";
+    }
+    elseif(preg_match('/Netscape/i',$u_agent))
+    {
+        $BrowserName = 'Netscape';
+        $ub = "Netscape";
+    }
+
+    return array(
+        'IP' => $SessionIP,
+        'Browser' => $BrowserName,
+        'Platform' => $Platform
+    );
 }

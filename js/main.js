@@ -7,7 +7,6 @@ $(document).ready(function() {
         async: false,
         success: function(AjaxData) {
             console.log('Ajax passed');
-            console.log(AjaxData);
         },
         error: function() {
             console.log('Ajax failed');
@@ -56,6 +55,7 @@ function CheckSession(){
     }else{
         var Page = "index";
     }
+
     try{
         var Action = "CheckSession";
         var AjaxData = {
@@ -64,11 +64,17 @@ function CheckSession(){
         };
         var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
         if (Response_Data == "0") {
-            alert("You need to login to access this page.  You are being redirected to the front page.");
-            //window.location = "/index.html";
-        }
+            alert("You need to have an account to access this page.  Please sign in again.");
+            window.location = "/petsignin/";
+        }else if(Response_Data == "1"){
+            alert("There seem to be to some discrepancies with your session.  Please sign in again.");
+            window.location = "/petsignin/";
+        }else if(Response_Data == "2"){
+            window.location = "/petsignin/dashboard.html";
+        }else{}
     }catch(e){
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        console.log(ErrorMSG = "CheckSession: "+e);
         var ErrorMSG = "CheckSession: "+e;
         var Action = "InsertJSError";
         var AjaxData = {
@@ -198,6 +204,9 @@ function Register(){
                 alert("This account has been locked.  Contact the administrator.");
             }else if (Response_Data == "1"){
                 alert("This account will be locked soon.  Reset your password or contact the administrator.");
+            }else if(Response_Data == "2"){
+                alert("Go to your email to activate your account.");
+                window.location = "/petsignin/";
             }else{
                 alert("Please check your email to activate your account");
             }
@@ -229,8 +238,16 @@ function SignIn(){
                 Password: Password,
                 Action: Action
             };
-            OutgoingAjax(AjaxData);
-            console.log('Signed in etc etc');
+            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            if(Response_Data == "0"){
+                alert("This account has been locked.  Contact the administrator.");
+            }else if (Response_Data == "1") {
+                alert("This account will be locked soon.  Reset your password or contact the administrator.");
+            }else if(Response_Data == "2"){
+                window.location = "/petsignin/dashboard.html";
+            }else{
+                alert("Please check your email to activate your account");
+            }
         }catch(e){
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
             var ErrorMSG = "SignIn: "+e;
