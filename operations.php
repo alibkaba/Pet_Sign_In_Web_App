@@ -30,7 +30,7 @@ function DBOperation($Action){
             break;
         case "InsertJSError": InsertJSError();
             break;
-        case "FetchActivity": FetchActivity();
+        case "FetchActivity": FetchActivity($Action);
             break;
         case "FetchPet": FetchPet();
             break;
@@ -73,22 +73,6 @@ function FetchPet(){
     $Email = "blenjar@gmail.com";
     global $PDOconn;
     $Query = 'SELECT * FROM djkabau1_petsignin.Pet where Email = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    $Statement->execute();
-    $Response = $Statement->fetchAll();
-    echo json_encode($Response);
-    $PDOconn = null;
-}
-
-function FetchActivity(){
-    $SessionID = CheckSession();
-    echo $SessionID;
-    //GrabSessionData($SessionID);
-
-    $Email = "blenjar@gmail.com";
-    global $PDOconn;
-    $Query = 'SELECT ActivityMSG, LogDate FROM djkabau1_petsignin.Activity where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
@@ -375,40 +359,55 @@ function CheckSession($Action){
         DeleteSession($Email);
         if($SessionData['IP'] !== $BrowserData['IP'] && $SessionData['Browser'] !== $BrowserData['Browser'] && $SessionData['Platform'] !== $BrowserData['Platform']){
             if($Page == "dashboard"){
-                echo json_encode("1");
+                echo json_encode("0");
                 //expired or logged somewhere else
                 $PDOconn = null;
             }else{
-                echo json_encode("3");
+                echo json_encode("10");
                 //you are not logged and in index, do nothing
                 $PDOconn = null;
             }
         }else{
-            if($Page == "index"){
-                echo json_encode("2");
-                //logged but kicked to dashboard
-                $PDOconn = null;
-            }else{
-                //logged and in dashboard, display your role menus
-                if($Action !== "CheckSession"){
-                    //echo json_encode("5");
-                    //logged but kicked to dashboard
-                    return $SessionID;
+            if($Action == "CheckSession"){
+                if($Page == "dashboard"){
+                    echo json_encode("10");
+                    //logged and in dashboard, do nothing
                 }else{
-                    echo json_encode("6");
-                    exit;
-                    //do nothing, just refreshed
+                    echo json_encode("2");
+                    //kicked to dashboard from index
                 }
+            }else{
+                //echo json_encode("10");
+                //this is where activity comes into play
+                return $SessionID;
             }
         }
     }else{
         if($Page == "dashboard"){
             echo json_encode("0");
-            //do nothing
+            //expired or logged somewhere else
         }else{
-            echo json_encode("4");
+            echo json_encode("10");
+            //do nothing, in index
         }
     }
+}
+
+function FetchActivity($Action){
+    $SessionID = CheckSession($Action);
+    echo $SessionID;
+    //GrabSessionData($SessionID);
+/*
+    $Email = "blenjar@gmail.com";
+    global $PDOconn;
+    $Query = 'SELECT ActivityMSG, LogDate FROM djkabau1_petsignin.Activity where Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $Response = $Statement->fetchAll();
+    echo json_encode($Response);
+    $PDOconn = null;
+*/
 }
 
 function DeleteSession($Email){
@@ -510,50 +509,4 @@ function GetBrowserData(){
         'Browser' => $BrowserName,
         'Platform' => $Platform
     );
-}
-
-
-
-
-
-
-
-if(isset($_SESSION['Session_ID'])){
-    $SessionID = $_SESSION["Session_ID"];
-    $SessionData = GrabDBSessionData($SessionID);
-    $Email = $SessionData['Email'];
-    $BrowserData = GetBrowserData();
-    DeleteSession($Email);
-    if($SessionData['IP'] !== $BrowserData['IP'] && $SessionData['Browser'] !== $BrowserData['Browser'] && $SessionData['Platform'] !== $BrowserData['Platform']){
-        if($Page == "dashboard"){
-            echo json_encode("1");
-            //expired or logged somewhere else
-            $PDOconn = null;
-        }else{
-            echo json_encode("2");
-            //you are not logged and in index, do nothing
-            $PDOconn = null;
-        }
-    }else{
-        if($Action == "CheckSession"){
-            if($Page == "index"){
-
-                return $SessionID;
-            }else{
-
-                exit;
-
-            }
-        }else{
-            //logged and in dashboard, display your role menus
-
-        }
-    }
-}else{
-    if($Page == "dashboard"){
-        echo json_encode("0");
-        //do nothing
-    }else{
-        echo json_encode("4");
-    }
 }

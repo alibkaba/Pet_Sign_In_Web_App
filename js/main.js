@@ -76,10 +76,10 @@ function CheckSession(){
         var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
         console.log(Response_Data);
         if (Response_Data == "0") {
-            alert("You need to have an account to access this page.  Please sign in again.");
+            alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
             window.location = "/petsignin/";
         }else if(Response_Data == "1"){
-            alert("Your session either expired or you sign in somewhere else.  Please sign in again.");
+            alert("You need to have an account to access this page.  Please sign in again.");
             window.location = "/petsignin/";
         }else if(Response_Data == "2"){
             window.location = "/petsignin/dashboard.html";
@@ -126,8 +126,9 @@ function Activity(){
             var AjaxData = {
                 Action: Action
             };
-            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
-            DisplayActivity(Response_Data);
+            console.log(OutgoingAjax(AjaxData));
+            //var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            //DisplayActivity(Response_Data);
         }catch(e){
             var ErrorMSG = e;
             var FailedAction = Action;
