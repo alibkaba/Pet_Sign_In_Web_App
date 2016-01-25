@@ -66,11 +66,11 @@ function CheckSession(){
         var Page = "index";
     }
     var Action = "CheckSession";
-    var IsActivity = "0";
+    var Refresh = "0";
     try{
         var AjaxData = {
             Page: Page,
-            IsActivity: IsActivity,
+            Refresh: Refresh,
             Action: Action
         };
         var Response_Data = JSON.parse(OutgoingAjax(AjaxData));

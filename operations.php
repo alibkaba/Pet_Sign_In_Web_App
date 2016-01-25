@@ -20,13 +20,11 @@ function ValidateAction(){
 
 function DBOperation($Action){
     switch($Action) {
-        case "UnitTest": UnitTest($Action);
+        case "UnitTest": UnitTest();
             break;
         case "Register": Register();
             break;
         case "SignIn": SignIn();
-            break;
-        case "StartSession": StartSession($Action);
             break;
         case "FetchError": FetchError();
             break;
@@ -36,7 +34,7 @@ function DBOperation($Action){
             break;
         case "FetchPet": FetchPet();
             break;
-        case "CheckSession": CheckSession();
+        case "CheckSession": CheckSession($Action);
             break;
         case "ResetActivationCode": ResetActivationCode();
             break;
@@ -84,8 +82,8 @@ function FetchPet(){
 }
 
 function FetchActivity(){
-    //$Page = "dashboard";
-    CheckSession();
+    $SessionID = CheckSession();
+    echo $SessionID;
     //GrabSessionData($SessionID);
 
     $Email = "blenjar@gmail.com";
@@ -185,7 +183,7 @@ function HashIt($Password){
 }
 
 //Single use
-function UnitTest($Action){
+function UnitTest(){
     global $PDOconn;
     $Query = 'DROP TABLE IF EXISTS djkabau1_petsignin.UnitTest ;
 	CREATE TABLE IF NOT EXISTS djkabau1_petsignin.UnitTest (
@@ -259,7 +257,7 @@ function SignIn(){
                 ResetAttempts($Email);
                 $ActivityMSG = "You signed in.";
                 InsertActivity($Email,$ActivityMSG);
-                StartSession($Email);
+                SaveSession($Email);
                 echo json_encode("2");
                 $PDOconn = null;
                 exit;
@@ -366,12 +364,9 @@ function GrabSessionData($SessionID){
     return $Response;
 }
 
-function CheckSession(){
+function CheckSession($Action){
+    StartSession();
     $Page = stripslashes($_POST["Page"]);
-    $IsActivity = stripslashes($_POST["IsActivity"]);
-    ini_set('session.cookie_lifetime', 1800);
-    ini_set('session.gc_maxlifetime', 1800);
-    session_start();
     if(isset($_SESSION['Session_ID'])){
         $SessionID = $_SESSION["Session_ID"];
         $SessionData = GrabDBSessionData($SessionID);
@@ -394,12 +389,15 @@ function CheckSession(){
                 //logged but kicked to dashboard
                 $PDOconn = null;
             }else{
-                if($IsActivity == 0){
-                    echo json_encode("3");
-                    //you are logged and in dashboard, do nothing
-                    $PDOconn = null;
-                }else{
+                //logged and in dashboard, display your role menus
+                if($Action !== "CheckSession"){
+                    //echo json_encode("5");
+                    //logged but kicked to dashboard
                     return $SessionID;
+                }else{
+                    echo json_encode("6");
+                    exit;
+                    //do nothing, just refreshed
                 }
             }
         }
@@ -439,10 +437,8 @@ function GrabDBSessionData($SessionID){
     return $Response;
 }
 
-function StartSession($Email){
-    ini_set('session.cookie_lifetime', 1800); //client side
-    ini_set('session.gc_maxlifetime', 1800); //server size
-    session_start();
+function SaveSession($Email){
+    StartSession();
     $BrowserData = GetBrowserData();
     $SessionID = hash('sha256', uniqid(rand(), true));
     $_SESSION["Session_ID"] = $SessionID;
@@ -459,6 +455,12 @@ function StartSession($Email){
     $Statement->bindParam(4, $SessionBrowser, PDO::PARAM_STR, 45);
     $Statement->bindParam(5, $SessionPlatform, PDO::PARAM_STR, 45);
     $Statement->execute();
+}
+
+function StartSession(){
+    ini_set('session.cookie_lifetime', 1800);
+    ini_set('session.gc_maxlifetime', 1800);
+    session_start();
 }
 
 function GetBrowserData(){
@@ -508,4 +510,50 @@ function GetBrowserData(){
         'Browser' => $BrowserName,
         'Platform' => $Platform
     );
+}
+
+
+
+
+
+
+
+if(isset($_SESSION['Session_ID'])){
+    $SessionID = $_SESSION["Session_ID"];
+    $SessionData = GrabDBSessionData($SessionID);
+    $Email = $SessionData['Email'];
+    $BrowserData = GetBrowserData();
+    DeleteSession($Email);
+    if($SessionData['IP'] !== $BrowserData['IP'] && $SessionData['Browser'] !== $BrowserData['Browser'] && $SessionData['Platform'] !== $BrowserData['Platform']){
+        if($Page == "dashboard"){
+            echo json_encode("1");
+            //expired or logged somewhere else
+            $PDOconn = null;
+        }else{
+            echo json_encode("2");
+            //you are not logged and in index, do nothing
+            $PDOconn = null;
+        }
+    }else{
+        if($Action == "CheckSession"){
+            if($Page == "index"){
+
+                return $SessionID;
+            }else{
+
+                exit;
+
+            }
+        }else{
+            //logged and in dashboard, display your role menus
+
+        }
+    }
+}else{
+    if($Page == "dashboard"){
+        echo json_encode("0");
+        //do nothing
+    }else{
+        echo json_encode("4");
+    }
 }
