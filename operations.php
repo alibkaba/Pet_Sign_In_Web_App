@@ -26,6 +26,8 @@ function DBOperation($Action){
             break;
         case "SignIn": SignIn();
             break;
+        case "SignOut": SignOut();
+            break;
         case "FetchError": FetchError();
             break;
         case "InsertJSError": InsertJSError();

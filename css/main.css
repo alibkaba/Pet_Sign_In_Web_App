@@ -2,7 +2,7 @@ body {
     background-color: #f2f2f3;
 }
 
-#Account, #Sign_Out, #Create_Button {
+#Account, #SignOut, #ActivityButton, #ErrorButton{
     display: none;
     visibility: hidden;
 }

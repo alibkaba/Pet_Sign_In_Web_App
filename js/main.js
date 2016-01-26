@@ -84,6 +84,7 @@ function CheckSession(){
         }else if(Response_Data == "2"){
             window.location = "/petsignin/dashboard.html";
         }else{}
+
     }catch(e){
         var ErrorMSG = e;
         var FailedAction = Action;
@@ -253,6 +254,25 @@ function SignIn(){
     };
 }
 
+function SignOut(){
+    var SignOutButton = document.getElementById("SignOut");
+    SignOutButton.onclick = function () {
+        var Action = "SignOut";
+        try{
+            var AjaxData = {
+                Action: Action
+            };
+            OutgoingAjax(AjaxData);
+            window.location = "/petsignin/";
+        }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            InsertJSError(FailedAction,ErrorMSG);
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        }
+    };
+}
+
 function Activate(ActivationCode){
     var Action = "Activate";
     try{
@@ -306,4 +326,25 @@ function ValidatePassword(Email,Password){
         alert("Error: password must contain at least one uppercase letter (A-Z)!");
         throw e = "Error: password must contain at least one uppercase letter (A-Z)!";
     }
+}
+
+function DisplayUser(){
+    document.getElementById("Account").style.display="block";
+    document.getElementById("SignOut").style.display="block";
+    document.getElementById("ActivityButton").style.display="block";
+    document.getElementById("ErrorButton").style.display="block";
+}
+
+function DisplayAdmin(){
+    document.getElementById("Account").style.display="block";
+    document.getElementById("SignOut").style.display="block";
+    document.getElementById("ActivityButton").style.display="block";
+    document.getElementById("ErrorButton").style.display="block";
+}
+
+function DisplaySAdmin(){
+    document.getElementById("Account").style.display="block";
+    document.getElementById("SignOut").style.display="block";
+    document.getElementById("ActivityButton").style.display="block";
+    document.getElementById("ErrorButton").style.display="block";
 }
