@@ -359,20 +359,11 @@ function CheckSession($Action){
         $Email = $SessionData['Email'];
         $BrowserData = GetBrowserData();
         DeleteSession($Email);
-        if($SessionData['IP'] !== $BrowserData['IP'] && $SessionData['Browser'] !== $BrowserData['Browser'] && $SessionData['Platform'] !== $BrowserData['Platform']){
-            if($Page == "dashboard"){
-                echo json_encode("0");
-                //expired or logged somewhere else
-                $PDOconn = null;
-            }else{
-                echo json_encode("10");
-                //you are not logged and in index, do nothing
-                $PDOconn = null;
-            }
-        }else{
+        if($SessionData['IP'] == $BrowserData['IP'] && $SessionData['Browser'] == $BrowserData['Browser'] && $SessionData['Platform'] == $BrowserData['Platform']){
             if($Action == "CheckSession"){
                 if($Page == "dashboard"){
-                    echo json_encode("10");
+                    $AccountRole = CheckAccountRole($Email);
+                    echo json_encode($AccountRole);
                     //logged and in dashboard, do nothing
                 }else{
                     echo json_encode("2");
@@ -383,16 +374,52 @@ function CheckSession($Action){
                 //this is where activity comes into play
                 return $SessionID;
             }
+        }else{
+            if($Page == "dashboard"){
+                session_unset();
+                session_destroy();
+                echo json_encode("0");
+                //expired or logged somewhere else
+                $PDOconn = null;
+            }else{
+                echo json_encode("");
+                //you are not logged and in index, do nothing
+                $PDOconn = null;
+            }
         }
     }else{
         if($Page == "dashboard"){
             echo json_encode("0");
             //expired or logged somewhere else
         }else{
-            echo json_encode("10");
+            echo json_encode("");
             //do nothing, in index
         }
     }
+}
+
+function CheckAccountRole($Email){
+    global $PDOconn;
+    $Query = 'SELECT ValidateEmail, Disabled, Attempts, AdminCode FROM djkabau1_petsignin.Account where Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
+    if($Response['ValidateEmail'] == 1 && $Response['Disabled'] == 0 && $Response['Attempts'] == 0){
+        if($Response['AdminCode'] == 2){
+            $AccountRole = 10;
+            //expired or logged somewhere else
+        }elseif($Response['AdminCode'] == 1){
+            $AccountRole = 9;
+        }else{
+            $AccountRole = 8;
+        }
+    }else{
+        session_unset();
+        session_destroy();
+        $AccountRole = 0;
+    }
+    return $AccountRole;
 }
 
 function FetchActivity($Action){
