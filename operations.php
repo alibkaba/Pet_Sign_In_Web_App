@@ -228,46 +228,57 @@ function SignIn(){
     $Email = stripslashes($_POST["Email"]);
     $Password = stripslashes($_POST["Password"]);
     $UserData = GrabUserData($Email);
-    $HashedPassword = $UserData['Password'];
-    $PasswordResponse = ValidatePassword($Password,$HashedPassword);
-    if($Email == $UserData['Email'] && $PasswordResponse == 1){
-        if($UserData['Attempts'] < 5){
-            if($UserData['ValidateEmail'] == 0) {
-                AddAttempt($UserData,$Email);
-                $ActivityMSG = "You attempted to sign in but your account wasn't activated.";
-                InsertActivity($Email,$ActivityMSG);
-                echo json_encode("3");
-                $PDOconn = null;
-                exit;
+    if(!empty($UserData['Email'])){
+        $HashedPassword = $UserData['Password'];
+        $PasswordResponse = ValidatePassword($Password,$HashedPassword);
+        if($Email == $UserData['Email'] && $PasswordResponse == 1){
+            if($UserData['Attempts'] < 5){
+                if($UserData['ValidateEmail'] == 1) {
+                    ResetAttempts($Email);
+                    DeleteSession($Email);
+                    $ActivityMSG = "You signed in.";
+                    InsertActivity($Email,$ActivityMSG);
+                    SaveSession($Email);
+                    echo json_encode("2");
+                    $PDOconn = null;
+                }else{
+                    AddAttempt($UserData,$Email);
+                    $ActivityMSG = "You attempted to sign in but your account wasn't activated.";
+                    InsertActivity($Email,$ActivityMSG);
+                    echo json_encode("3");
+                    $PDOconn = null;
+                }
             }else{
-                ResetAttempts($Email);
-                $ActivityMSG = "You signed in.";
+                $ActivityMSG = "Your account is locked out because someone attempted to sign in with your email 5 times in a row.";
                 InsertActivity($Email,$ActivityMSG);
-                SaveSession($Email);
-                echo json_encode("2");
+                echo json_encode("0");
                 $PDOconn = null;
-                exit;
             }
         }else{
-            $ActivityMSG = "Your account is locked out because someone attempted to sign in with your email 5 times in a row.";
-            InsertActivity($Email,$ActivityMSG);
-            echo json_encode("0");
-            $PDOconn = null;
+            if($UserData['Attempts'] < 5){
+                AddAttempt($UserData,$Email);
+                $ActivityMSG = "Your account will be locked out if you fail to sign in 5 times in a row.";
+                InsertActivity($Email,$ActivityMSG);
+                echo json_encode("1");
+                $PDOconn = null;
+            }else{
+                $ActivityMSG = "Your account is locked out because someone attempted to sign in with your email 5 times in a row.";
+                InsertActivity($Email,$ActivityMSG);
+                echo json_encode("0");
+                $PDOconn = null;
+            }
         }
     }else{
-        if($UserData['Attempts'] < 5){
-            AddAttempt($UserData,$Email);
-            $ActivityMSG = "Your account will be locked out if you fail to sign in 5 times in a row.";
-            InsertActivity($Email,$ActivityMSG);
-            echo json_encode("1");
-            $PDOconn = null;
-        }else{
-            $ActivityMSG = "Your account is locked out because someone attempted to sign in with your email 5 times in a row.";
-            InsertActivity($Email,$ActivityMSG);
-            echo json_encode("0");
-            $PDOconn = null;
-        }
+        echo json_encode("4");
     }
+}
+
+function DeleteSession($Email){
+    global $PDOconn;
+    $Query = 'DELETE FROM djkabau1_petsignin.Session WHERE Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
 }
 
 function ResetAttempts($Email){
@@ -351,14 +362,13 @@ function GrabSessionData($SessionID){
 }
 
 function CheckSession($Action){
-    StartSession();
     $Page = stripslashes($_POST["Page"]);
+    StartSession();
     if(isset($_SESSION['Session_ID'])){
         $SessionID = $_SESSION["Session_ID"];
         $SessionData = GrabDBSessionData($SessionID);
         $Email = $SessionData['Email'];
         $BrowserData = GetBrowserData();
-        DeleteSession($Email);
         if($SessionData['IP'] == $BrowserData['IP'] && $SessionData['Browser'] == $BrowserData['Browser'] && $SessionData['Platform'] == $BrowserData['Platform']){
             if($Action == "CheckSession"){
                 if($Page == "dashboard"){
@@ -437,22 +447,6 @@ function FetchActivity($Action){
     echo json_encode($Response);
     $PDOconn = null;
 */
-}
-
-function DeleteSession($Email){
-    global $PDOconn;
-    $Query = 'SELECT * FROM djkabau1_petsignin.Session WHERE Email = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    $Statement->execute();
-    $Response = $Statement->rowCount();
-
-    if($Response > 1){
-        $Query = 'DELETE FROM djkabau1_petsignin.Session WHERE Email = (?) AND LogDate ORDER BY LogDate ASC LIMIT 1';
-        $Statement = $PDOconn->prepare($Query);
-        $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-        $Statement->execute();
-    }
 }
 
 function GrabDBSessionData($SessionID){

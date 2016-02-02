@@ -269,8 +269,10 @@ function SignIn(){
                 alert("This account will be locked soon.  Reset your password or contact the administrator.");
             }else if(Response_Data == "2"){
                 window.location = "/petsignin/dashboard.html";
+            }else if(Response_Data == "3"){
+                alert("Please check your email to activate your account.");
             }else{
-                alert("Please check your email to activate your account");
+                alert("Please create an account.");
             }
         }catch(e){
             var ErrorMSG = e;
