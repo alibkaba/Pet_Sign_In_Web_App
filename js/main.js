@@ -154,9 +154,14 @@ function Activity(){
             var AjaxData = {
                 Action: Action
             };
-            console.log(OutgoingAjax(AjaxData));
-            //var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
-            //DisplayActivity(Response_Data);
+            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            console.log(Response_Data);
+            if (Response_Data == "0") {
+                alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
+                window.location = "/petsignin/";
+            }else{
+                DisplayActivity(Response_Data);
+            }
         }catch(e){
             var ErrorMSG = e;
             var FailedAction = Action;
@@ -284,8 +289,8 @@ function SignIn(){
 }
 
 function SignOut(){
-    var SignOutButton = document.getElementById("SignOut");
-    SignOutButton.onclick = function () {
+   // var SignOutButton = document.getElementById("SignOut");
+    //SignOutButton.onclick = function () {
         var Action = "SignOut";
         try{
             var AjaxData = {
@@ -299,7 +304,7 @@ function SignOut(){
             InsertJSError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
-    };
+    //};
 }
 
 function Activate(ActivationCode){

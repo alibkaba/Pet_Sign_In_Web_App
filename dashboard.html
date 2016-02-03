@@ -29,17 +29,13 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">About</a></li>
                 <li><a data-target="#AccountModal" data-toggle="modal" href="#" id="Account"><span class="glyphicon glyphicon-user"></span>Account</a></li>
-                <li> <a href="#" id="SignOut"><span class="glyphicon glyphicon-log-out"></span>Sign Out</a></li>
+                <li> <a href="#"><span class="glyphicon glyphicon-log-out"></span>Sign Out</a></li>
             </ul>
         </div>
     </div>
 </nav>
 <div id="DisplayPet"></div>
-<div id="Alert">Alert/important messages will be displayed here. they can be closed. e.g. new update, new policy, etc.  I may need to create a disabled field (disabled functions). disabled if you don't read policy. active is only touched one. maybe change from active to verified.</div>
-Need to find a way to sign in pet in 1 or 2 steps.
-
-<button type="button" onclick="">Pets</button><br>
-Pet Name (Pet info (pet table)), Pet activity (sign ins, edits to pet info in great detail), delete pet (5 days delay or right away by HR)<br>
+<button onclick="SignOut()" type="button" onclick="">Temporary sign out button</button><br>
 
 <div class="modal fade" id="AccountModal" role="dialog">
     <div class="modal-dialog modal-sm">

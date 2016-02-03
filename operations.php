@@ -26,21 +26,21 @@ function DBOperation($Action){
             break;
         case "SignIn": SignIn();
             break;
-        case "SignOut": SignOut();
+        case "SignOut": SignOut($Action);
             break;
-        case "FetchError": FetchError();
+        case "FetchError": FetchError($Action);
             break;
         case "InsertJSError": InsertJSError();
             break;
         case "FetchActivity": FetchActivity($Action);
             break;
-        case "FetchPet": FetchPet();
+        case "FetchPet": FetchPet($Action);
             break;
         case "CheckSession": CheckSession($Action);
             break;
-        case "ResetActivationCode": ResetActivationCode();
+        case "ResetActivationCode": ResetActivationCode($Action);
             break;
-        case "ResetPassword": ResetPassword();
+        case "ResetPassword": ResetPassword($Action);
             break;
     }
 }
@@ -346,7 +346,29 @@ function MailOut($Email, $Subject, $EmailMSG){ //fix this later, from and reply 
     mail($Email,$Subject,$EmailMSG,$Headers);
 }
 
-function SignOut(){
+function GetEmail($Action){
+    $Page = "dashboard";
+    $Email = ValidateSession($Action,$Page);
+    return $Email;
+}
+
+function FetchActivity($Action){
+    $Email = GetEmail($Action);
+    global $PDOconn;
+    $Query = 'SELECT ActivityMSG, LogDate FROM djkabau1_petsignin.Activity where Email = (?) ORDER BY LogDate DESC';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $Response = $Statement->fetchAll();
+    echo json_encode($Response);
+    $PDOconn = null;
+}
+
+function SignOut($Action){
+    $Email = GetEmail($Action);
+    DeleteSession($Email);
+    $ActivityMSG = "You signed out.";
+    InsertActivity($Email,$ActivityMSG);
     session_unset();
     session_destroy();
 }
@@ -363,6 +385,10 @@ function GrabSessionData($SessionID){
 
 function CheckSession($Action){
     $Page = stripslashes($_POST["Page"]);
+    ValidateSession($Action,$Page);
+}
+
+function ValidateSession($Action,$Page){
     StartSession();
     if(isset($_SESSION['Session_ID'])){
         $SessionID = $_SESSION["Session_ID"];
@@ -380,9 +406,8 @@ function CheckSession($Action){
                     //kicked to dashboard from index
                 }
             }else{
-                //echo json_encode("10");
                 //this is where activity comes into play
-                return $SessionID;
+                return $Email;
             }
         }else{
             if($Page == "dashboard"){
@@ -391,6 +416,7 @@ function CheckSession($Action){
                 echo json_encode("0");
                 //expired or logged somewhere else
                 $PDOconn = null;
+                exit;
             }else{
                 echo json_encode("");
                 //you are not logged and in index, do nothing
@@ -430,23 +456,6 @@ function CheckAccountRole($Email){
         $AccountRole = 0;
     }
     return $AccountRole;
-}
-
-function FetchActivity($Action){
-    $SessionID = CheckSession($Action);
-    echo $SessionID;
-    //GrabSessionData($SessionID);
-/*
-    $Email = "blenjar@gmail.com";
-    global $PDOconn;
-    $Query = 'SELECT ActivityMSG, LogDate FROM djkabau1_petsignin.Activity where Email = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    $Statement->execute();
-    $Response = $Statement->fetchAll();
-    echo json_encode($Response);
-    $PDOconn = null;
-*/
 }
 
 function GrabDBSessionData($SessionID){
