@@ -13,6 +13,127 @@ $(document).ready(function() {
         }
     });
     Start();
+    $('#sandbox-container input').datepicker({
+    });
+    $( "#SignInButton" ).click(function() {
+        var Email = document.getElementById("Email1").value;
+        var Password = document.getElementById("Password1").value;
+        IsFieldFilled(Email);
+        IsFieldFilled(Password);
+        ValidateEmailDomain(Email);
+        var Action = "SignIn";
+        try{
+            var AjaxData = {
+                Email: Email,
+                Password: Password,
+                Action: Action
+            };
+            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            if(Response_Data == "0"){
+                alert("This account has been locked.  Contact the administrator.");
+            }else if (Response_Data == "1") {
+                alert("Invalid user name and/or password.  If you forgot your password, reset it.");
+            }else if(Response_Data == "2"){
+                window.location = "/petsignin/";
+            }else if(Response_Data == "3"){
+                alert("Please check your email to activate your account.");
+            }else{
+                alert("Please create an account.");
+            }
+        }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            InsertJSError(FailedAction,ErrorMSG);
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        }
+    });
+
+    $( "#ActivityButton" ).click(function() {
+        var Action = "FetchActivity";
+        try{
+            var AjaxData = {
+                Action: Action
+            };
+            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            console.log(Response_Data);
+            if (Response_Data == "0") {
+                alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
+            }else{
+                DisplayActivity(Response_Data);
+            }
+        }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            InsertJSError(FailedAction,ErrorMSG);
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        }
+    });
+
+    $( "#ErrorButton" ).click(function() {
+        var Action = "FetchError";
+        try{
+            var AjaxData = {
+                Action: Action
+            };
+            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            DisplayError(Response_Data);
+        }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            InsertJSError(FailedAction,ErrorMSG);
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        }
+    });
+
+    $( "#RegisterButton" ).click(function() {
+        var Email = document.getElementById("Email2").value;
+        var Password = document.getElementById("Password2").value;
+        IsFieldFilled(Email);
+        IsFieldFilled(Password);
+        ValidateEmailDomain(Email);
+        ValidatePassword(Email,Password);
+        var Action = "Register";
+        try{
+            var AjaxData = {
+                Email: Email,
+                Password: Password,
+                Action: Action
+            };
+            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            if(Response_Data == "0"){
+                alert("This account has been locked.  Contact the administrator.");
+            }else if (Response_Data == "1"){
+                alert("This account already exists, please sign in instead.");
+            }else if(Response_Data == "2"){
+                alert("Go to your email to activate your account.");
+                window.location = "/petsignin/";
+            }else{
+                alert("Please check your email to activate your account");
+            }
+        }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            InsertJSError(FailedAction,ErrorMSG);
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        }
+    });
+
+    $( "#SignOutButton" ).click(function() {
+        var Action = "SignOut";
+        try{
+            var AjaxData = {
+                Action: Action
+            };
+            OutgoingAjax(AjaxData);
+            window.location = "/petsignin/";
+        }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            InsertJSError(FailedAction,ErrorMSG);
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        }
+    });
+
 });
 
 //Multiple use
@@ -43,81 +164,72 @@ function InsertJSError(FailedAction, ErrorMSG){
 //Single use
 function Start(){
     UnitTest();
-    CheckSession();
-    if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == '' || window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == 'index.html') {
-        Register();
-        SignIn();
-    }
+    ValidateSession();
+}
 
-    if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == 'dashboard.html') {
-        Activity();
-        FetchPet();
-    }
+function DisplayUser(){
+    document.getElementById("SignInAndRegister").style.display="block";
+    document.getElementById("SignInAndRegister").style.visibility="visible";
+}
+
+function DisplayRUser(){
+    document.getElementById("SignOut").style.display="block";
+    document.getElementById("SignOut").style.visibility="visible";
+    document.getElementById("Account").style.display="block";
+    document.getElementById("Account").style.visibility="visible";
+    document.getElementById("ActivityButton").style.display="block";
+    document.getElementById("ActivityButton").style.visibility="visible";
+}
+
+function DisplayAdmin(){
+    document.getElementById("SignOut").style.display="block";
+    document.getElementById("SignOut").style.visibility="visible";
+    document.getElementById("Account").style.display="block";
+    document.getElementById("Account").style.visibility="visible";
+    document.getElementById("ActivityButton").style.display="block";
+    document.getElementById("ActivityButton").style.visibility="visible";
+    document.getElementById("ErrorButton").style.display="block";
+    document.getElementById("ErrorButton").style.visibility="visible";
+}
+
+function DisplaySAdmin(){
+    document.getElementById("SignOut").style.display="block";
+    document.getElementById("SignOut").style.visibility="visible";
+    document.getElementById("Account").style.display="block";
+    document.getElementById("Account").style.visibility="visible";
+    document.getElementById("ActivityButton").style.display="block";
+    document.getElementById("ActivityButton").style.visibility="visible";
+    document.getElementById("ErrorButton").style.display="block";
+    document.getElementById("ErrorButton").style.visibility="visible";
 }
 
 function SignInPet(){
     alert('pet signed in.');
 }
 
-function CheckSession(){
-    if (window.location.pathname.substring(window.location.pathname.lastIndexOf('/')+1) == 'dashboard.html'){
-        var Page = "dashboard";
-    }else{
-        var Page = "index";
-    }
-    var Action = "CheckSession";
-    var Refresh = "0";
+function ValidateSession(){
+    var Action = "ValidateSession";
     try{
         var AjaxData = {
-            Page: Page,
-            Refresh: Refresh,
             Action: Action
         };
         var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
         console.log(Response_Data);
-        if (Response_Data == "0") {
-            alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
-            window.location = "/petsignin/";
-        }else if(Response_Data == "1"){
-            alert("You need to have an account to access this page.  Please sign in again.");
-            window.location = "/petsignin/";
+        if (Response_Data == "3") {
+            DisplaySAdmin();
         }else if(Response_Data == "2"){
-            window.location = "/petsignin/dashboard.html";
-        }else if(Response_Data == "10"){
-            alert("I'll show super admin functions.");
-        }else if(Response_Data == "9"){
-            alert("I'll show admin functions.");
-        }else if(Response_Data == "8"){
-            alert("I'll show user functions.");
-        }else{}
-
+            DisplayAdmin();
+        }else if(Response_Data == "1"){
+            DisplayRUser();
+        }else{
+            DisplayUser();
+        }
     }catch(e){
         var ErrorMSG = e;
         var FailedAction = Action;
         InsertJSError(FailedAction,ErrorMSG);
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
     }
-}
-
-function DisplayUser(){
-    document.getElementById("Test").style.display="block";
-    document.getElementById("SignOut").style.display="block";
-    document.getElementById("ActivityButton").style.display="block";
-    document.getElementById("ErrorButton").style.display="block";
-}
-
-function DisplayAdmin(){
-    document.getElementById("Account").style.display="block";
-    document.getElementById("SignOut").style.display="block";
-    document.getElementById("ActivityButton").style.display="block";
-    document.getElementById("ErrorButton").style.display="block";
-}
-
-function DisplaySAdmin(){
-    document.getElementById("Account").style.display="block";
-    document.getElementById("SignOut").style.display="block";
-    document.getElementById("ActivityButton").style.display="block";
-    document.getElementById("ErrorButton").style.display="block";
 }
 
 function FetchPet(){
@@ -146,31 +258,6 @@ function DisplayPet(Response_Data){
     document.getElementById("DisplayPet").innerHTML = DisplayPet;
 }
 
-function Activity(){
-    var ActivityButton = document.getElementById("ActivityButton");
-    ActivityButton.onclick = function () {
-        var Action = "FetchActivity";
-        try{
-            var AjaxData = {
-                Action: Action
-            };
-            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
-            console.log(Response_Data);
-            if (Response_Data == "0") {
-                alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
-                window.location = "/petsignin/";
-            }else{
-                DisplayActivity(Response_Data);
-            }
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            InsertJSError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        }
-    };
-}
-
 function DisplayActivity(Response_Data){
     var DisplayActivity = '<thead><tr><th>Activity</th><th>Date</th></tr></thead><tbody>';
     for (var i = 0; i < Response_Data.length; i++) {
@@ -178,25 +265,6 @@ function DisplayActivity(Response_Data){
     }
     DisplayActivity += '</tbody>';
     document.getElementById("DisplayActivity").innerHTML = DisplayActivity;
-}
-
-function Error(){
-    var ErrorButton = document.getElementById("ErrorButton");
-    ErrorButton.onclick = function () {
-        var Action = "FetchError";
-        try{
-            var AjaxData = {
-                Action: Action
-            };
-            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
-            DisplayError(Response_Data);
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            InsertJSError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        }
-    };
 }
 
 function DisplayError(Response_Data){
@@ -216,96 +284,38 @@ function UnitTest() {
     var AjaxData = OutgoingAjax(AjaxData);
 }
 
-function Register(){
-    var RegisterButton = document.getElementById("Register");
-    RegisterButton.onclick = function () {
-        var Email = document.getElementById("Email2").value;
-        var Password = document.getElementById("Password2").value;
-        IsFieldFilled(Email);
-        IsFieldFilled(Password);
-        ValidateEmailDomain(Email);
-        ValidatePassword(Email,Password);
-        var Action = "Register";
-        try{
-            var AjaxData = {
-                Email: Email,
-                Password: Password,
-                Action: Action
-            };
-            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
-            if(Response_Data == "0"){
-                alert("This account has been locked.  Contact the administrator.");
-            }else if (Response_Data == "1"){
-                alert("This account will be locked soon.  Reset your password or contact the administrator.");
-            }else if(Response_Data == "2"){
-                alert("Go to your email to activate your account.");
-                window.location = "/petsignin/";
-            }else{
-                alert("Please check your email to activate your account");
-            }
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            InsertJSError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        }
-    };
-}
-
-function SignIn(){
-    var SignInButton = document.getElementById("SignIn");
-    SignInButton.onclick = function () {
-        var Email = document.getElementById("Email1").value;
-        var Password = document.getElementById("Password1").value;
-        IsFieldFilled(Email);
-        IsFieldFilled(Password);
-        ValidateEmailDomain(Email);
-        var Action = "SignIn";
-        try{
-            var AjaxData = {
-                Email: Email,
-                Password: Password,
-                Action: Action
-            };
-            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
-            if(Response_Data == "0"){
-                alert("This account has been locked.  Contact the administrator.");
-            }else if (Response_Data == "1") {
-                alert("This account will be locked soon.  Reset your password or contact the administrator.");
-            }else if(Response_Data == "2"){
-                window.location = "/petsignin/dashboard.html";
-            }else if(Response_Data == "3"){
-                alert("Please check your email to activate your account.");
-            }else{
-                alert("Please create an account.");
-            }
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            InsertJSError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        }
-    };
-}
-
-function SignOut(){
-   // var SignOutButton = document.getElementById("SignOut");
-    //SignOutButton.onclick = function () {
-        var Action = "SignOut";
-        try{
-            var AjaxData = {
-                Action: Action
-            };
-            OutgoingAjax(AjaxData);
+$( "RegisterButton" ).click(function() {
+    var Email = document.getElementById("Email2").value;
+    var Password = document.getElementById("Password2").value;
+    IsFieldFilled(Email);
+    IsFieldFilled(Password);
+    ValidateEmailDomain(Email);
+    ValidatePassword(Email,Password);
+    var Action = "Register";
+    try{
+        var AjaxData = {
+            Email: Email,
+            Password: Password,
+            Action: Action
+        };
+        var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+        if(Response_Data == "0"){
+            alert("This account has been locked.  Contact the administrator.");
+        }else if (Response_Data == "1"){
+            alert("This account will be locked soon.  Reset your password or contact the administrator.");
+        }else if(Response_Data == "2"){
+            alert("Go to your email to activate your account.");
             window.location = "/petsignin/";
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            InsertJSError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        }else{
+            alert("Please check your email to activate your account");
         }
-    //};
-}
+    }catch(e){
+        var ErrorMSG = e;
+        var FailedAction = Action;
+        InsertJSError(FailedAction,ErrorMSG);
+        alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+    }
+});
 
 function Activate(ActivationCode){
     var Action = "Activate";

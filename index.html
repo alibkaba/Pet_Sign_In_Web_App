@@ -28,10 +28,47 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">About</a></li>
+                <li><a data-target="#AccountModal" data-toggle="modal" href="#" id="Account"><span class="glyphicon glyphicon-user"></span>Account</a></li>
+                <li> <a href="#" id="SignOut"><span class="glyphicon glyphicon-log-out"></span>Sign Out</a></li>
             </ul>
         </div>
     </div>
 </nav>
+<button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#AddPetModal" data-toggle="modal" id="AddPetButton">Add a Pet</button>
+<div class="modal fade" id="AddPetModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Register</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="PetName">Pet's Name</label>
+                    <input type="text" id="PetName" placeholder="Pet's Name Address">
+                </div>
+                <div class="form-group" id="PetBreed"></div>
+                <div class="form-group" id="DOB"><input type="text" id="datepicker"></div>
+                <div class="btn-group">
+                    <select>
+                        <option value="volvo">Boy or Girl?</option>
+                        <option value="boy">Boy</option>
+                        <option value="girl">Girl</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    upload area
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" id="RegisterButton">Register</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="DisplayPet"></div>
+<div id="SignInAndRegister">
 <p>Sign into your account</p>
 <div class="form-group">
     <input type="text" id="Email1" placeholder="Email Address">
@@ -39,13 +76,14 @@
 <div class="form-group">
     <input type="password" id="Password1" placeholder="Password" autocomplete="off"><br>
 </div>
-<button type="button" class="btn btn-primary btn-sm" id="SignIn">Sign In</button>
+<button type="button" class="btn btn-primary btn-sm" id="SignInButton">Sign In</button>
 <br>
 <a href="#">can't access your account?</a>
 <br><br>
 <p>New to Pet Sign In?</p>
-<a href="#" data-toggle="modal" data-target="#RegisterModal">Register for a new account</a>
-<br><br>
+<a href="#" data-toggle="modal" data-target="#RegisterModal" id="Register" >Register for a new account</a>
+<br>
+</div>
 <div class="modal fade" id="RegisterModal" role="dialog">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -54,16 +92,88 @@
                 <h4 class="modal-title">Register</h4>
             </div>
             <div class="modal-body">
-                <p>Enter an email and password</p>
                 <div class="form-group">
+                    <label for="Email2">Email address</label>
                     <input type="text" id="Email2" placeholder="Email Address">
                 </div>
                 <div class="form-group">
+                    <label for="Password2">Password</label>
                     <input type="password" id="Password2" placeholder="Password" autocomplete="off"><br>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-sm" id="Register">Register</button>
+                <button type="button" class="btn btn-primary btn-sm" id="RegisterButton">Register</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="AccountModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Account</h4>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ActivityModal" data-toggle="modal" id="ActivityButton">Account Activity</button>
+                <br>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ErrorModal" data-toggle="modal" id="ErrorButton">Error Logging</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ActivityModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Account</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered" id="DisplayActivity">
+                    <thead>
+                    <tr>
+                        <th>Activity</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-target="#AccountModal" data-toggle="modal">Back</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ErrorModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Account</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-bordered" id="DisplayError">
+                    <thead>
+                    <tr>
+                        <th>Account</th>
+                        <th>Action</th>
+                        <th>Error Message</th>
+                        <th>Date</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-target="#AccountModal" data-toggle="modal">Back</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>

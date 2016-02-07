@@ -36,7 +36,7 @@ function DBOperation($Action){
             break;
         case "FetchPet": FetchPet($Action);
             break;
-        case "CheckSession": CheckSession($Action);
+        case "ValidateSession": ValidateSession($Action);
             break;
         case "ResetActivationCode": ResetActivationCode($Action);
             break;
@@ -311,7 +311,7 @@ function Register(){
     $ValidateEmail = 0;
     $Disabled = 0;
     $Attempts = 0;
-    $AdminCode = 0;
+    $AdminCode = 1;
     $ActivationCode = hash('sha256', uniqid(rand(), true));
     global $PDOconn;
     $Query = 'INSERT INTO djkabau1_petsignin.Account (Email, Password, ValidateEmail, Disabled, Attempts, AdminCode, ActivationCode) VALUES (?,?,?,?,?,?,?)';
@@ -348,7 +348,7 @@ function MailOut($Email, $Subject, $EmailMSG){ //fix this later, from and reply 
 
 function GetEmail($Action){
     $Page = "dashboard";
-    $Email = ValidateSession($Action,$Page);
+    $Email = ValidateSession($Action);
     return $Email;
 }
 
@@ -383,54 +383,28 @@ function GrabSessionData($SessionID){
     return $Response;
 }
 
-function CheckSession($Action){
-    $Page = stripslashes($_POST["Page"]);
-    ValidateSession($Action,$Page);
-}
-
-function ValidateSession($Action,$Page){
+function ValidateSession($Action){
     StartSession();
     if(isset($_SESSION['Session_ID'])){
         $SessionID = $_SESSION["Session_ID"];
         $SessionData = GrabDBSessionData($SessionID);
         $Email = $SessionData['Email'];
         $BrowserData = GetBrowserData();
+        $AccountRole = CheckAccountRole($Email);
         if($SessionData['IP'] == $BrowserData['IP'] && $SessionData['Browser'] == $BrowserData['Browser'] && $SessionData['Platform'] == $BrowserData['Platform']){
-            if($Action == "CheckSession"){
-                if($Page == "dashboard"){
-                    $AccountRole = CheckAccountRole($Email);
-                    echo json_encode($AccountRole);
-                    //logged and in dashboard, do nothing
-                }else{
-                    echo json_encode("2");
-                    //kicked to dashboard from index
-                }
+            if($Action == "ValidateSession"){
+                echo json_encode($AccountRole);
             }else{
-                //this is where activity comes into play
                 return $Email;
             }
         }else{
-            if($Page == "dashboard"){
-                session_unset();
-                session_destroy();
-                echo json_encode("0");
-                //expired or logged somewhere else
-                $PDOconn = null;
-                exit;
-            }else{
-                echo json_encode("");
-                //you are not logged and in index, do nothing
-                $PDOconn = null;
-            }
+            session_unset();
+            session_destroy();
+            echo json_encode("0");
+            $PDOconn = null;
         }
     }else{
-        if($Page == "dashboard"){
-            echo json_encode("0");
-            //expired or logged somewhere else
-        }else{
-            echo json_encode("");
-            //do nothing, in index
-        }
+        echo json_encode("0");
     }
 }
 
@@ -442,13 +416,12 @@ function CheckAccountRole($Email){
     $Statement->execute();
     $Response = $Statement->fetch(PDO::FETCH_ASSOC);
     if($Response['ValidateEmail'] == 1 && $Response['Disabled'] == 0 && $Response['Attempts'] == 0){
-        if($Response['AdminCode'] == 2){
-            $AccountRole = 10;
-            //expired or logged somewhere else
-        }elseif($Response['AdminCode'] == 1){
-            $AccountRole = 9;
+        if($Response['AdminCode'] == 3){
+            $AccountRole = 3;
+        }elseif($Response['AdminCode'] == 2){
+            $AccountRole = 2;
         }else{
-            $AccountRole = 8;
+            $AccountRole = 1;
         }
     }else{
         session_unset();
