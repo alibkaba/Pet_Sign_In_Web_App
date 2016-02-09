@@ -30,11 +30,15 @@ function DBOperation($Action){
             break;
         case "FetchError": FetchError($Action);
             break;
-        case "InsertJSError": InsertJSError();
+        case "InsertJSError": InsertJSError($Action);
             break;
         case "FetchActivity": FetchActivity($Action);
             break;
         case "FetchPet": FetchPet($Action);
+            break;
+        case "FetchPetBreeds": FetchPetBreeds($Action);
+            break;
+        case "FetchPetDOBStart": FetchPetDOBStart($Action);
             break;
         case "ValidateSession": ValidateSession($Action);
             break;
@@ -71,8 +75,8 @@ function ResetPassword(){
     $PDOconn = null;
 }
 
-function FetchPet(){
-    $Email = "blenjar@gmail.com";
+function FetchPet($Action){
+    $Email = GetEmail($Action);
     global $PDOconn;
     $Query = 'SELECT * FROM djkabau1_petsignin.Pet where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
@@ -83,8 +87,8 @@ function FetchPet(){
     $PDOconn = null;
 }
 
-function FetchError(){
-    $Email = "blenjar@gmail.com";
+function FetchError($Action){
+    $Email = GetEmail($Action);
     global $PDOconn;
     $Query = 'SELECT Action, ErrorMSG, LogDate FROM djkabau1_petsignin.Error where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
@@ -350,6 +354,25 @@ function GetEmail($Action){
     $Page = "dashboard";
     $Email = ValidateSession($Action);
     return $Email;
+}
+
+function FetchPetBreeds(){
+    global $PDOconn;
+    $Query = 'SELECT * FROM djkabau1_petsignin.Breed ORDER BY Name ASC';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->execute();
+    $Response = $Statement->fetchAll();
+    echo json_encode($Response);
+    $PDOconn = null;
+}
+
+function FetchPetDOBStart(){
+    global $PDOconn;
+    $Query = 'SELECT DATE_ADD(CURDATE(),INTERVAL -3 MONTH) AS PetDOBStart';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->execute();
+    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
+    return $Response;
 }
 
 function FetchActivity($Action){

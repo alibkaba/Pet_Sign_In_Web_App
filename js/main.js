@@ -13,8 +13,6 @@ $(document).ready(function() {
         }
     });
     Start();
-    $('#sandbox-container input').datepicker({
-    });
     $( "#SignInButton" ).click(function() {
         var Email = document.getElementById("Email1").value;
         var Password = document.getElementById("Password1").value;
@@ -118,7 +116,7 @@ $(document).ready(function() {
         }
     });
 
-    $( "#SignOutButton" ).click(function() {
+    $( "#SignOut" ).click(function() {
         var Action = "SignOut";
         try{
             var AjaxData = {
@@ -134,7 +132,56 @@ $(document).ready(function() {
         }
     });
 
+    $( "#AddNewPetButton" ).click(function() {
+        //FetchPetDOBStart();
+        var Action = "FetchPetBreeds";
+        try{
+            var AjaxData = {
+                Action: Action
+            };
+            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            console.log(Response_Data);
+            DisplayPetBreeds(Response_Data);
+        }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            InsertJSError(FailedAction,ErrorMSG);
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        }
+        FetchPetDOBStart();
+    });
+
 });
+
+function FetchPetDOBStart(){
+        var AjaxData = {
+            Action: Action
+        };
+        var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+        console.log(Response_Data);
+        DisplayPetDOBStart(Response_Data);
+
+}
+
+function DisplayPet(Response_Data){
+    var DisplayPet = "";
+    for (var i = 0; i < Response_Data.length; i++) {
+        DisplayPet += '<button type="button" class="btn btn-primary btn-sm" value="' + Response_Data[i].Name + '" onclick="SignInPet()">' + Response_Data[i].Name + '</button><br>';
+    }
+    document.getElementById("DisplayPet").innerHTML = DisplayPet;
+}
+
+function DisplayPetDOBStart(Response_Data){
+    alert(Response_Data);
+}
+
+function DisplayPetBreeds(Response_Data){
+    var select = document.getElementById("DisplayPetBreeds");
+    var i;
+    for (i = 0; i < Response_Data.length; i++) {
+        select.options[select.options.length] = new Option(Response_Data[i].Name, Response_Data[i].BreedID);
+    }
+}
 
 //Multiple use
 function IsFieldFilled(Field){
@@ -179,6 +226,8 @@ function DisplayRUser(){
     document.getElementById("Account").style.visibility="visible";
     document.getElementById("ActivityButton").style.display="block";
     document.getElementById("ActivityButton").style.visibility="visible";
+    document.getElementById("AddNewPetButton").style.display="block";
+    document.getElementById("AddNewPetButton").style.visibility="visible";
 }
 
 function DisplayAdmin(){
@@ -190,6 +239,8 @@ function DisplayAdmin(){
     document.getElementById("ActivityButton").style.visibility="visible";
     document.getElementById("ErrorButton").style.display="block";
     document.getElementById("ErrorButton").style.visibility="visible";
+    document.getElementById("AddPetButton").style.display="block";
+    document.getElementById("AddPetButton").style.visibility="visible";
 }
 
 function DisplaySAdmin(){
@@ -201,6 +252,19 @@ function DisplaySAdmin(){
     document.getElementById("ActivityButton").style.visibility="visible";
     document.getElementById("ErrorButton").style.display="block";
     document.getElementById("ErrorButton").style.visibility="visible";
+}
+
+function HideAll(){
+    document.getElementById("SignOut").style.display="none";
+    document.getElementById("SignOut").style.visibility="hidden";
+    document.getElementById("Account").style.display="none";
+    document.getElementById("Account").style.visibility="hidden";
+    document.getElementById("ActivityButton").style.display="none";
+    document.getElementById("ActivityButton").style.visibility="hidden";
+    document.getElementById("ErrorButton").style.display="none";
+    document.getElementById("ErrorButton").style.visibility="hidden";
+    document.getElementById("AddPetButton").style.display="none";
+    document.getElementById("AddPetButton").style.visibility="hidden";
 }
 
 function SignInPet(){
@@ -248,14 +312,6 @@ function FetchPet(){
         InsertJSError(FailedAction,ErrorMSG);
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
     }
-}
-
-function DisplayPet(Response_Data){
-    var DisplayPet = "";
-    for (var i = 0; i < Response_Data.length; i++) {
-        DisplayPet += '<button type="button" class="btn btn-primary btn-sm" value="' + Response_Data[i].Name + '" onclick="SignInPet()">' + Response_Data[i].Name + '</button><br>';
-    }
-    document.getElementById("DisplayPet").innerHTML = DisplayPet;
 }
 
 function DisplayActivity(Response_Data){
