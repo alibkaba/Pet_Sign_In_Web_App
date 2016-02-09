@@ -351,7 +351,6 @@ function MailOut($Email, $Subject, $EmailMSG){ //fix this later, from and reply 
 }
 
 function GetEmail($Action){
-    $Page = "dashboard";
     $Email = ValidateSession($Action);
     return $Email;
 }
@@ -427,7 +426,12 @@ function ValidateSession($Action){
             $PDOconn = null;
         }
     }else{
-        echo json_encode("0");
+        if($Action == "ValidateSession"){
+            echo json_encode("0");
+        }else{
+            echo json_encode("0");
+            exit;
+        }
     }
 }
 

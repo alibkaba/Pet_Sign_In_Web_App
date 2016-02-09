@@ -56,6 +56,7 @@ $(document).ready(function() {
             console.log(Response_Data);
             if (Response_Data == "0") {
                 alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
+                window.location = "/petsignin/";
             }else{
                 DisplayActivity(Response_Data);
             }
