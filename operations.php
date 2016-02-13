@@ -38,8 +38,6 @@ function DBOperation($Action){
             break;
         case "FetchPetBreeds": FetchPetBreeds($Action);
             break;
-        case "FetchPetDOBStart": FetchPetDOBStart($Action);
-            break;
         case "ValidateSession": ValidateSession($Action);
             break;
         case "ResetActivationCode": ResetActivationCode($Action);
@@ -363,15 +361,6 @@ function FetchPetBreeds(){
     $Response = $Statement->fetchAll();
     echo json_encode($Response);
     $PDOconn = null;
-}
-
-function FetchPetDOBStart(){
-    global $PDOconn;
-    $Query = 'SELECT DATE_ADD(CURDATE(),INTERVAL -3 MONTH) AS PetDOBStart';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->execute();
-    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
-    return $Response;
 }
 
 function FetchActivity($Action){

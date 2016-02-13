@@ -51,7 +51,6 @@
                         <option value="">Select your pet's breed</option>
                     </select>
                 </div>
-
                 <div class="btn-group">
                     <label for="Gender">Pet's Gender</label>
                     <select class="form-control" id="Gender">
@@ -61,11 +60,22 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    upload area
+                    <label for="VetPhoneNumber">Vet Phone Number</label>
+                    <input type="tel" id="VetPhoneNumber" placeholder="Vet Phone Number">
+                </div>
+                <div class="form-group">
+                    <label for="VetEmail">Vet Email Address</label>
+                    <input type="text" id="VetEmail" placeholder="Vet Email Address">
+                </div>
+                <div class="form-group">
+                    <p>terms and condition pdf URL</p>
+                    <br>
+                    <input type="radio" name="tnc" value="no" checked>I do not agree<br>
+                    <input type="radio" name="tnc" value="yes">I agree<br>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-sm" id="AddPetButton">Save</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" id="AddPetButton" disabled>Add Pet</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -75,9 +85,11 @@
 <div id="SignInAndRegister">
 <p>Sign into your account</p>
 <div class="form-group">
+    <label for="Email1">Email Address</label>
     <input type="text" id="Email1" placeholder="Email Address">
 </div>
 <div class="form-group">
+    <label for="Password1">Password</label>
     <input type="password" id="Password1" placeholder="Password" autocomplete="off"><br>
 </div>
 <button type="button" class="btn btn-primary btn-sm" id="SignInButton">Sign In</button>
@@ -97,7 +109,7 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="Email2">Email address</label>
+                    <label for="Email2">Email Address</label>
                     <input type="text" id="Email2" placeholder="Email Address">
                 </div>
                 <div class="form-group">

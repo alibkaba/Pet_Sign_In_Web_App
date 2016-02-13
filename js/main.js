@@ -134,7 +134,6 @@ $(document).ready(function() {
     });
 
     $( "#AddNewPetButton" ).click(function() {
-        //FetchPetDOBStart();
         var Action = "FetchPetBreeds";
         try{
             var AjaxData = {
@@ -149,20 +148,33 @@ $(document).ready(function() {
             InsertJSError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
-        FetchPetDOBStart();
+        //FetchPetDOBStart();
     });
 
+    $( "#AddPetButton" ).click(function() {
+        var Name = document.getElementById("PetName").value;
+        var Breed = "1";
+        var Gender = document.getElementById("Gender").value;
+        var VetEmail = document.getElementById("VetEmail").value;
+        var VetPhoneNumber = document.getElementById("VetPhoneNumber").value;
+
+        console.log(Name, Breed, Gender, VetEmail, VetPhoneNumber);
+        IsFieldFilled(Name);
+        IsFieldFilled(Breed);
+        IsFieldFilled(Gender);
+        IsFieldFilled(VetEmail);
+        IsFieldFilled(VetPhoneNumber);
+    });
+
+    $('input[type=radio][name=tnc]').change(function() {
+        if (this.value == 'yes') {
+            document.getElementById("AddPetButton").disabled = false;
+        }
+        else if (this.value == 'no') {
+            document.getElementById("AddPetButton").disabled = true;
+        }
+    });
 });
-
-function FetchPetDOBStart(){
-        var AjaxData = {
-            Action: Action
-        };
-        var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
-        console.log(Response_Data);
-        DisplayPetDOBStart(Response_Data);
-
-}
 
 function DisplayPet(Response_Data){
     var DisplayPet = "";
@@ -170,10 +182,6 @@ function DisplayPet(Response_Data){
         DisplayPet += '<button type="button" class="btn btn-primary btn-sm" value="' + Response_Data[i].Name + '" onclick="SignInPet()">' + Response_Data[i].Name + '</button><br>';
     }
     document.getElementById("DisplayPet").innerHTML = DisplayPet;
-}
-
-function DisplayPetDOBStart(Response_Data){
-    alert(Response_Data);
 }
 
 function DisplayPetBreeds(Response_Data){
