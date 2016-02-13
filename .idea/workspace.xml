@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/operations.php" description="}" line="291" />
+    <bookmark url="file://$PROJECT_DIR$/operations.php" description="}" line="253" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f092118-30af-4901-9d01-d49356a10af1" name="Default" comment="" />
@@ -35,11 +35,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.9818182">
-              <caret line="46" column="22" selection-start-line="46" selection-start-column="22" selection-end-line="46" selection-end-column="22" />
+            <state vertical-scroll-proportion="0.49015063">
+              <caret line="123" column="14" selection-start-line="123" selection-start-column="14" selection-end-line="123" selection-end-column="14" />
               <folding />
             </state>
           </provider>
@@ -48,49 +48,31 @@
       <file leaf-file-name="main.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.9310346">
-              <caret line="176" column="3" selection-start-line="176" selection-start-column="3" selection-end-line="176" selection-end-column="3" />
+            <state vertical-scroll-proportion="-10.793103">
+              <caret line="215" column="28" selection-start-line="215" selection-start-column="28" selection-end-line="215" selection-end-column="28" />
               <folding>
-                <marker date="1455377268102" expanded="true" signature="12095:12099" placeholder="..." />
-                <marker date="1455377268102" expanded="true" signature="12095:12116" placeholder="..." />
-                <marker date="1455377268102" expanded="true" signature="12095:12129" placeholder="..." />
-                <marker date="1455377268102" expanded="true" signature="12095:12134" placeholder="..." />
-                <marker date="1455377268102" expanded="true" signature="12099:12116" placeholder="..." />
+                <marker date="1455386218537" expanded="true" signature="12484:12488" placeholder="..." />
+                <marker date="1455386218537" expanded="true" signature="12484:12505" placeholder="..." />
+                <marker date="1455386218537" expanded="true" signature="12484:12518" placeholder="..." />
+                <marker date="1455386218537" expanded="true" signature="12484:12523" placeholder="..." />
+                <marker date="1455386218537" expanded="true" signature="12488:12505" placeholder="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="operations.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="operations.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/operations.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.21436848">
-              <caret line="34" column="53" selection-start-line="34" selection-start-column="53" selection-end-line="34" selection-end-column="53" />
+            <state vertical-scroll-proportion="-0.92727274">
+              <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
               <folding>
-                <marker date="1455377282600" expanded="true" signature="1506:1582" placeholder="UPDATE djkab..." />
-                <marker date="1455377282600" expanded="true" signature="2140:2216" placeholder="UPDATE djkab..." />
-                <marker date="1455377282600" expanded="true" signature="2704:2758" placeholder="SELECT Activ..Activity..." />
-                <marker date="1455377282600" expanded="true" signature="3084:3164" placeholder="SELECT Actio..." />
-                <marker date="1455377282600" expanded="true" signature="4604:4681" placeholder="INSERT INTO djkabau1_petsignin.Debug..." />
-                <marker date="1455377282600" expanded="true" signature="5127:5195" placeholder="INSERT INTO djkabau1_petsignin.Debug..." />
-                <marker date="1455377282600" expanded="true" signature="5501:5574" placeholder="INSERT INTO djkabau1_petsignin.Audit..." />
-                <marker date="1455377282600" expanded="true" signature="5967:6015" placeholder="DROP TABLE I..." />
-                <marker date="1455377282600" expanded="true" signature="6019:6145" placeholder="CREATE TABLE..IF..." />
-                <marker date="1455377282600" expanded="true" signature="6277:6340" placeholder="INSERT INTO djkabau1_petsignin.UnitTest..." />
-                <marker date="1455377282600" expanded="true" signature="6508:6586" placeholder="UPDATE djkab..." />
-                <marker date="1455377282600" expanded="true" signature="6790:6852" placeholder="DELETE FROM ..." />
-                <marker date="1455377282600" expanded="true" signature="7002:7050" placeholder="DROP TABLE I..." />
-                <marker date="1455377282600" expanded="true" signature="7388:7458" placeholder="UPDATE djkab..." />
-                <marker date="1455377282600" expanded="true" signature="9983:10039" placeholder="DELETE FROM " />
-                <marker date="1455377282600" expanded="true" signature="10241:10313" placeholder="UPDATE djkab..." />
-                <marker date="1455377282600" expanded="true" signature="11445:11586" placeholder="INSERT INTO djkabau1_petsignin.Users..." />
-                <marker date="1455377282600" expanded="true" signature="12386:12444" placeholder="SELECT count..." />
-                <marker date="1455377282600" expanded="true" signature="13087:13143" placeholder="SELECT * FRO... Breed" />
-                <marker date="1455377282600" expanded="true" signature="13414:13514" placeholder="SELECT Activ... Activity" />
-                <marker date="1455377282600" expanded="true" signature="14028:14090" placeholder="SELECT * FRO..Session..." />
-                <marker date="1455377282600" expanded="true" signature="15345:15446" placeholder="SELECT FROM Account" />
-                <marker date="1455377282600" expanded="true" signature="16132:16194" placeholder="SELECT * FRO..Session..." />
-                <marker date="1455377282600" expanded="true" signature="16761:16860" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
+                <marker date="1455386534190" expanded="true" signature="1500:1576" placeholder="UPDATE djkab..." />
+                <marker date="1455386534190" expanded="true" signature="2134:2210" placeholder="UPDATE djkab..." />
+                <marker date="1455386534190" expanded="true" signature="2698:2752" placeholder="SELECT Activ..Activity..." />
+                <marker date="1455386534190" expanded="true" signature="3461:3538" placeholder="INSERT INTO djkabau1_petsignin.Debug..." />
+                <marker date="1455386534190" expanded="true" signature="14004:14008" placeholder="SELECT * FRO..Session..." />
+                <marker date="1455386534190" expanded="true" signature="14591:14603" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
               </folding>
             </state>
           </provider>
@@ -914,12 +896,12 @@
       <workItem from="1454457701299" duration="7968000" />
       <workItem from="1454781806813" duration="13300000" />
       <workItem from="1454973526171" duration="11216000" />
-      <workItem from="1455371064635" duration="6012000" />
+      <workItem from="1455371064635" duration="12378000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="322320000" />
+    <option name="totallyTimeSpent" value="328686000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -977,11 +959,11 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="15" column="46" selection-start-line="15" selection-start-column="46" selection-end-line="15" selection-end-column="46" />
           <folding>
-            <marker date="1455377268102" expanded="true" signature="12095:12099" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12116" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12129" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12134" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12099:12116" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12488" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12505" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12518" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12523" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12488:12505" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -991,30 +973,12 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="241" column="42" selection-start-line="241" selection-start-column="42" selection-end-line="241" selection-end-column="42" />
           <folding>
-            <marker date="1455377282600" expanded="true" signature="1506:1582" placeholder="UPDATE djkab..." />
-            <marker date="1455377282600" expanded="true" signature="2140:2216" placeholder="UPDATE djkab..." />
-            <marker date="1455377282600" expanded="true" signature="2704:2758" placeholder="SELECT Activ..Activity..." />
-            <marker date="1455377282600" expanded="true" signature="3084:3164" placeholder="SELECT Actio..." />
-            <marker date="1455377282600" expanded="true" signature="4604:4681" placeholder="INSERT INTO djkabau1_petsignin.Debug..." />
-            <marker date="1455377282600" expanded="true" signature="5127:5195" placeholder="INSERT INTO djkabau1_petsignin.Debug..." />
-            <marker date="1455377282600" expanded="true" signature="5501:5574" placeholder="INSERT INTO djkabau1_petsignin.Audit..." />
-            <marker date="1455377282600" expanded="true" signature="5967:6015" placeholder="DROP TABLE I..." />
-            <marker date="1455377282600" expanded="true" signature="6019:6145" placeholder="CREATE TABLE..IF..." />
-            <marker date="1455377282600" expanded="true" signature="6277:6340" placeholder="INSERT INTO djkabau1_petsignin.UnitTest..." />
-            <marker date="1455377282600" expanded="true" signature="6508:6586" placeholder="UPDATE djkab..." />
-            <marker date="1455377282600" expanded="true" signature="6790:6852" placeholder="DELETE FROM ..." />
-            <marker date="1455377282600" expanded="true" signature="7002:7050" placeholder="DROP TABLE I..." />
-            <marker date="1455377282600" expanded="true" signature="7388:7458" placeholder="UPDATE djkab..." />
-            <marker date="1455377282600" expanded="true" signature="9983:10039" placeholder="DELETE FROM " />
-            <marker date="1455377282600" expanded="true" signature="10241:10313" placeholder="UPDATE djkab..." />
-            <marker date="1455377282600" expanded="true" signature="11445:11586" placeholder="INSERT INTO djkabau1_petsignin.Users..." />
-            <marker date="1455377282600" expanded="true" signature="12386:12444" placeholder="SELECT count..." />
-            <marker date="1455377282600" expanded="true" signature="13087:13143" placeholder="SELECT * FRO... Breed" />
-            <marker date="1455377282600" expanded="true" signature="13414:13514" placeholder="SELECT Activ... Activity" />
-            <marker date="1455377282600" expanded="true" signature="14028:14090" placeholder="SELECT * FRO..Session..." />
-            <marker date="1455377282600" expanded="true" signature="15345:15446" placeholder="SELECT FROM Account" />
-            <marker date="1455377282600" expanded="true" signature="16132:16194" placeholder="SELECT * FRO..Session..." />
-            <marker date="1455377282600" expanded="true" signature="16761:16860" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
+            <marker date="1455386534190" expanded="true" signature="1500:1576" placeholder="UPDATE djkab..." />
+            <marker date="1455386534190" expanded="true" signature="2134:2210" placeholder="UPDATE djkab..." />
+            <marker date="1455386534190" expanded="true" signature="2698:2752" placeholder="SELECT Activ..Activity..." />
+            <marker date="1455386534190" expanded="true" signature="3461:3538" placeholder="INSERT INTO djkabau1_petsignin.Debug..." />
+            <marker date="1455386534190" expanded="true" signature="14004:14008" placeholder="SELECT * FRO..Session..." />
+            <marker date="1455386534190" expanded="true" signature="14591:14603" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
           </folding>
         </state>
       </provider>
@@ -1043,30 +1007,12 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1455377282600" expanded="true" signature="1506:1582" placeholder="UPDATE djkab..." />
-            <marker date="1455377282600" expanded="true" signature="2140:2216" placeholder="UPDATE djkab..." />
-            <marker date="1455377282600" expanded="true" signature="2704:2758" placeholder="SELECT Activ..Activity..." />
-            <marker date="1455377282600" expanded="true" signature="3084:3164" placeholder="SELECT Actio..." />
-            <marker date="1455377282600" expanded="true" signature="4604:4681" placeholder="INSERT INTO djkabau1_petsignin.Debug..." />
-            <marker date="1455377282600" expanded="true" signature="5127:5195" placeholder="INSERT INTO djkabau1_petsignin.Debug..." />
-            <marker date="1455377282600" expanded="true" signature="5501:5574" placeholder="INSERT INTO djkabau1_petsignin.Audit..." />
-            <marker date="1455377282600" expanded="true" signature="5967:6015" placeholder="DROP TABLE I..." />
-            <marker date="1455377282600" expanded="true" signature="6019:6145" placeholder="CREATE TABLE..IF..." />
-            <marker date="1455377282600" expanded="true" signature="6277:6340" placeholder="INSERT INTO djkabau1_petsignin.UnitTest..." />
-            <marker date="1455377282600" expanded="true" signature="6508:6586" placeholder="UPDATE djkab..." />
-            <marker date="1455377282600" expanded="true" signature="6790:6852" placeholder="DELETE FROM ..." />
-            <marker date="1455377282600" expanded="true" signature="7002:7050" placeholder="DROP TABLE I..." />
-            <marker date="1455377282600" expanded="true" signature="7388:7458" placeholder="UPDATE djkab..." />
-            <marker date="1455377282600" expanded="true" signature="9983:10039" placeholder="DELETE FROM " />
-            <marker date="1455377282600" expanded="true" signature="10241:10313" placeholder="UPDATE djkab..." />
-            <marker date="1455377282600" expanded="true" signature="11445:11586" placeholder="INSERT INTO djkabau1_petsignin.Users..." />
-            <marker date="1455377282600" expanded="true" signature="12386:12444" placeholder="SELECT count..." />
-            <marker date="1455377282600" expanded="true" signature="13087:13143" placeholder="SELECT * FRO... Breed" />
-            <marker date="1455377282600" expanded="true" signature="13414:13514" placeholder="SELECT Activ... Activity" />
-            <marker date="1455377282600" expanded="true" signature="14028:14090" placeholder="SELECT * FRO..Session..." />
-            <marker date="1455377282600" expanded="true" signature="15345:15446" placeholder="SELECT FROM Account" />
-            <marker date="1455377282600" expanded="true" signature="16132:16194" placeholder="SELECT * FRO..Session..." />
-            <marker date="1455377282600" expanded="true" signature="16761:16860" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
+            <marker date="1455386534190" expanded="true" signature="1500:1576" placeholder="UPDATE djkab..." />
+            <marker date="1455386534190" expanded="true" signature="2134:2210" placeholder="UPDATE djkab..." />
+            <marker date="1455386534190" expanded="true" signature="2698:2752" placeholder="SELECT Activ..Activity..." />
+            <marker date="1455386534190" expanded="true" signature="3461:3538" placeholder="INSERT INTO djkabau1_petsignin.Debug..." />
+            <marker date="1455386534190" expanded="true" signature="14004:14008" placeholder="SELECT * FRO..Session..." />
+            <marker date="1455386534190" expanded="true" signature="14591:14603" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
           </folding>
         </state>
       </provider>
@@ -1119,11 +1065,11 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="69" column="50" selection-start-line="69" selection-start-column="50" selection-end-line="69" selection-end-column="50" />
           <folding>
-            <marker date="1455377268102" expanded="true" signature="12095:12099" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12116" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12129" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12134" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12099:12116" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12488" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12505" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12518" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12523" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12488:12505" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1149,11 +1095,11 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1455377268102" expanded="true" signature="12095:12099" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12116" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12129" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12134" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12099:12116" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12488" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12505" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12518" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12523" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12488:12505" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1179,11 +1125,11 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="60" column="21" selection-start-line="60" selection-start-column="21" selection-end-line="60" selection-end-column="21" />
           <folding>
-            <marker date="1455377268102" expanded="true" signature="12095:12099" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12116" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12129" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12134" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12099:12116" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12488" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12505" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12518" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12523" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12488:12505" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1209,11 +1155,11 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1455377268102" expanded="true" signature="12095:12099" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12116" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12129" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12134" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12099:12116" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12488" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12505" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12518" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12523" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12488:12505" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1239,11 +1185,11 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1455377268102" expanded="true" signature="12095:12099" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12116" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12129" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12134" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12099:12116" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12488" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12505" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12518" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12523" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12488:12505" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1269,11 +1215,11 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="75" column="14" selection-start-line="75" selection-start-column="14" selection-end-line="75" selection-end-column="14" />
           <folding>
-            <marker date="1455377268102" expanded="true" signature="12095:12099" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12116" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12129" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12134" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12099:12116" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12488" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12505" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12518" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12523" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12488:12505" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1299,11 +1245,11 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1455377268102" expanded="true" signature="12095:12099" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12116" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12129" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12134" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12099:12116" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12488" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12505" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12518" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12523" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12488:12505" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1329,11 +1275,11 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="11" column="26" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
           <folding>
-            <marker date="1455377268102" expanded="true" signature="12095:12099" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12116" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12129" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12134" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12099:12116" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12488" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12505" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12518" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12523" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12488:12505" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1359,11 +1305,11 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1455377268102" expanded="true" signature="12095:12099" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12116" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12129" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12134" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12099:12116" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12488" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12505" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12518" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12523" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12488:12505" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1389,11 +1335,11 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="32" column="10" selection-start-line="32" selection-start-column="10" selection-end-line="32" selection-end-column="10" />
           <folding>
-            <marker date="1455377268102" expanded="true" signature="12095:12099" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12116" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12129" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12134" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12099:12116" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12488" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12505" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12518" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12523" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12488:12505" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1419,11 +1365,11 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="32" column="10" selection-start-line="32" selection-start-column="10" selection-end-line="32" selection-end-column="10" />
           <folding>
-            <marker date="1455377268102" expanded="true" signature="12095:12099" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12116" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12129" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12134" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12099:12116" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12488" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12505" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12518" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12523" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12488:12505" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1449,11 +1395,11 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="32" column="10" selection-start-line="32" selection-start-column="10" selection-end-line="32" selection-end-column="10" />
           <folding>
-            <marker date="1455377268102" expanded="true" signature="12095:12099" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12116" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12129" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12134" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12099:12116" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12488" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12505" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12518" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12523" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12488:12505" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -1493,58 +1439,40 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.9818182">
-          <caret line="46" column="22" selection-start-line="46" selection-start-column="22" selection-end-line="46" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.9310346">
-          <caret line="176" column="3" selection-start-line="176" selection-start-column="3" selection-end-line="176" selection-end-column="3" />
+        <state vertical-scroll-proportion="-10.793103">
+          <caret line="215" column="28" selection-start-line="215" selection-start-column="28" selection-end-line="215" selection-end-column="28" />
           <folding>
-            <marker date="1455377268102" expanded="true" signature="12095:12099" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12116" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12129" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12095:12134" placeholder="..." />
-            <marker date="1455377268102" expanded="true" signature="12099:12116" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12488" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12505" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12518" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12484:12523" placeholder="..." />
+            <marker date="1455386218537" expanded="true" signature="12488:12505" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/operations.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.21436848">
-          <caret line="34" column="53" selection-start-line="34" selection-start-column="53" selection-end-line="34" selection-end-column="53" />
+        <state vertical-scroll-proportion="-0.92727274">
+          <caret line="48" column="0" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
           <folding>
-            <marker date="1455377282600" expanded="true" signature="1506:1582" placeholder="UPDATE djkab..." />
-            <marker date="1455377282600" expanded="true" signature="2140:2216" placeholder="UPDATE djkab..." />
-            <marker date="1455377282600" expanded="true" signature="2704:2758" placeholder="SELECT Activ..Activity..." />
-            <marker date="1455377282600" expanded="true" signature="3084:3164" placeholder="SELECT Actio..." />
-            <marker date="1455377282600" expanded="true" signature="4604:4681" placeholder="INSERT INTO djkabau1_petsignin.Debug..." />
-            <marker date="1455377282600" expanded="true" signature="5127:5195" placeholder="INSERT INTO djkabau1_petsignin.Debug..." />
-            <marker date="1455377282600" expanded="true" signature="5501:5574" placeholder="INSERT INTO djkabau1_petsignin.Audit..." />
-            <marker date="1455377282600" expanded="true" signature="5967:6015" placeholder="DROP TABLE I..." />
-            <marker date="1455377282600" expanded="true" signature="6019:6145" placeholder="CREATE TABLE..IF..." />
-            <marker date="1455377282600" expanded="true" signature="6277:6340" placeholder="INSERT INTO djkabau1_petsignin.UnitTest..." />
-            <marker date="1455377282600" expanded="true" signature="6508:6586" placeholder="UPDATE djkab..." />
-            <marker date="1455377282600" expanded="true" signature="6790:6852" placeholder="DELETE FROM ..." />
-            <marker date="1455377282600" expanded="true" signature="7002:7050" placeholder="DROP TABLE I..." />
-            <marker date="1455377282600" expanded="true" signature="7388:7458" placeholder="UPDATE djkab..." />
-            <marker date="1455377282600" expanded="true" signature="9983:10039" placeholder="DELETE FROM " />
-            <marker date="1455377282600" expanded="true" signature="10241:10313" placeholder="UPDATE djkab..." />
-            <marker date="1455377282600" expanded="true" signature="11445:11586" placeholder="INSERT INTO djkabau1_petsignin.Users..." />
-            <marker date="1455377282600" expanded="true" signature="12386:12444" placeholder="SELECT count..." />
-            <marker date="1455377282600" expanded="true" signature="13087:13143" placeholder="SELECT * FRO... Breed" />
-            <marker date="1455377282600" expanded="true" signature="13414:13514" placeholder="SELECT Activ... Activity" />
-            <marker date="1455377282600" expanded="true" signature="14028:14090" placeholder="SELECT * FRO..Session..." />
-            <marker date="1455377282600" expanded="true" signature="15345:15446" placeholder="SELECT FROM Account" />
-            <marker date="1455377282600" expanded="true" signature="16132:16194" placeholder="SELECT * FRO..Session..." />
-            <marker date="1455377282600" expanded="true" signature="16761:16860" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
+            <marker date="1455386534190" expanded="true" signature="1500:1576" placeholder="UPDATE djkab..." />
+            <marker date="1455386534190" expanded="true" signature="2134:2210" placeholder="UPDATE djkab..." />
+            <marker date="1455386534190" expanded="true" signature="2698:2752" placeholder="SELECT Activ..Activity..." />
+            <marker date="1455386534190" expanded="true" signature="3461:3538" placeholder="INSERT INTO djkabau1_petsignin.Debug..." />
+            <marker date="1455386534190" expanded="true" signature="14004:14008" placeholder="SELECT * FRO..Session..." />
+            <marker date="1455386534190" expanded="true" signature="14591:14603" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.49015063">
+          <caret line="123" column="14" selection-start-line="123" selection-start-column="14" selection-end-line="123" selection-end-column="14" />
+          <folding />
         </state>
       </provider>
     </entry>

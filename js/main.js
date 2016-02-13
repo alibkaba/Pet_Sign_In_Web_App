@@ -41,7 +41,7 @@ $(document).ready(function() {
         }catch(e){
             var ErrorMSG = e;
             var FailedAction = Action;
-            InsertJSError(FailedAction,ErrorMSG);
+            AddJSError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
@@ -63,7 +63,7 @@ $(document).ready(function() {
         }catch(e){
             var ErrorMSG = e;
             var FailedAction = Action;
-            InsertJSError(FailedAction,ErrorMSG);
+            AddJSError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
@@ -79,7 +79,7 @@ $(document).ready(function() {
         }catch(e){
             var ErrorMSG = e;
             var FailedAction = Action;
-            InsertJSError(FailedAction,ErrorMSG);
+            AddJSError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
@@ -112,7 +112,7 @@ $(document).ready(function() {
         }catch(e){
             var ErrorMSG = e;
             var FailedAction = Action;
-            InsertJSError(FailedAction,ErrorMSG);
+            AddJSError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
@@ -128,12 +128,17 @@ $(document).ready(function() {
         }catch(e){
             var ErrorMSG = e;
             var FailedAction = Action;
-            InsertJSError(FailedAction,ErrorMSG);
+            AddJSError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
 
     $( "#AddNewPetButton" ).click(function() {
+        var Name = document.getElementById("PetName").value = "";
+        var Breed = document.getElementById("DisplayPetBreeds").options.length = "1";
+        var Gender = document.getElementById("Gender").value = "";
+        var VetEmail = document.getElementById("VetEmail").value = "";
+        var VetPhoneNumber = document.getElementById("VetPhoneNumber").value = "";
         var Action = "FetchPetBreeds";
         try{
             var AjaxData = {
@@ -145,7 +150,7 @@ $(document).ready(function() {
         }catch(e){
             var ErrorMSG = e;
             var FailedAction = Action;
-            InsertJSError(FailedAction,ErrorMSG);
+            AddJSError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
         //FetchPetDOBStart();
@@ -153,7 +158,7 @@ $(document).ready(function() {
 
     $( "#AddPetButton" ).click(function() {
         var Name = document.getElementById("PetName").value;
-        var Breed = "1";
+        var Breed = document.getElementById("DisplayPetBreeds").value;
         var Gender = document.getElementById("Gender").value;
         var VetEmail = document.getElementById("VetEmail").value;
         var VetPhoneNumber = document.getElementById("VetPhoneNumber").value;
@@ -207,8 +212,8 @@ function OutgoingAjax(AjaxData) {
     return IncomingAjaxData;
 }
 
-function InsertJSError(FailedAction, ErrorMSG){
-    var Action = "InsertJSError";
+function AddJSError(FailedAction, ErrorMSG){
+    var Action = "AddJSError";
     var AjaxData = {
         FailedAction: FailedAction,
         ErrorMSG: ErrorMSG,
@@ -300,7 +305,7 @@ function ValidateSession(){
     }catch(e){
         var ErrorMSG = e;
         var FailedAction = Action;
-        InsertJSError(FailedAction,ErrorMSG);
+        AddJSError(FailedAction,ErrorMSG);
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
     }
 }
@@ -318,7 +323,7 @@ function FetchPet(){
     }catch(e){
         var ErrorMSG = e;
         var FailedAction = Action;
-        InsertJSError(FailedAction,ErrorMSG);
+        AddJSError(FailedAction,ErrorMSG);
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
     }
 }
@@ -377,7 +382,7 @@ $( "RegisterButton" ).click(function() {
     }catch(e){
         var ErrorMSG = e;
         var FailedAction = Action;
-        InsertJSError(FailedAction,ErrorMSG);
+        AddJSError(FailedAction,ErrorMSG);
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
     }
 });
@@ -393,7 +398,7 @@ function Activate(ActivationCode){
     }catch(e){
         var ErrorMSG = e;
         var FailedAction = Action;
-        InsertJSError(FailedAction,ErrorMSG);
+        AddJSError(FailedAction,ErrorMSG);
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
     }
 }

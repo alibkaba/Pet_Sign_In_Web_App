@@ -30,7 +30,7 @@ function DBOperation($Action){
             break;
         case "FetchError": FetchError($Action);
             break;
-        case "InsertJSError": InsertJSError($Action);
+        case "AddJSError": AddJSError($Action);
             break;
         case "FetchActivity": FetchActivity($Action);
             break;
@@ -88,7 +88,7 @@ function FetchPet($Action){
 function FetchError($Action){
     $Email = GetEmail($Action);
     global $PDOconn;
-    $Query = 'SELECT Action, ErrorMSG, LogDate FROM djkabau1_petsignin.Error where Email = (?)';
+    $Query = 'CALL FetchError (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
@@ -97,40 +97,7 @@ function FetchError($Action){
     $PDOconn = null;
 }
 
-//needs attention
-//$Statement = $PDOconn->prepare($Query);           needs an error handling procedure
-//$Statement->execute();                            needs an error handling procedure
-//$Statement->fetch(PDO::FETCH_ASSOC);              needs an error handling procedure
-
-
-//Multiple use
-/*
-function Execute($Statement,$Action,$Email){
-    try {
-        if(!$Statement->execute()) {
-            $Response = array('action' => $Action, 'status' => "0");
-            echo json_encode($Response);
-        }
-    } catch (PDOException $e) {
-        //echo 'Connection failed: ' . $e->getMessage() . "\n";
-        $ErrorMSG = 'Execute statement failed: ' . $e->getMessage() . "\n";
-        Error($Action,$Email,$ErrorMSG);
-    }
-}
-
-function Fetch($Statement,$Action,$Email){
-    try {
-        if(!$Response = $Statement->fetch(PDO::FETCH_ASSOC)) {
-
-        }
-    } catch (PDOException $e) {
-        //echo 'Connection failed: ' . $e->getMessage() . "\n";
-        $ErrorMSG = 'Fetch statement failed: ' . $e->getMessage() . "\n";
-        Error($Action,$Email,$ErrorMSG);
-    }
-}
-*/
-function Error($Action,$ErrorMSG,$Email){
+function AddError($Action,$ErrorMSG,$Email){
     if (!isset($Email)) {
         $Email = NULL;
     }
@@ -144,11 +111,11 @@ function Error($Action,$ErrorMSG,$Email){
     $PDOconn = null;
 }
 
-function InsertJSError(){
+function AddJSError(){
     $FailedAction = stripslashes($_POST["FailedAction"]);
     $ErrorMSG = stripslashes($_POST["ErrorMSG"]);
     global $PDOconn;
-    $Query = 'INSERT INTO djkabau1_petsignin.Error (Action, ErrorMSG) VALUES (?,?)';
+    $Query = 'CALL AddJSError (?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $FailedAction, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $ErrorMSG, PDO::PARAM_STR, 100);
@@ -156,9 +123,9 @@ function InsertJSError(){
     $PDOconn = null;
 }
 
-function InsertActivity($Email,$ActivityMSG){
+function AddActivity($Email,$ActivityMSG){
     global $PDOconn;
-    $Query = 'INSERT INTO djkabau1_petsignin.Activity (Email, ActivityMSG) VALUES (?,?)';
+    $Query = 'CALL AddJSError (?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $ActivityMSG, PDO::PARAM_STR, 45);
@@ -173,34 +140,29 @@ function HashIt($Password){
 //Single use
 function UnitTest(){
     global $PDOconn;
-    $Query = 'DROP TABLE IF EXISTS djkabau1_petsignin.UnitTest ;
-	CREATE TABLE IF NOT EXISTS djkabau1_petsignin.UnitTest (
-	TestColumn INT NOT NULL,
-	PRIMARY KEY (TestColumn))
-	ENGINE = InnoDB;
-	USE djkabau1_petsignin';
+    $Query = 'CALL UTCreate';
     $Statement = $PDOconn->prepare($Query);
     $Statement->execute();
 
-    $Value = "1";
-    $Query = 'INSERT INTO djkabau1_petsignin.UnitTest (TestColumn) VALUES (?)';
+    $UTValue = "1";
+    $Query = 'CALL UTInsert (?)';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Value, PDO::PARAM_INT);
+    $Statement->bindParam(1, $UTValue, PDO::PARAM_INT);
     $Statement->execute();
 
-    $UpdatedValue = "2";
-    $Query = 'UPDATE djkabau1_petsignin.UnitTest set TestColumn = (?) where TestColumn = (?)';
+    $UpdatedUTValue = "2";
+    $Query = 'CALL UTUpdate (?,?)';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $UpdatedValue, PDO::PARAM_INT);
-    $Statement->bindParam(2, $Value, PDO::PARAM_INT);
+    $Statement->bindParam(1, $UpdatedUTValue, PDO::PARAM_INT);
+    $Statement->bindParam(2, $UTValue, PDO::PARAM_INT);
     $Statement->execute();
 
-    $Query = 'DELETE FROM djkabau1_petsignin.UnitTest WHERE TestColumn = (?)';
+    $Query = 'CALL UTDelete (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $UpdatedValue, PDO::PARAM_INT);
     $Statement->execute();
 
-    $Query = 'DROP TABLE IF EXISTS djkabau1_petsignin.UnitTest';
+    $Query = 'CALL UTDrop';
     $Statement = $PDOconn->prepare($Query);
     $Statement->execute();
     echo json_encode("Unit Test successful");//do I need try and catch for unit test? do I need to fetch?
@@ -211,7 +173,7 @@ function AddAttempt($UserData,$Email){
     $NewAttempt = $UserData['Attempts'];
     $NewAttempt++;
     global $PDOconn;
-    $Query = 'UPDATE djkabau1_petsignin.Account set Attempts = (?) where Email = (?)';
+    $Query = 'CALL AddAttempt (?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $NewAttempt, PDO::PARAM_INT, 1);
     $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
@@ -239,20 +201,20 @@ function SignIn(){
                     ResetAttempts($Email);
                     DeleteSession($Email);
                     $ActivityMSG = "You signed in.";
-                    InsertActivity($Email,$ActivityMSG);
+                    AddActivity($Email,$ActivityMSG);
                     SaveSession($Email);
                     echo json_encode("2");
                     $PDOconn = null;
                 }else{
                     AddAttempt($UserData,$Email);
                     $ActivityMSG = "You attempted to sign in but your account wasn't activated.";
-                    InsertActivity($Email,$ActivityMSG);
+                    AddActivity($Email,$ActivityMSG);
                     echo json_encode("3");
                     $PDOconn = null;
                 }
             }else{
                 $ActivityMSG = "Your account is locked out because someone attempted to sign in with your email 5 times in a row.";
-                InsertActivity($Email,$ActivityMSG);
+                AddActivity($Email,$ActivityMSG);
                 echo json_encode("0");
                 $PDOconn = null;
             }
@@ -260,12 +222,12 @@ function SignIn(){
             if($UserData['Attempts'] < 5){
                 AddAttempt($UserData,$Email);
                 $ActivityMSG = "Your account will be locked out if you fail to sign in 5 times in a row.";
-                InsertActivity($Email,$ActivityMSG);
+                AddActivity($Email,$ActivityMSG);
                 echo json_encode("1");
                 $PDOconn = null;
             }else{
                 $ActivityMSG = "Your account is locked out because someone attempted to sign in with your email 5 times in a row.";
-                InsertActivity($Email,$ActivityMSG);
+                AddActivity($Email,$ActivityMSG);
                 echo json_encode("0");
                 $PDOconn = null;
             }
@@ -277,7 +239,7 @@ function SignIn(){
 
 function DeleteSession($Email){
     global $PDOconn;
-    $Query = 'DELETE FROM djkabau1_petsignin.Session WHERE Email = (?)';
+    $Query = 'CALL DeleteSession (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
@@ -285,7 +247,7 @@ function DeleteSession($Email){
 
 function ResetAttempts($Email){
     global $PDOconn;
-    $Query = 'UPDATE djkabau1_petsignin.Account set Attempts = ("0") where Email = (?)';
+    $Query = 'CALL ResetAttempts (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
@@ -299,12 +261,12 @@ function Register(){
         if($UserData['Attempts'] < 5){
             AddAttempt($UserData,$Email);
             $ActivityMSG = "Your account will be locked out when someone attempts to register with you account 5 times in a row.";
-            InsertActivity($Email,$ActivityMSG);
+            AddActivity($Email,$ActivityMSG);
             echo json_encode("1");
             exit;
         }else{
             $ActivityMSG = "Your account is locked out because someone attempted to register an account using your email 5 times in a row.";
-            InsertActivity($Email,$ActivityMSG);
+            AddActivity($Email,$ActivityMSG);
             echo json_encode("0");
             exit;
         }
@@ -316,7 +278,7 @@ function Register(){
     $AdminCode = 1;
     $ActivationCode = hash('sha256', uniqid(rand(), true));
     global $PDOconn;
-    $Query = 'INSERT INTO djkabau1_petsignin.Account (Email, Password, ValidateEmail, Disabled, Attempts, AdminCode, ActivationCode) VALUES (?,?,?,?,?,?,?)';
+    $Query = 'CALL Register (?,?,?,?,?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
@@ -333,7 +295,7 @@ function Register(){
 
 function GrabUserData($Email){
     global $PDOconn;
-    $Query = 'SELECT * FROM djkabau1_petsignin.Account where Email = (?)';
+    $Query = 'CALL GrabUserData (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
@@ -355,7 +317,7 @@ function GetEmail($Action){
 
 function FetchPetBreeds(){
     global $PDOconn;
-    $Query = 'SELECT * FROM djkabau1_petsignin.Breed ORDER BY Name ASC';
+    $Query = 'CALL FetchPetBreeds';
     $Statement = $PDOconn->prepare($Query);
     $Statement->execute();
     $Response = $Statement->fetchAll();
@@ -366,7 +328,7 @@ function FetchPetBreeds(){
 function FetchActivity($Action){
     $Email = GetEmail($Action);
     global $PDOconn;
-    $Query = 'SELECT ActivityMSG, LogDate FROM djkabau1_petsignin.Activity where Email = (?) ORDER BY LogDate DESC';
+    $Query = 'CALL FetchActivity (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
@@ -379,14 +341,14 @@ function SignOut($Action){
     $Email = GetEmail($Action);
     DeleteSession($Email);
     $ActivityMSG = "You signed out.";
-    InsertActivity($Email,$ActivityMSG);
+    AddActivity($Email,$ActivityMSG);
     session_unset();
     session_destroy();
 }
 
 function GrabSessionData($SessionID){
     global $PDOconn;
-    $Query = 'SELECT * FROM djkabau1_petsignin.Session WHERE SessionID = (?)';
+    $Query = 'CALL GrabSessionData (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
     $Statement->execute();
@@ -426,7 +388,7 @@ function ValidateSession($Action){
 
 function CheckAccountRole($Email){
     global $PDOconn;
-    $Query = 'SELECT ValidateEmail, Disabled, Attempts, AdminCode FROM djkabau1_petsignin.Account where Email = (?)';
+    $Query = 'CALL CheckAccountRole (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
@@ -449,7 +411,7 @@ function CheckAccountRole($Email){
 
 function GrabDBSessionData($SessionID){
     global $PDOconn;
-    $Query = 'SELECT * FROM djkabau1_petsignin.Session WHERE SessionID = (?)';
+    $Query = 'CALL GrabDBSessionData (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
     $Statement->execute();
@@ -467,7 +429,7 @@ function SaveSession($Email){
     $SessionPlatform = $BrowserData['Platform'];
 
     global $PDOconn;
-    $Query = 'INSERT INTO djkabau1_petsignin.Session (SessionID, Email, IP, Browser, Platform) VALUES (?,?,?,?,?)';
+    $Query = 'CALL SaveSession (?,?,?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
     $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
