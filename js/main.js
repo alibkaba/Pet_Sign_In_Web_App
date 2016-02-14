@@ -18,6 +18,8 @@ $(document).ready(function() {
         var Password = document.getElementById("Password1").value;
         IsFieldFilled(Email);
         IsFieldFilled(Password);
+        ValidateEmailDomain(Email);
+        ValidatePassword(Email,Password)
         var Action = "SignIn";
         try{
             var AjaxData = {
@@ -99,6 +101,8 @@ $(document).ready(function() {
         IsFieldFilled(Password);
         IsFieldFilled(FirstName);
         IsFieldFilled(LastName);
+        ValidateEmailDomain(Email);
+        ValidatePassword(Email,Password);
         var Action = "Register";
         try{
             var AjaxData = {
@@ -116,7 +120,7 @@ $(document).ready(function() {
                 alert("This account already exists, please sign in instead.");
             }else if(Response_Data == "2"){
                 alert("Go to your email to activate your account.");
-                window.location = "/petsignin/";
+                //window.location = "/petsignin/";
             }else{
                 alert("Please check your email to activate your account");
             }
@@ -148,8 +152,6 @@ $(document).ready(function() {
         var Name = document.getElementById("PetName").value = "";
         var Breed = document.getElementById("DisplayPetBreeds").options.length = "1";
         var Gender = document.getElementById("Gender").value = "";
-        var VetEmail = document.getElementById("VetEmail").value = "";
-        var VetPhoneNumber = document.getElementById("VetPhoneNumber").value = "";
         var Action = "FetchPetBreeds";
         try{
             var AjaxData = {
@@ -170,13 +172,9 @@ $(document).ready(function() {
         var Name = document.getElementById("PetName").value;
         var Breed = document.getElementById("DisplayPetBreeds").value;
         var Gender = document.getElementById("Gender").value;
-        var VetEmail = document.getElementById("VetEmail").value;
-        var VetPhoneNumber = document.getElementById("VetPhoneNumber").value;
         IsFieldFilled(Name);
         IsFieldFilled(Breed);
         IsFieldFilled(Gender);
-        IsFieldFilled(VetEmail);
-        IsFieldFilled(VetPhoneNumber);
         var Action = "AddPet";
         try{
             var AjaxData = {
@@ -440,6 +438,19 @@ function Activate(ActivationCode){
         var FailedAction = Action;
         AddJSError(FailedAction,ErrorMSG);
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+    }
+}
+
+function ValidateEmailDomain(Email) {
+    var re = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
+    if (re.test(Email)) {
+        if (Email.indexOf('@gmail.com', Email.length - '@gmail.com'.length) == -1) {
+            alert('Email must be a GMAIL e-mail address (your.name@gmail.com)');
+            throw e = "Email must be a GMAIL e-mail address (your.name@gmail.com)";
+        }
+    } else {
+        alert('Not a valid e-mail address');
+        throw e = "Not a valid e-mail address";
     }
 }
 

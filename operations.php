@@ -255,19 +255,9 @@ function ResetAttempts($Email){
     $Statement->execute();
 }
 
-function ValidateEmailDomain($Email){
-    strtolower($Email);
-    $Email = filter_var($Email, FILTER_SANITIZE_EMAIL);
-    $EmailDomain = substr(strrchr($Email, "@"), 1);
-    if(filter_var($Email, FILTER_VALIDATE_EMAIL) === true && !$EmailDomain == "@gmail") {
-        echo json_encode("notvalid");
-        exit;
-    }
-}
-
 function Register(){
     $Email = stripslashes($_POST["Email"]);
-    ValidateEmailDomain($Email);
+    exit;
     $UserData = FetchUserData($Email);
     if($Email == $UserData['Email']){
         if($UserData['Attempts'] < 5){
@@ -315,53 +305,18 @@ function AddPet($Action){
     $Name = stripslashes($_POST["Name"]);
     $Gender = stripslashes($_POST["Gender"]);
     $BreedID = stripslashes($_POST["BreedID"]);
-    $VetPhoneNumber = stripslashes($_POST["VetPhoneNumber"]);
-    $VetEmail = stripslashes($_POST["VetEmail"]);
-    $VetCode = hash('sha256', uniqid(rand(), true));
-    $ValidatePet = 0;
     $Disabled = 0;
     global $PDOconn;
-    $Query = 'CALL AddPet (?,?,?,?,?,?,?,?,?)';
+    $Query = 'CALL AddPet (?,?,?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $Name, PDO::PARAM_STR, 45);
     $Statement->bindParam(3, $Gender, PDO::PARAM_STR, 4);
     $Statement->bindParam(4, $BreedID, PDO::PARAM_INT);
-    $Statement->bindParam(5, $VetPhoneNumber, PDO::PARAM_INT);
-    $Statement->bindParam(6, $VetEmail, PDO::PARAM_STR, 45);
-    $Statement->bindParam(7, $VetCode, PDO::PARAM_STR, 64);
-    $Statement->bindParam(8, $ValidatePet, PDO::PARAM_INT, 1);
-    $Statement->bindParam(9, $Disabled, PDO::PARAM_INT, 1);
+    $Statement->bindParam(5, $Disabled, PDO::PARAM_INT, 1);
     $Statement->execute();
     $ActivityMSG = "Your new pet " + $Name + " has been added.";
     AddActivity($Email,$ActivityMSG);
-    $UserData = FetchUserData($Email);
-    $FirstName = $UserData['FirstName'];
-    mail($VetEmail,"Hello, " + $FirstName + " would like you to send forms about " +  $Name,"Please upload all rabies and vaccination records for " + $Name + ". Go to this link: https://petsignin.alibkaba.com/petsignin/vetupload.php.  Sign in email is " + $VetEmail + " and password is " + $VetCode +".  These credentials can only be used ONCE.");
-    echo json_encode("2");
-    $PDOconn = null;
-}
-
-function UpdatePetVet($Action){
-    $Email = GetEmail($Action);
-    $PetID = stripslashes($_POST["PetID"]);
-    $Name = stripslashes($_POST["Name"]);
-    $VetPhoneNumber = stripslashes($_POST["VetPhoneNumber"]);
-    $VetEmail = stripslashes($_POST["VetEmail"]);
-    $VetCode = hash('sha256', uniqid(rand(), true));
-    global $PDOconn;
-    $Query = 'CALL AddPetVet (?,?,?,?,?,?,?,?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $VetPhoneNumber, PDO::PARAM_INT);
-    $Statement->bindParam(2, $VetEmail, PDO::PARAM_STR, 45);
-    $Statement->bindParam(3, $VetCode, PDO::PARAM_STR, 64);
-    $Statement->bindParam(1, $PetID, PDO::PARAM_INT);
-    $Statement->execute();
-    $ActivityMSG = "You updated " + $Name + "'s vet info out.";
-    AddActivity($Email,$ActivityMSG);
-    $UserData = FetchUserData($Email);
-    $FirstName = $UserData['FirstName'];
-    mail($VetEmail,"Hello, " + $FirstName + " would like you to send forms about " +  $Name,"Please upload all rabies and vaccination records for " + $Name + ". Go to this link: https://petsignin.alibkaba.com/petsignin/vetupload.php.  Sign in email is " + $VetEmail + " and password is " + $VetCode +".  These credentials can only be used ONCE.");
     echo json_encode("2");
     $PDOconn = null;
 }
