@@ -11,189 +11,217 @@
         <script src="js/main.js" type="text/javascript"></script>
         <title>Pet Sign In</title>
     </head>
-<body>
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Pet Sign In</a>
+    <body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Pet Sign In</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">About</a></li>
+                    <li><a data-target="#AccountModal" data-toggle="modal" href="#" id="Account"><span class="glyphicon glyphicon-user"></span>Account</a></li>
+                    <li><a href="#" id="SignOut"><span class="glyphicon glyphicon-log-out"></span>Sign Out</a></li>
+                </ul>
+            </div>
         </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#">About</a></li>
-                <li><a data-target="#AccountModal" data-toggle="modal" href="#" id="Account"><span class="glyphicon glyphicon-user"></span>Account</a></li>
-                <li><a href="#" id="SignOut"><span class="glyphicon glyphicon-log-out"></span>Sign Out</a></li>
-            </ul>
+    </nav>
+    <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#AddNewPetModal" data-toggle="modal" id="AddNewPetButton">Add a new Pet</button>
+    <div class="modal fade" id="AddNewPetModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add a Pet</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="PetName">Pet's Name</label>
+                        <input type="text" id="PetName" placeholder="Pet's Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="DisplayPetBreeds">Pet's Breed</label>
+                        <select class="form-control" id="DisplayPetBreeds">
+                            <option value="">Select your pet's breed</option>
+                        </select>
+                    </div>
+                    <div class="btn-group">
+                        <label for="Gender">Pet's Gender</label>
+                        <select class="form-control" id="Gender">
+                            <option value="">Select your pet's gender</option>
+                            <option value="boy">Boy</option>
+                            <option value="girl">Girl</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="VetPhoneNumber">Vet Phone Number</label>
+                        <input type="tel" id="VetPhoneNumber" placeholder="Vet Phone Number">
+                    </div>
+                    <div class="form-group">
+                        <label for="VetEmail">Vet Email Address</label>
+                        <input type="text" id="VetEmail" placeholder="Vet Email Address">
+                    </div>
+                    <div class="form-group">
+                        <p>terms and condition pdf URL</p>
+                        <br>
+                        <input type="radio" name="tnc" value="no" checked>I do not agree<br>
+                        <input type="radio" name="tnc" value="yes">I agree<br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-dismiss="modal" id="AddPetButton" disabled>Add Pet</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
     </div>
-</nav>
-<button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#AddNewPetModal" data-toggle="modal" id="AddNewPetButton">Add a new Pet</button>
-<div class="modal fade" id="AddNewPetModal" role="dialog">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Add a Pet</h4>
+    <div id="DisplayPet"></div>
+    <div id="SignInAndRegister">
+    <p>Sign into your account</p>
+    <div class="form-group">
+        <label for="Email1">Email Address</label>
+        <input type="text" id="Email1" placeholder="Email Address">
+    </div>
+    <div class="form-group">
+        <label for="Password1">Password</label>
+        <input type="password" id="Password1" placeholder="Password" autocomplete="off"><br>
+    </div>
+    <button type="button" class="btn btn-primary btn-sm" id="SignInButton">Sign In</button>
+    <br>
+    <a href="#" data-toggle="modal" data-target="#ResetAccountModal" id="ResetAccount" >can't access your account?</a>
+    <br>
+    <div class="modal fade" id="ResetAccountModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Reset your account</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Email2">Email Address</label>
+                        <input type="text" id="Email3" placeholder="Email Address">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" id="ResetAccountButton">Reset</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
             </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="PetName">Pet's Name</label>
-                    <input type="text" id="PetName" placeholder="Pet's Name">
+        </div>
+    </div>
+    <p>New to Pet Sign In?</p>
+    <a href="#" data-toggle="modal" data-target="#RegisterModal" id="Register" >Register for a new account</a>
+    <br>
+    </div>
+    <div class="modal fade" id="RegisterModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Register</h4>
                 </div>
-                <div class="form-group">
-                    <label for="DisplayPetBreeds">Pet's Breed</label>
-                    <select class="form-control" id="DisplayPetBreeds">
-                        <option value="">Select your pet's breed</option>
-                    </select>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="FirstName">First Name</label>
+                        <input type="text" id="FirstName" placeholder="First Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="LastName">Last Name</label>
+                        <input type="text" id="LastName" placeholder="Last Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="Email2">Email Address</label>
+                        <input type="text" id="Email2" placeholder="Email Address">
+                    </div>
+                    <div class="form-group">
+                        <label for="Password2">Password</label>
+                        <input type="password" id="Password2" placeholder="Password" autocomplete="off"><br>
+                    </div>
                 </div>
-                <div class="btn-group">
-                    <label for="Gender">Pet's Gender</label>
-                    <select class="form-control" id="Gender">
-                        <option value="">Select your pet's gender</option>
-                        <option value="boy">Boy</option>
-                        <option value="girl">Girl</option>
-                    </select>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" id="RegisterButton">Register</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
-                <div class="form-group">
-                    <label for="VetPhoneNumber">Vet Phone Number</label>
-                    <input type="tel" id="VetPhoneNumber" placeholder="Vet Phone Number">
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="AccountModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Account</h4>
                 </div>
-                <div class="form-group">
-                    <label for="VetEmail">Vet Email Address</label>
-                    <input type="text" id="VetEmail" placeholder="Vet Email Address">
-                </div>
-                <div class="form-group">
-                    <p>terms and condition pdf URL</p>
+                <div class="modal-body">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ActivityModal" data-toggle="modal" id="ActivityButton">Activity</button>
                     <br>
-                    <input type="radio" name="tnc" value="no" checked>I do not agree<br>
-                    <input type="radio" name="tnc" value="yes">I agree<br>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ErrorModal" data-toggle="modal" id="ErrorButton">Error Logging</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal" id="AddPetButton" disabled>Add Pet</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
         </div>
     </div>
-</div>
-<div id="DisplayPet"></div>
-<div id="SignInAndRegister">
-<p>Sign into your account</p>
-<div class="form-group">
-    <label for="Email1">Email Address</label>
-    <input type="text" id="Email1" placeholder="Email Address">
-</div>
-<div class="form-group">
-    <label for="Password1">Password</label>
-    <input type="password" id="Password1" placeholder="Password" autocomplete="off"><br>
-</div>
-<button type="button" class="btn btn-primary btn-sm" id="SignInButton">Sign In</button>
-<br>
-<a href="#">can't access your account?</a>
-<br><br>
-<p>New to Pet Sign In?</p>
-<a href="#" data-toggle="modal" data-target="#RegisterModal" id="Register" >Register for a new account</a>
-<br>
-</div>
-<div class="modal fade" id="RegisterModal" role="dialog">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Register</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="Email2">Email Address</label>
-                    <input type="text" id="Email2" placeholder="Email Address">
+
+    <div class="modal fade" id="ActivityModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Account</h4>
                 </div>
-                <div class="form-group">
-                    <label for="Password2">Password</label>
-                    <input type="password" id="Password2" placeholder="Password" autocomplete="off"><br>
+                <div class="modal-body">
+                    <table class="table table-bordered" id="DisplayActivity">
+                        <thead>
+                        <tr>
+                            <th>Activity</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-target="#AccountModal" data-toggle="modal">Back</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-sm" id="RegisterButton">Register</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
         </div>
     </div>
-</div>
 
-<div class="modal fade" id="AccountModal" role="dialog">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Account</h4>
-            </div>
-            <div class="modal-body">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ActivityModal" data-toggle="modal" id="ActivityButton">Activity</button>
-                <br>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ErrorModal" data-toggle="modal" id="ErrorButton">Error Logging</button>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="ActivityModal" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Account</h4>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered" id="DisplayActivity">
-                    <thead>
-                    <tr>
-                        <th>Activity</th>
-                        <th>Date</th>
-                    </tr>
-                    </thead>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" data-target="#AccountModal" data-toggle="modal">Back</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+    <div class="modal fade" id="ErrorModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Account</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered" id="DisplayError">
+                        <thead>
+                        <tr>
+                            <th>Account</th>
+                            <th>Action</th>
+                            <th>Error Message</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" data-target="#AccountModal" data-toggle="modal">Back</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
-
-<div class="modal fade" id="ErrorModal" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Account</h4>
-            </div>
-            <div class="modal-body">
-                <table class="table table-bordered" id="DisplayError">
-                    <thead>
-                    <tr>
-                        <th>Account</th>
-                        <th>Action</th>
-                        <th>Error Message</th>
-                        <th>Date</th>
-                    </tr>
-                    </thead>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal" data-target="#AccountModal" data-toggle="modal">Back</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-</body>
+    </body>
 </html>

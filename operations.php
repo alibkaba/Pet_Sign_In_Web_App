@@ -44,6 +44,8 @@ function DBOperation($Action){
             break;
         case "ResetPassword": ResetPassword($Action);
             break;
+        case "AddPet": AddPet($Action);
+            break;
     }
 }
 
@@ -191,7 +193,7 @@ function ValidatePassword($Password,$HashedPassword){
 function SignIn(){
     $Email = stripslashes($_POST["Email"]);
     $Password = stripslashes($_POST["Password"]);
-    $UserData = GrabUserData($Email);
+    $UserData = FetchUserData($Email);
     if(!empty($UserData['Email'])){
         $HashedPassword = $UserData['Password'];
         $PasswordResponse = ValidatePassword($Password,$HashedPassword);
@@ -253,10 +255,20 @@ function ResetAttempts($Email){
     $Statement->execute();
 }
 
+function ValidateEmailDomain($Email){
+    strtolower($Email);
+    $Email = filter_var($Email, FILTER_SANITIZE_EMAIL);
+    $EmailDomain = substr(strrchr($Email, "@"), 1);
+    if(filter_var($Email, FILTER_VALIDATE_EMAIL) === true && !$EmailDomain == "@gmail") {
+        echo json_encode("notvalid");
+        exit;
+    }
+}
+
 function Register(){
     $Email = stripslashes($_POST["Email"]);
-    $Password = stripslashes($_POST["Password"]);
-    $UserData = GrabUserData($Email);
+    ValidateEmailDomain($Email);
+    $UserData = FetchUserData($Email);
     if($Email == $UserData['Email']){
         if($UserData['Attempts'] < 5){
             AddAttempt($UserData,$Email);
@@ -271,6 +283,9 @@ function Register(){
             exit;
         }
     }
+    $FirstName = stripslashes($_POST["FirstName"]);
+    $LastName = stripslashes($_POST["LastName"]);
+    $Password = stripslashes($_POST["Password"]);
     $HashedPassword = HashIt($Password);
     $ValidateEmail = 0;
     $Disabled = 0;
@@ -278,24 +293,82 @@ function Register(){
     $AdminCode = 1;
     $ActivationCode = hash('sha256', uniqid(rand(), true));
     global $PDOconn;
-    $Query = 'CALL Register (?,?,?,?,?,?,?)';
+    $Query = 'CALL Register (?,?,?,?,?,?,?,?,?)';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
-    $Statement->bindParam(3, $ValidateEmail, PDO::PARAM_INT, 1);
-    $Statement->bindParam(4, $Disabled, PDO::PARAM_STR, 64);
-    $Statement->bindParam(5, $Attempts, PDO::PARAM_INT, 1);
-    $Statement->bindParam(6, $AdminCode, PDO::PARAM_INT, 1);
-    $Statement->bindParam(7, $ActivationCode, PDO::PARAM_INT, 1);
+    $Statement->bindParam(1, $FirstName, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $LastName, PDO::PARAM_STR, 45);
+    $Statement->bindParam(3, $Email, PDO::PARAM_STR, 45);
+    $Statement->bindParam(4, $HashedPassword, PDO::PARAM_STR, 255);
+    $Statement->bindParam(5, $ValidateEmail, PDO::PARAM_INT, 1);
+    $Statement->bindParam(6, $Disabled, PDO::PARAM_INT, 1);
+    $Statement->bindParam(7, $Attempts, PDO::PARAM_INT, 1);
+    $Statement->bindParam(8, $AdminCode, PDO::PARAM_INT, 1);
+    $Statement->bindParam(9, $ActivationCode, PDO::PARAM_STR, 64);
     $Statement->execute();
-    mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/petsignin/activate.php?confirm=$ActivationCode");
+    //mail($Email,"Hello " + $FirstName + ", please activate your account","To activate your account, click on this link: https://petsignin.alibkaba.com/petsignin/activate.php?confirm=$ActivationCode");
     echo json_encode("2");
     $PDOconn = null;
 }
 
-function GrabUserData($Email){
+function AddPet($Action){
+    $Email = GetEmail($Action);
+    $Name = stripslashes($_POST["Name"]);
+    $Gender = stripslashes($_POST["Gender"]);
+    $BreedID = stripslashes($_POST["BreedID"]);
+    $VetPhoneNumber = stripslashes($_POST["VetPhoneNumber"]);
+    $VetEmail = stripslashes($_POST["VetEmail"]);
+    $VetCode = hash('sha256', uniqid(rand(), true));
+    $ValidatePet = 0;
+    $Disabled = 0;
     global $PDOconn;
-    $Query = 'CALL GrabUserData (?)';
+    $Query = 'CALL AddPet (?,?,?,?,?,?,?,?,?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $Name, PDO::PARAM_STR, 45);
+    $Statement->bindParam(3, $Gender, PDO::PARAM_STR, 4);
+    $Statement->bindParam(4, $BreedID, PDO::PARAM_INT);
+    $Statement->bindParam(5, $VetPhoneNumber, PDO::PARAM_INT);
+    $Statement->bindParam(6, $VetEmail, PDO::PARAM_STR, 45);
+    $Statement->bindParam(7, $VetCode, PDO::PARAM_STR, 64);
+    $Statement->bindParam(8, $ValidatePet, PDO::PARAM_INT, 1);
+    $Statement->bindParam(9, $Disabled, PDO::PARAM_INT, 1);
+    $Statement->execute();
+    $ActivityMSG = "Your new pet " + $Name + " has been added.";
+    AddActivity($Email,$ActivityMSG);
+    $UserData = FetchUserData($Email);
+    $FirstName = $UserData['FirstName'];
+    mail($VetEmail,"Hello, " + $FirstName + " would like you to send forms about " +  $Name,"Please upload all rabies and vaccination records for " + $Name + ". Go to this link: https://petsignin.alibkaba.com/petsignin/vetupload.php.  Sign in email is " + $VetEmail + " and password is " + $VetCode +".  These credentials can only be used ONCE.");
+    echo json_encode("2");
+    $PDOconn = null;
+}
+
+function UpdatePetVet($Action){
+    $Email = GetEmail($Action);
+    $PetID = stripslashes($_POST["PetID"]);
+    $Name = stripslashes($_POST["Name"]);
+    $VetPhoneNumber = stripslashes($_POST["VetPhoneNumber"]);
+    $VetEmail = stripslashes($_POST["VetEmail"]);
+    $VetCode = hash('sha256', uniqid(rand(), true));
+    global $PDOconn;
+    $Query = 'CALL AddPetVet (?,?,?,?,?,?,?,?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $VetPhoneNumber, PDO::PARAM_INT);
+    $Statement->bindParam(2, $VetEmail, PDO::PARAM_STR, 45);
+    $Statement->bindParam(3, $VetCode, PDO::PARAM_STR, 64);
+    $Statement->bindParam(1, $PetID, PDO::PARAM_INT);
+    $Statement->execute();
+    $ActivityMSG = "You updated " + $Name + "'s vet info out.";
+    AddActivity($Email,$ActivityMSG);
+    $UserData = FetchUserData($Email);
+    $FirstName = $UserData['FirstName'];
+    mail($VetEmail,"Hello, " + $FirstName + " would like you to send forms about " +  $Name,"Please upload all rabies and vaccination records for " + $Name + ". Go to this link: https://petsignin.alibkaba.com/petsignin/vetupload.php.  Sign in email is " + $VetEmail + " and password is " + $VetCode +".  These credentials can only be used ONCE.");
+    echo json_encode("2");
+    $PDOconn = null;
+}
+
+function FetchUserData($Email){
+    global $PDOconn;
+    $Query = 'CALL FetchUserData (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
@@ -346,9 +419,9 @@ function SignOut($Action){
     session_destroy();
 }
 
-function GrabSessionData($SessionID){
+function FetchSessionData($SessionID){
     global $PDOconn;
-    $Query = 'CALL GrabSessionData (?)';
+    $Query = 'CALL FetchSessionData (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
     $Statement->execute();
@@ -360,7 +433,7 @@ function ValidateSession($Action){
     StartSession();
     if(isset($_SESSION['Session_ID'])){
         $SessionID = $_SESSION["Session_ID"];
-        $SessionData = GrabDBSessionData($SessionID);
+        $SessionData = FetchDBSessionData($SessionID);
         $Email = $SessionData['Email'];
         $BrowserData = GetBrowserData();
         $AccountRole = CheckAccountRole($Email);
@@ -409,9 +482,9 @@ function CheckAccountRole($Email){
     return $AccountRole;
 }
 
-function GrabDBSessionData($SessionID){
+function FetchDBSessionData($SessionID){
     global $PDOconn;
-    $Query = 'CALL GrabDBSessionData (?)';
+    $Query = 'CALL FetchDBSessionData (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
     $Statement->execute();

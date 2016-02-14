@@ -7,7 +7,7 @@ CheckActivationCode($ActivationCode);
 
 function CheckActivationCode($ActivationCode){
     global $PDOconn;
-    $Query = 'SELECT count(*) as Count FROM djkabau1_petsignin.Account WHERE ActivationCode = (?)';
+    $Query = 'CALL CheckActivationCode (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $ActivationCode, PDO::PARAM_STR, 64);
     $Statement->execute();
@@ -25,7 +25,7 @@ function CheckActivationCode($ActivationCode){
 function Activate($ActivationCode){
     $ValidateEmail = 1;
     global $PDOconn;
-    $Query = 'UPDATE djkabau1_petsignin.Account set ValidateEmail = (?) where ActivationCode = (?)';
+    $Query = 'CALL ActivateAccount (?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $ValidateEmail, PDO::PARAM_STR, 64);
     $Statement->bindParam(2, $ActivationCode, PDO::PARAM_STR, 64);

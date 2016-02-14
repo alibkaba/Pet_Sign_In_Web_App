@@ -18,7 +18,6 @@ $(document).ready(function() {
         var Password = document.getElementById("Password1").value;
         IsFieldFilled(Email);
         IsFieldFilled(Password);
-        ValidateEmailDomain(Email);
         var Action = "SignIn";
         try{
             var AjaxData = {
@@ -28,7 +27,7 @@ $(document).ready(function() {
             };
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
             if(Response_Data == "0"){
-                alert("This account has been locked.  Contact the administrator.");
+                alert("This account has been locked.  Reset your account or contact the administrator..");
             }else if (Response_Data == "1") {
                 alert("Invalid user name and/or password.  If you forgot your password, reset it.");
             }else if(Response_Data == "2"){
@@ -84,23 +83,35 @@ $(document).ready(function() {
         }
     });
 
+    $( "#Register" ).click(function() {
+        var FirstName = document.getElementById("FirstName").value = "";
+        var LastName = document.getElementById("LastName").value = "";
+        var Email = document.getElementById("Email2").value = "";
+        var Password = document.getElementById("Password2").value = "";
+    });
+
     $( "#RegisterButton" ).click(function() {
+        var FirstName = document.getElementById("FirstName").value;
+        var LastName = document.getElementById("LastName").value;
         var Email = document.getElementById("Email2").value;
         var Password = document.getElementById("Password2").value;
         IsFieldFilled(Email);
         IsFieldFilled(Password);
-        ValidateEmailDomain(Email);
-        ValidatePassword(Email,Password);
+        IsFieldFilled(FirstName);
+        IsFieldFilled(LastName);
         var Action = "Register";
         try{
             var AjaxData = {
+                FirstName: FirstName,
+                LastName: LastName,
                 Email: Email,
                 Password: Password,
                 Action: Action
             };
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            console.log(Response_Data);
             if(Response_Data == "0"){
-                alert("This account has been locked.  Contact the administrator.");
+                alert("This account has been locked.  Reset your account or contact the administrator..");
             }else if (Response_Data == "1"){
                 alert("This account already exists, please sign in instead.");
             }else if(Response_Data == "2"){
@@ -153,7 +164,6 @@ $(document).ready(function() {
             AddJSError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
-        //FetchPetDOBStart();
     });
 
     $( "#AddPetButton" ).click(function() {
@@ -162,13 +172,25 @@ $(document).ready(function() {
         var Gender = document.getElementById("Gender").value;
         var VetEmail = document.getElementById("VetEmail").value;
         var VetPhoneNumber = document.getElementById("VetPhoneNumber").value;
-
-        console.log(Name, Breed, Gender, VetEmail, VetPhoneNumber);
         IsFieldFilled(Name);
         IsFieldFilled(Breed);
         IsFieldFilled(Gender);
         IsFieldFilled(VetEmail);
         IsFieldFilled(VetPhoneNumber);
+        var Action = "AddPet";
+        try{
+            var AjaxData = {
+                Action: Action
+            };
+            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            console.log(Response_Data);
+            DisplayPetBreeds(Response_Data);
+        }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            AddJSError(FailedAction,ErrorMSG);
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        }
     });
 
     $('input[type=radio][name=tnc]').change(function() {
@@ -177,6 +199,57 @@ $(document).ready(function() {
         }
         else if (this.value == 'no') {
             document.getElementById("AddPetButton").disabled = true;
+        }
+    });
+
+    $( "#ResetAccountButton" ).click(function() {
+        var Email = document.getElementById("Email3").value;
+        IsFieldFilled(Email);
+        var Action = "ResetAccountButton";
+        try{
+            var AjaxData = {
+                Email: Email,
+                Action: Action
+            };
+            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            if(Response_Data == "0"){
+                alert("Invalid email, try again.");
+            }else{
+                alert("Please check your email to activate your account");
+            }
+        }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            AddJSError(FailedAction,ErrorMSG);
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        }
+    });
+
+    $( "#ChangePasswordButton" ).click(function() {
+        var OldPassword = document.getElementById("OldPassword").value;
+        var OldPassword1 = document.getElementById("OldPassword1").value;
+        var NewPassword = document.getElementById("NewPassword").value;
+        IsFieldFilled(Email);
+        IsFieldFilled(OldPassword);
+        IsFieldFilled(OldPassword1);
+        IsFieldFilled(NewPassword);
+        var Action = "ResetAccountButton";
+        try{
+            var AjaxData = {
+                Email: Email,
+                Action: Action
+            };
+            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            if(Response_Data == "0"){
+                alert("Invalid email, try again.");
+            }else{
+                alert("Please check your email to activate your account");
+            }
+        }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            AddJSError(FailedAction,ErrorMSG);
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
 });
@@ -354,39 +427,6 @@ function UnitTest() {
     var AjaxData = OutgoingAjax(AjaxData);
 }
 
-$( "RegisterButton" ).click(function() {
-    var Email = document.getElementById("Email2").value;
-    var Password = document.getElementById("Password2").value;
-    IsFieldFilled(Email);
-    IsFieldFilled(Password);
-    ValidateEmailDomain(Email);
-    ValidatePassword(Email,Password);
-    var Action = "Register";
-    try{
-        var AjaxData = {
-            Email: Email,
-            Password: Password,
-            Action: Action
-        };
-        var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
-        if(Response_Data == "0"){
-            alert("This account has been locked.  Contact the administrator.");
-        }else if (Response_Data == "1"){
-            alert("This account will be locked soon.  Reset your password or contact the administrator.");
-        }else if(Response_Data == "2"){
-            alert("Go to your email to activate your account.");
-            window.location = "/petsignin/";
-        }else{
-            alert("Please check your email to activate your account");
-        }
-    }catch(e){
-        var ErrorMSG = e;
-        var FailedAction = Action;
-        AddJSError(FailedAction,ErrorMSG);
-        alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-    }
-});
-
 function Activate(ActivationCode){
     var Action = "Activate";
     try{
@@ -400,19 +440,6 @@ function Activate(ActivationCode){
         var FailedAction = Action;
         AddJSError(FailedAction,ErrorMSG);
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-    }
-}
-
-function ValidateEmailDomain(Email) {
-    var re = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
-    if (re.test(Email)) {
-        if (Email.indexOf('@gmail.com', Email.length - '@gmail.com'.length) == -1) {
-            alert('Email must be a GMAIL e-mail address (your.name@gmail.com)');
-            throw e = "Email must be a GMAIL e-mail address (your.name@gmail.com)";
-        }
-    } else {
-        alert('Not a valid e-mail address');
-        throw e = "Not a valid e-mail address";
     }
 }
 
