@@ -22,9 +22,11 @@ function DBOperation($Action){
     switch($Action) {
         case "UnitTest": UnitTest();
             break;
-        case "Register": Register();
+        case "AddAccount": AddAccount();
             break;
         case "SignIn": SignIn();
+            break;
+        case "SignInPet": SignInPet($Action);
             break;
         case "SignOut": SignOut($Action);
             break;
@@ -36,7 +38,7 @@ function DBOperation($Action){
             break;
         case "FetchPet": FetchPet($Action);
             break;
-        case "FetchPetBreeds": FetchPetBreeds($Action);
+        case "FetchBreeds": FetchBreeds($Action);
             break;
         case "ValidateSession": ValidateSession($Action);
             break;
@@ -46,6 +48,8 @@ function DBOperation($Action){
             break;
         case "AddPet": AddPet($Action);
             break;
+        case "AddBreed": AddBreed($Action);
+            break;
     }
 }
 
@@ -53,10 +57,10 @@ function ResetActivationCode(){
     $Email = stripslashes($_POST["Email"]);
     $ActivationCode = hash('sha256', uniqid(rand(), true));
     global $PDOconn;
-    $Query = 'UPDATE djkabau1_petsignin.Account set ActivationCode = (?) where Email = (?)';
+    $Query = 'UPDATE djkabau1_petsignin.Accounts set ActivationCode = (?) where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $ActivationCode, PDO::PARAM_INT, 64);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
     mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/petsignin/activate.php?confirm=$ActivationCode");
     echo json_encode("0");
     $PDOconn = null;
@@ -66,7 +70,7 @@ function ResetPassword(){
     $Email = stripslashes($_POST["Email"]);
     $ActivationCode = hash('sha256', uniqid(rand(), true));
     global $PDOconn;
-    $Query = 'UPDATE djkabau1_petsignin.Account set ActivationCode = (?) where Email = (?)';
+    $Query = 'UPDATE djkabau1_petsignin.Accounts set ActivationCode = (?) where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $ActivationCode, PDO::PARAM_INT, 64);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
@@ -76,9 +80,9 @@ function ResetPassword(){
 }
 
 function FetchPet($Action){
-    $Email = GetEmail($Action);
+    $Email = ValidateSession($Action);
     global $PDOconn;
-    $Query = 'SELECT * FROM djkabau1_petsignin.Pet where Email = (?)';
+    $Query = 'CALL FetchPet (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
@@ -88,7 +92,7 @@ function FetchPet($Action){
 }
 
 function FetchError($Action){
-    $Email = GetEmail($Action);
+    $Email = ValidateSession($Action);
     global $PDOconn;
     $Query = 'CALL FetchError (?)';
     $Statement = $PDOconn->prepare($Query);
@@ -104,7 +108,7 @@ function AddError($Action,$ErrorMSG,$Email){
         $Email = NULL;
     }
     global $PDOconn;
-    $Query = 'INSERT INTO djkabau1_petsignin.Error (Email, Action, ErrorMSG) VALUES (?,?,?)';
+    $Query = 'INSERT INTO djkabau1_petsignin.Errors (Email, Action, ErrorMSG) VALUES (?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $Action, PDO::PARAM_STR, 45);
@@ -127,7 +131,7 @@ function AddJSError(){
 
 function AddActivity($Email,$ActivityMSG){
     global $PDOconn;
-    $Query = 'CALL AddJSError (?,?)';
+    $Query = 'CALL AddActivity (?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $ActivityMSG, PDO::PARAM_STR, 45);
@@ -239,6 +243,14 @@ function SignIn(){
     }
 }
 
+function SignInPet($Action){
+    $Email = ValidateSession($Action);
+    $Name = stripslashes($_POST["Name"]);
+    $ActivityMSG = "Your pet " . $Name . " has been signed in.";
+    AddActivity($Email,$ActivityMSG);
+    echo json_encode("1");
+}
+
 function DeleteSession($Email){
     global $PDOconn;
     $Query = 'CALL DeleteSession (?)';
@@ -255,9 +267,8 @@ function ResetAttempts($Email){
     $Statement->execute();
 }
 
-function Register(){
+function AddAccount(){
     $Email = stripslashes($_POST["Email"]);
-    exit;
     $UserData = FetchUserData($Email);
     if($Email == $UserData['Email']){
         if($UserData['Attempts'] < 5){
@@ -273,8 +284,6 @@ function Register(){
             exit;
         }
     }
-    $FirstName = stripslashes($_POST["FirstName"]);
-    $LastName = stripslashes($_POST["LastName"]);
     $Password = stripslashes($_POST["Password"]);
     $HashedPassword = HashIt($Password);
     $ValidateEmail = 0;
@@ -283,41 +292,57 @@ function Register(){
     $AdminCode = 1;
     $ActivationCode = hash('sha256', uniqid(rand(), true));
     global $PDOconn;
-    $Query = 'CALL Register (?,?,?,?,?,?,?,?,?)';
+    $Query = 'CALL AddAccount (?,?,?,?,?,?,?)';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $FirstName, PDO::PARAM_STR, 45);
-    $Statement->bindParam(2, $LastName, PDO::PARAM_STR, 45);
-    $Statement->bindParam(3, $Email, PDO::PARAM_STR, 45);
-    $Statement->bindParam(4, $HashedPassword, PDO::PARAM_STR, 255);
-    $Statement->bindParam(5, $ValidateEmail, PDO::PARAM_INT, 1);
-    $Statement->bindParam(6, $Disabled, PDO::PARAM_INT, 1);
-    $Statement->bindParam(7, $Attempts, PDO::PARAM_INT, 1);
-    $Statement->bindParam(8, $AdminCode, PDO::PARAM_INT, 1);
-    $Statement->bindParam(9, $ActivationCode, PDO::PARAM_STR, 64);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
+    $Statement->bindParam(3, $ValidateEmail, PDO::PARAM_INT, 1);
+    $Statement->bindParam(4, $Disabled, PDO::PARAM_INT, 1);
+    $Statement->bindParam(5, $Attempts, PDO::PARAM_INT, 1);
+    $Statement->bindParam(6, $AdminCode, PDO::PARAM_INT, 1);
+    $Statement->bindParam(7, $ActivationCode, PDO::PARAM_STR, 64);
     $Statement->execute();
-    //mail($Email,"Hello " + $FirstName + ", please activate your account","To activate your account, click on this link: https://petsignin.alibkaba.com/petsignin/activate.php?confirm=$ActivationCode");
+    mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/petsignin/activate.php?confirm=$ActivationCode");
     echo json_encode("2");
     $PDOconn = null;
 }
 
 function AddPet($Action){
-    $Email = GetEmail($Action);
+    $Email = ValidateSession($Action);
     $Name = stripslashes($_POST["Name"]);
-    $Gender = stripslashes($_POST["Gender"]);
     $BreedID = stripslashes($_POST["BreedID"]);
+    $Gender = stripslashes($_POST["Gender"]);
     $Disabled = 0;
     global $PDOconn;
     $Query = 'CALL AddPet (?,?,?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $Name, PDO::PARAM_STR, 45);
-    $Statement->bindParam(3, $Gender, PDO::PARAM_STR, 4);
-    $Statement->bindParam(4, $BreedID, PDO::PARAM_INT);
+    $Statement->bindParam(3, $BreedID, PDO::PARAM_INT);
+    $Statement->bindParam(4, $Gender, PDO::PARAM_STR, 4);
     $Statement->bindParam(5, $Disabled, PDO::PARAM_INT, 1);
     $Statement->execute();
-    $ActivityMSG = "Your new pet " + $Name + " has been added.";
+    $ActivityMSG = "Your new pet " . $Name . " has been added.";
     AddActivity($Email,$ActivityMSG);
     echo json_encode("2");
+    $PDOconn = null;
+}
+
+function AddBreed($Action){
+    $Email = ValidateSession($Action);
+    if(!CheckAccountRole($Email) == 2){
+        echo json_encode("0");//this function is for admins only
+        exit;
+    }
+    $Name = stripslashes($_POST["Name"]);
+    global $PDOconn;
+    $Query = 'CALL AddBreed (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Name, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $ActivityMSG = "Your added " . $Name . " as a new Breed.";
+    AddActivity($Email,$ActivityMSG);
+    echo json_encode("1");
     $PDOconn = null;
 }
 
@@ -338,14 +363,9 @@ function MailOut($Email, $Subject, $EmailMSG){ //fix this later, from and reply 
     mail($Email,$Subject,$EmailMSG,$Headers);
 }
 
-function GetEmail($Action){
-    $Email = ValidateSession($Action);
-    return $Email;
-}
-
-function FetchPetBreeds(){
+function FetchBreeds(){
     global $PDOconn;
-    $Query = 'CALL FetchPetBreeds';
+    $Query = 'CALL FetchBreeds';
     $Statement = $PDOconn->prepare($Query);
     $Statement->execute();
     $Response = $Statement->fetchAll();
@@ -354,7 +374,7 @@ function FetchPetBreeds(){
 }
 
 function FetchActivity($Action){
-    $Email = GetEmail($Action);
+    $Email = ValidateSession($Action);
     global $PDOconn;
     $Query = 'CALL FetchActivity (?)';
     $Statement = $PDOconn->prepare($Query);
@@ -366,7 +386,7 @@ function FetchActivity($Action){
 }
 
 function SignOut($Action){
-    $Email = GetEmail($Action);
+    $Email = ValidateSession($Action);
     DeleteSession($Email);
     $ActivityMSG = "You signed out.";
     AddActivity($Email,$ActivityMSG);
@@ -423,16 +443,16 @@ function CheckAccountRole($Email){
     $Response = $Statement->fetch(PDO::FETCH_ASSOC);
     if($Response['ValidateEmail'] == 1 && $Response['Disabled'] == 0 && $Response['Attempts'] == 0){
         if($Response['AdminCode'] == 3){
-            $AccountRole = 3;
+            $AccountRole = 3;//super admin
         }elseif($Response['AdminCode'] == 2){
-            $AccountRole = 2;
+            $AccountRole = 2;//admin
         }else{
-            $AccountRole = 1;
+            $AccountRole = 1;//registered user
         }
     }else{
         session_unset();
         session_destroy();
-        $AccountRole = 0;
+        $AccountRole = 0;//user
     }
     return $AccountRole;
 }

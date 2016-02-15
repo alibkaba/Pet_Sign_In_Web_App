@@ -32,6 +32,8 @@
             </div>
         </div>
     </nav>
+    <div class="btn-group-vertical" data-toggle="buttons" id="DisplayPet"></div>
+    <br>
     <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#AddNewPetModal" data-toggle="modal" id="AddNewPetButton">Add a new Pet</button>
     <div class="modal fade" id="AddNewPetModal" role="dialog">
         <div class="modal-dialog modal-sm">
@@ -42,46 +44,45 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="PetName">Pet's Name</label>
+                        <label for="PetName">Pet's Name</label><br>
                         <input type="text" id="PetName" placeholder="Pet's Name">
                     </div>
                     <div class="form-group">
-                        <label for="DisplayPetBreeds">Pet's Breed</label>
+                        <label for="DisplayPetBreeds">Pet's Breed</label><br>
                         <select class="form-control" id="DisplayPetBreeds">
                             <option value="">Select your pet's breed</option>
                         </select>
                     </div>
                     <div class="btn-group">
-                        <label for="Gender">Pet's Gender</label>
+                        <label for="Gender">Pet's Gender</label><br>
                         <select class="form-control" id="Gender">
                             <option value="">Select your pet's gender</option>
-                            <option value="boy">Boy</option>
-                            <option value="girl">Girl</option>
+                            <option value="Boy">Boy</option>
+                            <option value="Girl">Girl</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <p>terms and condition pdf URL</p>
                         <br>
-                        <input type="radio" name="tnc" value="no" checked>I do not agree<br>
-                        <input type="radio" name="tnc" value="yes">I agree<br>
+                        <input type="radio" name="pettnc" value="no" id="pettncno" checked>I do not agree<br>
+                        <input type="radio" name="pettnc" value="yes">I agree<br>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-dismiss="modal" id="AddPetButton" disabled>Add Pet</button>
+                    <button type="button" class="btn btn-success" id="AddPetButton" disabled>Add Pet</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
-    <div id="DisplayPet"></div>
     <div id="SignInAndRegister">
     <p>Sign into your account</p>
     <div class="form-group">
-        <label for="Email1">Email Address</label>
+        <label for="Email1">Email Address</label><br>
         <input type="text" id="Email1" placeholder="Email Address">
     </div>
     <div class="form-group">
-        <label for="Password1">Password</label>
+        <label for="Password1">Password</label><br>
         <input type="password" id="Password1" placeholder="Password" autocomplete="off"><br>
     </div>
     <button type="button" class="btn btn-primary btn-sm" id="SignInButton">Sign In</button>
@@ -97,7 +98,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="Email2">Email Address</label>
+                        <label for="Email2">Email Address</label><br>
                         <input type="text" id="Email3" placeholder="Email Address">
                     </div>
                 </div>
@@ -121,24 +122,22 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="FirstName">First Name</label>
-                        <input type="text" id="FirstName" placeholder="First Name">
-                    </div>
-                    <div class="form-group">
-                        <label for="LastName">Last Name</label>
-                        <input type="text" id="LastName" placeholder="Last Name">
-                    </div>
-                    <div class="form-group">
-                        <label for="Email2">Email Address</label>
+                        <label for="Email2">Email Address</label><br>
                         <input type="text" id="Email2" placeholder="Email Address">
                     </div>
                     <div class="form-group">
-                        <label for="Password2">Password</label>
+                        <label for="Password2">Password</label><br>
                         <input type="password" id="Password2" placeholder="Password" autocomplete="off"><br>
+                    </div>
+                    <div class="form-group">
+                        <p>terms and condition pdf URL</p>
+                        <br>
+                        <input type="radio" name="accounttnc" value="no" id="accounttncno" checked>I do not agree<br>
+                        <input type="radio" name="accounttnc" value="yes">I agree<br>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-sm" id="RegisterButton">Register</button>
+                    <button type="button" class="btn btn-success btn-sm" id="RegisterButton" disabled>Register</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>

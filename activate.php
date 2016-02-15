@@ -13,21 +13,16 @@ function CheckActivationCode($ActivationCode){
     $Statement->execute();
     $Response = $Statement->fetch(PDO::FETCH_ASSOC);
     if($Response['Count'] == 1){
-        Activate($ActivationCode);
+        $ValidateEmail = 1;
+        $Query = 'CALL ActivateAccount (?,?)';
+        $Statement = $PDOconn->prepare($Query);
+        $Statement->bindParam(1, $ValidateEmail, PDO::PARAM_STR, 45);
+        $Statement->bindParam(2, $ActivationCode, PDO::PARAM_STR, 64);
+        $Statement->execute();
         $MSG = "ACCOUNT HAS BEEN ACTIVATED.  You are being re-directed to the home page to sign in.";
     }else{
-        $MSG = "Invalid activation code.  Please reset your account activation code/password";
+        $MSG = "Invalid activation code or your account has already been activated.  Please reset your account or contact an administrator.";
     }
     echo "<script type='text/javascript'>alert('$MSG'); window.location = \"/petsignin/\";</script>";
     $PDOconn = null;
-}
-
-function Activate($ActivationCode){
-    $ValidateEmail = 1;
-    global $PDOconn;
-    $Query = 'CALL ActivateAccount (?,?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $ValidateEmail, PDO::PARAM_STR, 64);
-    $Statement->bindParam(2, $ActivationCode, PDO::PARAM_STR, 64);
-    $Statement->execute();
 }

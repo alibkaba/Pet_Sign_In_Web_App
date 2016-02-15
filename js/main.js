@@ -86,28 +86,31 @@ $(document).ready(function() {
     });
 
     $( "#Register" ).click(function() {
-        var FirstName = document.getElementById("FirstName").value = "";
-        var LastName = document.getElementById("LastName").value = "";
-        var Email = document.getElementById("Email2").value = "";
-        var Password = document.getElementById("Password2").value = "";
+        document.getElementById("Email2").value = "";
+        document.getElementById("Password2").value = "";
+        document.getElementById("accounttncno").checked = true;
+        document.getElementById("RegisterButton").disabled = true;
+    });
+
+    $('input[type=radio][name=accounttnc]').change(function() {
+        if (this.value == 'yes') {
+            document.getElementById("RegisterButton").disabled = false;
+        }
+        else if (this.value == 'no') {
+            document.getElementById("RegisterButton").disabled = true;
+        }
     });
 
     $( "#RegisterButton" ).click(function() {
-        var FirstName = document.getElementById("FirstName").value;
-        var LastName = document.getElementById("LastName").value;
         var Email = document.getElementById("Email2").value;
         var Password = document.getElementById("Password2").value;
         IsFieldFilled(Email);
         IsFieldFilled(Password);
-        IsFieldFilled(FirstName);
-        IsFieldFilled(LastName);
         ValidateEmailDomain(Email);
         ValidatePassword(Email,Password);
-        var Action = "Register";
+        var Action = "AddAccount";
         try{
             var AjaxData = {
-                FirstName: FirstName,
-                LastName: LastName,
                 Email: Email,
                 Password: Password,
                 Action: Action
@@ -120,7 +123,7 @@ $(document).ready(function() {
                 alert("This account already exists, please sign in instead.");
             }else if(Response_Data == "2"){
                 alert("Go to your email to activate your account.");
-                //window.location = "/petsignin/";
+                window.location = "/petsignin/";
             }else{
                 alert("Please check your email to activate your account");
             }
@@ -149,10 +152,12 @@ $(document).ready(function() {
     });
 
     $( "#AddNewPetButton" ).click(function() {
-        var Name = document.getElementById("PetName").value = "";
-        var Breed = document.getElementById("DisplayPetBreeds").options.length = "1";
-        var Gender = document.getElementById("Gender").value = "";
-        var Action = "FetchPetBreeds";
+        document.getElementById("PetName").value = "";
+        document.getElementById("DisplayPetBreeds").options.length = "1";
+        document.getElementById("Gender").value = "";
+        document.getElementById("pettncno").checked = true;
+        document.getElementById("AddPetButton").disabled = true;
+        var Action = "FetchBreeds";
         try{
             var AjaxData = {
                 Action: Action
@@ -170,19 +175,27 @@ $(document).ready(function() {
 
     $( "#AddPetButton" ).click(function() {
         var Name = document.getElementById("PetName").value;
-        var Breed = document.getElementById("DisplayPetBreeds").value;
+        var BreedID = document.getElementById("DisplayPetBreeds").value;
         var Gender = document.getElementById("Gender").value;
         IsFieldFilled(Name);
-        IsFieldFilled(Breed);
+        IsFieldFilled(BreedID);
         IsFieldFilled(Gender);
         var Action = "AddPet";
         try{
             var AjaxData = {
+                Name: Name,
+                BreedID: BreedID,
+                Gender: Gender,
                 Action: Action
             };
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
             console.log(Response_Data);
-            DisplayPetBreeds(Response_Data);
+            if(Response_Data == "0"){
+                alert("This account has been locked.  Reset your account or contact the administrator..");
+            }else{
+                alert( Name + " was added.");
+                window.location = "/petsignin/";
+            }
         }catch(e){
             var ErrorMSG = e;
             var FailedAction = Action;
@@ -191,7 +204,7 @@ $(document).ready(function() {
         }
     });
 
-    $('input[type=radio][name=tnc]').change(function() {
+    $('input[type=radio][name=pettnc]').change(function() {
         if (this.value == 'yes') {
             document.getElementById("AddPetButton").disabled = false;
         }
@@ -250,12 +263,48 @@ $(document).ready(function() {
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
+
+    $( "#DisplayPet :input" ).change(function() {
+        var Name = this.value;
+        var Action = "SignInPet";
+        try{
+            var AjaxData = {
+                Name: Name,
+                Action: Action
+            };
+            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            console.log(Response_Data);
+            if (Response_Data == "0") {
+                alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
+                window.location = "/petsignin/";
+            }else{
+                alert('Your pet was signed in.');
+                window.location = "/petsignin/";
+            }
+        }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            AddJSError(FailedAction,ErrorMSG);
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        }
+    });
 });
+
+function SignInPet(){
+
+}
 
 function DisplayPet(Response_Data){
     var DisplayPet = "";
     for (var i = 0; i < Response_Data.length; i++) {
-        DisplayPet += '<button type="button" class="btn btn-primary btn-sm" value="' + Response_Data[i].Name + '" onclick="SignInPet()">' + Response_Data[i].Name + '</button><br>';
+        if (Response_Data[i].DiffDate == "0"){
+            DisplayPet += '<label class="btn btn-primary" disabled>';
+        }else{
+            DisplayPet += '<label class="btn btn-primary">';
+        }
+        DisplayPet += '<input type="radio" name="options" id="option1" autocomplete="off" value="' + Response_Data[i].Name + '">' + Response_Data[i].Name + '</button>';
+
+        DisplayPet += '</label>';
     }
     document.getElementById("DisplayPet").innerHTML = DisplayPet;
 }
@@ -305,6 +354,7 @@ function DisplayUser(){
 }
 
 function DisplayRUser(){
+    FetchPet();
     document.getElementById("SignOut").style.display="block";
     document.getElementById("SignOut").style.visibility="visible";
     document.getElementById("Account").style.display="block";
@@ -316,6 +366,7 @@ function DisplayRUser(){
 }
 
 function DisplayAdmin(){
+    FetchPet();
     document.getElementById("SignOut").style.display="block";
     document.getElementById("SignOut").style.visibility="visible";
     document.getElementById("Account").style.display="block";
@@ -350,10 +401,6 @@ function HideAll(){
     document.getElementById("ErrorButton").style.visibility="hidden";
     document.getElementById("AddPetButton").style.display="none";
     document.getElementById("AddPetButton").style.visibility="hidden";
-}
-
-function SignInPet(){
-    alert('pet signed in.');
 }
 
 function ValidateSession(){
