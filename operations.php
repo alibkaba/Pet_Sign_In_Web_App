@@ -3,6 +3,7 @@ require_once('db.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+
 ValidateAjaxRequest();
 
 function ValidateAjaxRequest() {
@@ -30,7 +31,7 @@ function DBOperation($Action){
             break;
         case "SignOut": SignOut($Action);
             break;
-        case "FetchError": FetchError($Action);
+        case "FetchErrors": FetchErrors($Action);
             break;
         case "AddJSError": AddJSError($Action);
             break;
@@ -91,10 +92,10 @@ function FetchPet($Action){
     $PDOconn = null;
 }
 
-function FetchError($Action){
+function FetchErrors($Action){
     $Email = ValidateSession($Action);
     global $PDOconn;
-    $Query = 'CALL FetchError (?)';
+    $Query = 'CALL FetchErrors';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
@@ -203,7 +204,7 @@ function SignIn(){
         $PasswordResponse = ValidatePassword($Password,$HashedPassword);
         if($Email == $UserData['Email'] && $PasswordResponse == 1){
             if($UserData['Attempts'] < 5){
-                if($UserData['ValidateEmail'] == 1) {
+                if($UserData['Disabled'] == 0) {
                     ResetAttempts($Email);
                     DeleteSession($Email);
                     $ActivityMSG = "You signed in.";
@@ -286,23 +287,18 @@ function AddAccount(){
     }
     $Password = stripslashes($_POST["Password"]);
     $HashedPassword = HashIt($Password);
-    $ValidateEmail = 0;
-    $Disabled = 0;
+    $Disabled = 1;
     $Attempts = 0;
     $AdminCode = 1;
-    $ActivationCode = hash('sha256', uniqid(rand(), true));
     global $PDOconn;
     $Query = 'CALL AddAccount (?,?,?,?,?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
-    $Statement->bindParam(3, $ValidateEmail, PDO::PARAM_INT, 1);
     $Statement->bindParam(4, $Disabled, PDO::PARAM_INT, 1);
     $Statement->bindParam(5, $Attempts, PDO::PARAM_INT, 1);
     $Statement->bindParam(6, $AdminCode, PDO::PARAM_INT, 1);
-    $Statement->bindParam(7, $ActivationCode, PDO::PARAM_STR, 64);
     $Statement->execute();
-    mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/petsignin/activate.php?confirm=$ActivationCode");
     echo json_encode("2");
     $PDOconn = null;
 }
@@ -330,7 +326,7 @@ function AddPet($Action){
 
 function AddBreed($Action){
     $Email = ValidateSession($Action);
-    if(!CheckAccountRole($Email) == 2){
+    if(!FetchAccountRole($Email) == 2){
         echo json_encode("0");//this function is for admins only
         exit;
     }
@@ -411,7 +407,7 @@ function ValidateSession($Action){
         $SessionData = FetchDBSessionData($SessionID);
         $Email = $SessionData['Email'];
         $BrowserData = GetBrowserData();
-        $AccountRole = CheckAccountRole($Email);
+        $AccountRole = FetchAccountRole($Email);
         if($SessionData['IP'] == $BrowserData['IP'] && $SessionData['Browser'] == $BrowserData['Browser'] && $SessionData['Platform'] == $BrowserData['Platform']){
             if($Action == "ValidateSession"){
                 echo json_encode($AccountRole);
@@ -434,14 +430,14 @@ function ValidateSession($Action){
     }
 }
 
-function CheckAccountRole($Email){
+function FetchAccountRole($Email){
     global $PDOconn;
-    $Query = 'CALL CheckAccountRole (?)';
+    $Query = 'CALL FetchAccountRole (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
     $Response = $Statement->fetch(PDO::FETCH_ASSOC);
-    if($Response['ValidateEmail'] == 1 && $Response['Disabled'] == 0 && $Response['Attempts'] == 0){
+    if($Response['Disabled'] == 0 && $Response['Attempts'] == 0){
         if($Response['AdminCode'] == 3){
             $AccountRole = 3;//super admin
         }elseif($Response['AdminCode'] == 2){

@@ -288,10 +288,59 @@ $(document).ready(function() {
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
+
+    $( "#ManageAccountsButton" ).click(function() {
+        var Action = "FetchUsersData";
+        try{
+            var AjaxData = {
+                Action: Action
+            };
+            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            console.log(Response_Data);
+            DisplayAllAccounts(Response_Data);
+        }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            AddJSError(FailedAction,ErrorMSG);
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        }
+    });
+// FETCH USER DATA BUT MAKE SURE THE DISABLED IS SET BASED ON THE VALUE ON THE DATABASE. ALSO DRAG THE PETS INFO DOWN TOO. SO TWO FETCH.
+    $( "#DisplayAllAccounts" ).change(function() {
+        var Name = this.value;
+        var Action = "FetchUsersData";
+        try{
+            var AjaxData = {
+                Name: Name,
+                Action: Action
+            };
+            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+            console.log(Response_Data);
+            DisplayDisabledAndPets(Response_Data);
+        }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            AddJSError(FailedAction,ErrorMSG);
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        }
+    });
 });
 
-function SignInPet(){
+function DisplayDisabledAndPets(Response_Data){
+    document.getElementById("DisplayPet").innerHTML = '<label><input type="checkbox">Disable account</label>';
+    var select = document.getElementById("DisplayAllAccountsPets");
+    var i;
+    for (i = 0; i < Response_Data.length; i++) {
+        select.options[select.options.length] = new Option(Response_Data[i].Email, Response_Data[i].Email);
+    }
+}
 
+function DisplayAllAccounts(Response_Data){
+    var select = document.getElementById("DisplayAllAccounts");
+    var i;
+    for (i = 0; i < Response_Data.length; i++) {
+        select.options[select.options.length] = new Option(Response_Data[i].Email, Response_Data[i].Email);
+    }
 }
 
 function DisplayPet(Response_Data){
@@ -388,6 +437,8 @@ function DisplaySAdmin(){
     document.getElementById("ActivityButton").style.visibility="visible";
     document.getElementById("ErrorButton").style.display="block";
     document.getElementById("ErrorButton").style.visibility="visible";
+    document.getElementById("ManageAccountsButton").style.display="block";
+    document.getElementById("ManageAccountsButton").style.visibility="visible";
 }
 
 function HideAll(){
@@ -401,6 +452,8 @@ function HideAll(){
     document.getElementById("ErrorButton").style.visibility="hidden";
     document.getElementById("AddPetButton").style.display="none";
     document.getElementById("AddPetButton").style.visibility="hidden";
+    document.getElementById("ManageAccountsButton").style.display="none";
+    document.getElementById("ManageAccountsButton").style.visibility="hidden";
 }
 
 function ValidateSession(){
@@ -470,22 +523,6 @@ function UnitTest() {
         Action: Action
     };
     var AjaxData = OutgoingAjax(AjaxData);
-}
-
-function Activate(ActivationCode){
-    var Action = "Activate";
-    try{
-        var AjaxData = {
-            Activation: ActivationCode,
-            Action: Action
-        };
-        OutgoingAjax(AjaxData);
-    }catch(e){
-        var ErrorMSG = e;
-        var FailedAction = Action;
-        AddJSError(FailedAction,ErrorMSG);
-        alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-    }
 }
 
 function ValidateEmailDomain(Email) {

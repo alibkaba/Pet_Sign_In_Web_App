@@ -15,7 +15,7 @@ body {
 }
 
 
-#Account, #SignOut, #ActivityButton, #ErrorButton, #SignInAndRegister, #AddNewPetButton{
+#Account, #SignOut, #ActivityButton, #ErrorButton, #SignInAndRegister, #AddNewPetButton, #ManageAccountsButton{
     display: none;
     visibility: hidden;
 }
