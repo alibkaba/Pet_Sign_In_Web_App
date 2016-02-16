@@ -93,10 +93,10 @@ $(document).ready(function() {
     });
 
     $('input[type=radio][name=accounttnc]').change(function() {
-        if (this.value == 'yes') {
+        if (this.value == "yes") {
             document.getElementById("RegisterButton").disabled = false;
         }
-        else if (this.value == 'no') {
+        else if (this.value == "no") {
             document.getElementById("RegisterButton").disabled = true;
         }
     });
@@ -205,10 +205,10 @@ $(document).ready(function() {
     });
 
     $('input[type=radio][name=pettnc]').change(function() {
-        if (this.value == 'yes') {
+        if (this.value == "yes") {
             document.getElementById("AddPetButton").disabled = false;
         }
-        else if (this.value == 'no') {
+        else if (this.value == "no") {
             document.getElementById("AddPetButton").disabled = true;
         }
     });
@@ -290,6 +290,10 @@ $(document).ready(function() {
     });
 
     $( "#ManageAccountsButton" ).click(function() {
+        document.getElementById("DisplayAllAccountsPets").options.length = "1";
+        document.getElementById("DisplayPetName").value = "";
+        document.getElementById("DisplayPetBreed").options.length = "1";
+        document.getElementById("DisplayGender").options.length = "1";
         var Action = "FetchUsersData";
         try{
             var AjaxData = {
@@ -297,7 +301,11 @@ $(document).ready(function() {
             };
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
             console.log(Response_Data);
-            DisplayAllAccounts(Response_Data);
+            if (Response_Data == "0"){
+                DisplayPet += '<label class="btn btn-primary" disabled>';
+            }else{
+                DisplayAllAccounts(Response_Data);
+            }
         }catch(e){
             var ErrorMSG = e;
             var FailedAction = Action;
@@ -305,7 +313,23 @@ $(document).ready(function() {
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
-// FETCH USER DATA BUT MAKE SURE THE DISABLED IS SET BASED ON THE VALUE ON THE DATABASE. ALSO DRAG THE PETS INFO DOWN TOO. SO TWO FETCH.
+
+    $( "DisplayAllAccounts" ).change(function() {
+        if (this.value == "") {
+            document.getElementById("AccountDisabled").disabled = true;
+            document.getElementById("DisplayAllAccountsPets").disabled = true;
+            document.getElementById("DisplayAllAccountsPets").options.length = "1";
+            document.getElementById("DisplayPetName").disabled = true;
+            document.getElementById("DisplayPetName").value = "";
+            document.getElementById("DisplayPetBreed").disabled = true;
+            document.getElementById("DisplayGender").disabled = true;
+            document.getElementById("DisplayAllAccountsPets").disabled = true;
+            document.getElementById("DisplayPetBreed").options.length = "1";
+            document.getElementById("DisplayGender").options.length = "1";
+            document.getElementById("UpdateAccountButton").disabled = true;
+        }
+    });
+
     $( "#DisplayAllAccounts" ).change(function() {
         var Name = this.value;
         var Action = "FetchUsersData";
@@ -327,7 +351,7 @@ $(document).ready(function() {
 });
 
 function DisplayDisabledAndPets(Response_Data){
-    document.getElementById("DisplayPet").innerHTML = '<label><input type="checkbox">Disable account</label>';
+    document.getElementById("AccountDisabled").innerHTML = '<label><input type="checkbox">Disable account</label>';
     var select = document.getElementById("DisplayAllAccountsPets");
     var i;
     for (i = 0; i < Response_Data.length; i++) {

@@ -51,6 +51,8 @@ function DBOperation($Action){
             break;
         case "AddBreed": AddBreed($Action);
             break;
+        case "FetchUsersData": FetchUsersData($Action);
+            break;
     }
 }
 
@@ -350,6 +352,21 @@ function FetchUserData($Email){
     $Statement->execute();
     $Response = $Statement->fetch(PDO::FETCH_ASSOC);
     return $Response;
+}
+
+function FetchUsersData($Action){
+    $Email = ValidateSession($Action);
+    if(!FetchAccountRole($Email) == 2){
+        echo json_encode("0");//this function is for admins only
+        exit;
+    }
+    global $PDOconn;
+    $Query = 'CALL FetchUsersData';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->execute();
+    $Response = $Statement->fetchAll();
+    echo json_encode($Response);
+    $PDOconn = null;
 }
 
 function MailOut($Email, $Subject, $EmailMSG){ //fix this later, from and reply not working

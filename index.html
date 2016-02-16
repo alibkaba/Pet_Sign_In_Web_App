@@ -211,24 +211,24 @@
                     </div>
                     <div class="form-group">
                         <label for="DisplayAllAccountsPets">Account's Pets</label><br>
-                        <select class="form-control" id="DisplayAllAccountsPets">
+                        <select class="form-control" id="DisplayAllAccountsPets" disabled>
                             <option value="">Select the account first</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="PetName">Pet's Name</label><br>
-                        <input type="text" id="DisplayPetName" placeholder="Pet's Name">
+                        <input type="text" id="DisplayPetName" placeholder="Pet's Name" disabled>
                     </div>
                     <div class="form-group">
-                        <label for="DisplayPetBreeds">Pet's Breed</label><br>
-                        <select class="form-control" id="DisplayPetBreed">
+                        <label for="DisplayPetBreed">Pet's Breed</label><br>
+                        <select class="form-control" id="DisplayPetBreed" disabled>
                             <option value="">Select the pet first</option>
                         </select>
                     </div>
                     <div class="btn-group">
                         <label for="Gender">Pet's Gender</label><br>
-                        <select class="form-control" id="DisplayGender">
-                            <option value="">Select your pet's gender</option>
+                        <select class="form-control" id="DisplayGender" disabled>
+                            <option value="">The pet's gender</option>
                             <option value="Boy">Boy</option>
                             <option value="Girl">Girl</option>
                         </select>
@@ -238,7 +238,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-dismiss="modal" disabled>Update</button>
+                    <button type="button" class="btn btn-success" data-dismiss="modal" disabled id="UpdateAccountButton">Update</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
