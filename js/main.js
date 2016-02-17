@@ -12,7 +12,9 @@ $(document).ready(function() {
             console.log("Error: " + xhr.status);
         }
     });
+
     Start();
+
     $( "#SignInButton" ).click(function() {
         var Email = document.getElementById("Email1").value;
         var Password = document.getElementById("Password1").value;
@@ -41,7 +43,8 @@ $(document).ready(function() {
             }
         }catch(e){
             var ErrorMSG = e;
-            AddError(Action,ErrorMSG);
+            var FailedAction = Action;
+            AddError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
@@ -55,29 +58,35 @@ $(document).ready(function() {
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
             console.log(Response_Data);
             if (Response_Data == "0") {
-                alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
-                window.location = "/petsignin/";
+                alert("You don't have rights to have that action.");
             }else{
                 DisplayActivities(Response_Data);
             }
         }catch(e){
             var ErrorMSG = e;
-            AddError(Action,ErrorMSG);
+            var FailedAction = Action;
+            AddError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
 
     $( "#ErrorButton" ).click(function() {
-        var Action = "FetchError";
+        var Action = "FetchErrors";
         try{
             var AjaxData = {
                 Action: Action
             };
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
-            DisplayError(Response_Data);
+            console.log(Response_Data);
+            if(Response_Data == "0"){
+                alert("You don't have rights to have that action.");
+            }else{
+                DisplayErrors(Response_Data);
+            }
         }catch(e){
             var ErrorMSG = e;
-            AddError(Action,ErrorMSG);
+            var FailedAction = Action;
+            AddError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
@@ -115,7 +124,7 @@ $(document).ready(function() {
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
             console.log(Response_Data);
             if(Response_Data == "0"){
-                alert("This account has been locked.  Reset your account or contact the administrator..");
+                alert("This account has been locked.  Reset your account or contact the administrator.");
             }else if (Response_Data == "1"){
                 alert("This account already exists, please sign in instead.");
             }else if(Response_Data == "2"){
@@ -126,7 +135,8 @@ $(document).ready(function() {
             }
         }catch(e){
             var ErrorMSG = e;
-            AddError(Action,ErrorMSG);
+            var FailedAction = Action;
+            AddError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
@@ -141,7 +151,8 @@ $(document).ready(function() {
             window.location = "/petsignin/";
         }catch(e){
             var ErrorMSG = e;
-            AddError(Action,ErrorMSG);
+            var FailedAction = Action;
+            AddError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
@@ -162,7 +173,8 @@ $(document).ready(function() {
             DisplayPetBreeds(Response_Data);
         }catch(e){
             var ErrorMSG = e;
-            AddError(Action,ErrorMSG);
+            var FailedAction = Action;
+            AddError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
@@ -185,14 +197,15 @@ $(document).ready(function() {
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
             console.log(Response_Data);
             if(Response_Data == "0"){
-                alert("This account has been locked.  Reset your account or contact the administrator..");
+                alert("This account has been locked.  Reset your account or contact the administrator.");
             }else{
                 alert( Name + " was added.");
                 window.location = "/petsignin/";
             }
         }catch(e){
             var ErrorMSG = e;
-            AddError(Action,ErrorMSG);
+            var FailedAction = Action;
+            AddError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
@@ -223,7 +236,8 @@ $(document).ready(function() {
             }
         }catch(e){
             var ErrorMSG = e;
-            AddError(Action,ErrorMSG);
+            var FailedAction = Action;
+            AddError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
@@ -250,7 +264,8 @@ $(document).ready(function() {
             }
         }catch(e){
             var ErrorMSG = e;
-            AddError(Action,ErrorMSG);
+            var FailedAction = Action;
+            AddError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
@@ -274,7 +289,8 @@ $(document).ready(function() {
             }
         }catch(e){
             var ErrorMSG = e;
-            AddError(Action,ErrorMSG);
+            var FailedAction = Action;
+            AddError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
@@ -291,20 +307,20 @@ $(document).ready(function() {
             };
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
             console.log(Response_Data);
-            if (Response_Data == "0"){
-                DisplayPet += '<label class="btn btn-primary" disabled>';
+            if (Response_Data == "0") {
+                alert("You don't have rights to have that action.");
             }else{
                 DisplayAllAccounts(Response_Data);
             }
         }catch(e){
             var ErrorMSG = e;
-            AddError(Action,ErrorMSG);
+            var FailedAction = Action;
+            AddError(FailedAction,ErrorMSG);
             alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
         }
     });
 
-    $( "DisplayAllAccounts" ).change(function() {
-        alert("test");
+    $( "#DisplayAllAccounts" ).change(function() {
         if (this.value == "1") {
             document.getElementById("AccountDisabled").disabled = true;
             document.getElementById("DisplayAllAccountsPets").disabled = true;
@@ -327,11 +343,16 @@ $(document).ready(function() {
                 };
                 var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
                 console.log(Response_Data);
-                DisplayDisabled(Response_Data);
-                FetchUserPets(Email);
+                if (Response_Data == "0") {
+                    alert("You don't have rights to have that action.");
+                }else{
+                    DisplayAccountDisabled(Response_Data);
+                    FetchUserPets(Email);
+                }
             }catch(e){
                 var ErrorMSG = e;
-                AddError(Action,ErrorMSG);
+                var FailedAction = Action;
+                AddError(FailedAction,ErrorMSG);
                 alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
             }
         }
@@ -339,6 +360,7 @@ $(document).ready(function() {
 });
 
 function FetchUserPets(Email){
+    document.getElementById("DisplayAllAccountsPets").disabled = false;
     var Action = "FetchUserPets";
     try{
         var AjaxData = {
@@ -347,10 +369,15 @@ function FetchUserPets(Email){
         };
         var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
         console.log(Response_Data);
-        DisplayUserPets(Response_Data);
+        if (Response_Data == "0") {
+            alert("You don't have rights to have that action.");
+        }else{
+            DisplayUserPets(Response_Data);
+        }
     }catch(e){
         var ErrorMSG = e;
-        AddError(Action,ErrorMSG);
+        var FailedAction = Action;
+        AddError(FailedAction,ErrorMSG);
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
     }
 }
@@ -364,11 +391,11 @@ function DisplayUserPets(Response_Data){
     document.getElementById("PetDisabled").innerHTML = '<label><input type="checkbox">Disable account</label>';
 }
 
-function DisplayDisabled(Response_Data){
+function DisplayAccountDisabled (Response_Data){
     if(Response_Data == 0){
-        document.getElementById("AccountDisabled").innerHTML = '<label><input type="checkbox">Disable account</label>';
+        document.getElementById("AccountDisabled").checked = false;
     }else{
-        document.getElementById("AccountDisabled").innerHTML = '<label><input type="checkbox" disabled>Disable account</label>';
+        document.getElementById("AccountDisabled").checked = true;
     }
 }
 
@@ -419,10 +446,10 @@ function OutgoingAjax(AjaxData) {
     return IncomingAjaxData;
 }
 
-function AddError(Action, ErrorMSG){
+function AddError(FailedAction, ErrorMSG){
     var Action = "AddError";
     var AjaxData = {
-        Action: Action,
+        FailedAction: FailedAction,
         ErrorMSG: ErrorMSG,
         Action: Action
     };
@@ -499,8 +526,8 @@ function ValidateSession(){
         }
     }catch(e){
         var ErrorMSG = e;
-
-        AddError(Action,ErrorMSG);
+        var FailedAction = Action;
+        AddError(FailedAction,ErrorMSG);
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
     }
 }
@@ -517,7 +544,8 @@ function FetchUserPetsStatus(){
         }
     }catch(e){
         var ErrorMSG = e;
-        AddError(Action,ErrorMSG);
+        var FailedAction = Action;
+        AddError(FailedAction,ErrorMSG);
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
     }
 }
@@ -531,13 +559,13 @@ function DisplayActivities(Response_Data){
     document.getElementById("DisplayActivities").innerHTML = DisplayActivities;
 }
 
-function DisplayError(Response_Data){
-    var DisplayError = '<thead><tr><th>Account</th><th>Action</th><th>Error Message</th><th>Date</th></tr></thead><tbody>';
+function DisplayErrors(Response_Data){
+    var DisplayErrors = '<thead><tr><th>Account</th><th>Action</th><th>Error Message</th><th>Date</th></tr></thead><tbody>';
     for (var i = 0; i < Response_Data.length; i++) {
-        DisplayError += '<tr><td>' + Response_Data[i].Email +  '<tr><td>' + Response_Data[i].Action + '<tr><td>' + Response_Data[i].ErrorMSG + '</td><td>' + Response_Data[i].LogDate + '</td></tr>';
+        DisplayErrors += '<tr><td>' + Response_Data[i].Email +  '<tr><td>' + Response_Data[i].Action + '<tr><td>' + Response_Data[i].ErrorMSG + '</td><td>' + Response_Data[i].LogDate + '</td></tr>';
     }
-    DisplayError += '</tbody>';
-    document.getElementById("DisplayError").innerHTML = DisplayError;
+    DisplayErrors += '</tbody>';
+    document.getElementById("DisplayError").innerHTML = DisplayErrors;
 }
 
 function UnitTest() {

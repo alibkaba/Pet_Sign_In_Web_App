@@ -84,18 +84,6 @@ function ResetPassword(){
     $PDOconn = null;
 }
 
-function FetchErrors($Action){
-    $Email = ValidateSession($Action);
-    global $PDOconn;
-    $Query = 'CALL FetchErrors';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    $Statement->execute();
-    $Response = $Statement->fetchAll();
-    echo json_encode($Response);
-    $PDOconn = null;
-}
-
 function AddError($Action){
     $Email = ValidateSession($Action);
     if (!isset($Email)) {
@@ -107,7 +95,7 @@ function AddError($Action){
     $Query = 'CALL AddError (?,?,?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    $Statement->bindParam(2, $Action, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $FailedAction, PDO::PARAM_STR, 45);
     $Statement->bindParam(3, $ErrorMSG, PDO::PARAM_STR, 100);
     $Statement->execute();
     $PDOconn = null;
@@ -324,9 +312,34 @@ function AddBreed($Action){
 
 function CheckAdminRole($Email){
     if(!FetchAccountRole($Email) == 2){
-        echo json_encode("0");//this function is for admins only
+        echo json_encode("0");
         exit;
     }
+}
+
+function FetchActivities($Action){
+    $Email = ValidateSession($Action);
+    CheckAdminRole($Email);
+    global $PDOconn;
+    $Query = 'CALL FetchActivities (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $Response = $Statement->fetchAll();
+    echo json_encode($Response);
+    $PDOconn = null;
+}
+
+function FetchErrors($Action){
+    $Email = ValidateSession($Action);
+    CheckAdminRole($Email);
+    global $PDOconn;
+    $Query = 'CALL FetchErrors';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->execute();
+    $Response = $Statement->fetchAll();
+    echo json_encode($Response);
+    $PDOconn = null;
 }
 
 function FetchUser($Email){
@@ -363,7 +376,22 @@ function FetchUserStatus($Action){
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
     $Response = $Statement->fetch(PDO::FETCH_ASSOC);
-    return $Response;
+    echo json_encode($Response);
+    $PDOconn = null;
+}
+
+function FetchUserPets($Action){
+    $Email = ValidateSession($Action);
+    CheckAdminRole($Email);
+    $Email = stripslashes($_POST["Email"]);
+    global $PDOconn;
+    $Query = 'CALL FetchUserPets (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $Response = $Statement->fetchAll();
+    echo json_encode($Response);
+    $PDOconn = null;
 }
 
 function FetchUsers($Action){
@@ -389,18 +417,6 @@ function FetchBreeds(){
     global $PDOconn;
     $Query = 'CALL FetchBreeds';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->execute();
-    $Response = $Statement->fetchAll();
-    echo json_encode($Response);
-    $PDOconn = null;
-}
-
-function FetchActivities($Action){
-    $Email = ValidateSession($Action);
-    global $PDOconn;
-    $Query = 'CALL FetchActivities (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
     $Response = $Statement->fetchAll();
     echo json_encode($Response);
