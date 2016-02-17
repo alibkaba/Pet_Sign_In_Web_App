@@ -37,7 +37,7 @@ function DBOperation($Action){
             break;
         case "FetchActivities": FetchActivities($Action);
             break;
-        case "FetchUserPetsStatus": FetchUserPetsStatus($Action);
+        case "FetchSignInPet": FetchSignInPet($Action);
             break;
         case "FetchBreeds": FetchBreeds($Action);
             break;
@@ -352,12 +352,12 @@ function FetchUser($Email){
     return $Response;
 }
 
-function FetchUserPetsStatus($Action){
+function FetchSignInPet($Action){
     $Email = ValidateSession($Action);
     CheckAdminRole($Email);
     $Email = stripslashes($_POST["Email"]);
     global $PDOconn;
-    $Query = 'CALL FetchUserPetsStatus (?)';
+    $Query = 'CALL FetchSignInPet (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();

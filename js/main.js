@@ -357,7 +357,84 @@ $(document).ready(function() {
             }
         }
     });
+
+    $( "#DisplayAllAccountsPets" ).change(function() {
+        if (this.value == "1") {
+            document.getElementById("DisplayPetName").disabled = true;
+            document.getElementById("DisplayPetName").value = "";
+            document.getElementById("DisplayPetBreed").disabled = true;
+            document.getElementById("DisplayGender").disabled = true;
+            document.getElementById("DisplayAllAccountsPets").disabled = true;
+            document.getElementById("DisplayPetBreed").options.length = "1";
+            document.getElementById("DisplayGender").options.length = "1";
+            document.getElementById("UpdateAccountButton").disabled = true;
+        }else{
+            var PetID = this.value;
+            var Action = "FetchPetStatus";
+            try{
+                var AjaxData = {
+                    Email: Email,
+                    Action: Action
+                };
+                var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+                console.log(Response_Data);
+                if (Response_Data == "0") {
+                    alert("You don't have rights to have that action.");
+                }else{
+                    DisplayPetDisabled(Response_Data);
+                    FetchPet(PetID);
+                }
+            }catch(e){
+                var ErrorMSG = e;
+                var FailedAction = Action;
+                AddError(FailedAction,ErrorMSG);
+                alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+            }
+        }
+    });
 });
+
+function FetchPet(PetID){
+    document.getElementById("DisplayAllAccountsPets").disabled = false;
+    var Action = "FetchPet";
+    try{
+        var AjaxData = {
+            Email: Email,
+            Action: Action
+        };
+        var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+        console.log(Response_Data);
+        if (Response_Data == "0") {
+            alert("You don't have rights to have that action.");
+        }else{
+            DisplayUserPets(Response_Data);
+        }
+    }catch(e){
+        var ErrorMSG = e;
+        var FailedAction = Action;
+        AddError(FailedAction,ErrorMSG);
+        alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+    }
+}
+
+function DisplayPetDisabled (Response_Data){
+    if(Response_Data == 0){
+        document.getElementById("PetDisabled").checked = false;
+    }else{
+        document.getElementById("PetDisabled").checked = true;
+    }
+}
+
+function DisplayPetData(Response_Data){
+    document.getElementById("DisplayPetName").text = Response_Data.Name;
+
+    var select = document.getElementById("DisplayAllAccountsPets");
+    var i;
+    for (i = 0; i < Response_Data.length; i++) {
+        select.options[select.options.length] = new Option(Response_Data[i].PetID, Response_Data[i].Name);
+    }
+    document.getElementById("PetDisabled").innerHTML = '<label><input type="checkbox">Disable account</label>';
+}
 
 function FetchUserPets(Email){
     document.getElementById("DisplayAllAccountsPets").disabled = false;
@@ -408,19 +485,19 @@ function DisplayAllAccounts(Response_Data){
     document.getElementById("AccountDisabled").innerHTML = '<label><input type="checkbox">Disable account</label>';
 }
 
-function DisplayPet(Response_Data){
-    var DisplayPet = "";
+function DisplaySignInPet(Response_Data){
+    var DisplaySignInPet = "";
     for (var i = 0; i < Response_Data.length; i++) {
         if (Response_Data[i].DiffDate == "0"){
-            DisplayPet += '<label class="btn btn-primary" disabled>';
+            DisplaySignInPet += '<label class="btn btn-primary" disabled>';
         }else{
-            DisplayPet += '<label class="btn btn-primary">';
+            DisplaySignInPet += '<label class="btn btn-primary">';
         }
-        DisplayPet += '<input type="radio" name="options" id="option1" autocomplete="off" value="' + Response_Data[i].Name + '">' + Response_Data[i].Name + '</button>';
+        DisplaySignInPet += '<input type="radio" name="options" id="option1" autocomplete="off" value="' + Response_Data[i].Name + '">' + Response_Data[i].Name + '</button>';
 
-        DisplayPet += '</label>';
+        DisplaySignInPet += '</label>';
     }
-    document.getElementById("DisplayPet").innerHTML = DisplayPet;
+    document.getElementById("DisplaySignInPet").innerHTML = DisplaySignInPet;
 }
 
 function DisplayPetBreeds(Response_Data){
@@ -532,15 +609,15 @@ function ValidateSession(){
     }
 }
 
-function FetchUserPetsStatus(){
-    var Action = "FetchUserPetsStatus";
+function FetchSignInPet(){
+    var Action = "FetchSignInPet";
     try{
         var AjaxData = {
             Action: Action
         };
         var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
         if (Response_Data !== "") {
-            DisplayPet(Response_Data);
+            DisplaySignInPet(Response_Data);
         }
     }catch(e){
         var ErrorMSG = e;

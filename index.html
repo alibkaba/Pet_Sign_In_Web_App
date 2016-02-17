@@ -32,9 +32,80 @@
             </div>
         </div>
     </nav>
-    <div class="btn-group-vertical" data-toggle="buttons" id="DisplayPet"></div>
+    <div class="btn-group-vertical" data-toggle="buttons" id="DisplaySignInPet"></div>
     <br>
     <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#AddNewPetModal" data-toggle="modal" id="AddNewPetButton">Add a new Pet</button>
+
+    <div id="SignInAndRegister">
+    <p>Sign into your account</p>
+    <div class="form-group">
+        <label for="Email1">Email Address</label><br>
+        <input type="text" id="Email1" placeholder="Email Address">
+    </div>
+    <div class="form-group">
+        <label for="Password1">Password</label><br>
+        <input type="password" id="Password1" placeholder="Password" autocomplete="off"><br>
+    </div>
+    <button type="button" class="btn btn-primary btn-sm" id="SignInButton">Sign In</button>
+    <br>
+    <a href="#" data-toggle="modal" data-target="#ResetAccountModal" id="ResetAccount" >can't access your account?</a>
+    <br>
+    <div class="modal fade" id="ResetAccountModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Reset your account</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Email2">Email Address</label><br>
+                        <input type="text" id="Email3" placeholder="Email Address">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" id="ResetAccountButton">Reset</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <p>New to Pet Sign In?</p>
+    <a href="#" data-toggle="modal" data-target="#RegisterModal" id="Register" >Register for a new account</a>
+    <br>
+    </div>
+
+    <div class="modal fade" id="RegisterModal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Register</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="Email2">Email Address</label><br>
+                        <input type="text" id="Email2" placeholder="Email Address">
+                    </div>
+                    <div class="form-group">
+                        <label for="Password2">Password</label><br>
+                        <input type="password" id="Password2" placeholder="Password" autocomplete="off"><br>
+                    </div>
+                    <div class="form-group">
+                        <p>terms and condition pdf URL</p>
+                        <br>
+                        <input type="radio" name="accounttnc" value="no" id="accounttncno" checked>I do not agree<br>
+                        <input type="radio" name="accounttnc" value="yes">I agree<br>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success btn-sm" id="RegisterButton" disabled>Register</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="AddNewPetModal" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -70,76 +141,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" id="AddPetButton" disabled>Add Pet</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="SignInAndRegister">
-    <p>Sign into your account</p>
-    <div class="form-group">
-        <label for="Email1">Email Address</label><br>
-        <input type="text" id="Email1" placeholder="Email Address">
-    </div>
-    <div class="form-group">
-        <label for="Password1">Password</label><br>
-        <input type="password" id="Password1" placeholder="Password" autocomplete="off"><br>
-    </div>
-    <button type="button" class="btn btn-primary btn-sm" id="SignInButton">Sign In</button>
-    <br>
-    <a href="#" data-toggle="modal" data-target="#ResetAccountModal" id="ResetAccount" >can't access your account?</a>
-    <br>
-    <div class="modal fade" id="ResetAccountModal" role="dialog">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Reset your account</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="Email2">Email Address</label><br>
-                        <input type="text" id="Email3" placeholder="Email Address">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-sm" id="ResetAccountButton">Reset</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <p>New to Pet Sign In?</p>
-    <a href="#" data-toggle="modal" data-target="#RegisterModal" id="Register" >Register for a new account</a>
-    <br>
-    </div>
-
-    <div class="modal fade" id="RegisterModal" role="dialog">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Register</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="Email2">Email Address</label><br>
-                        <input type="text" id="Email2" placeholder="Email Address">
-                    </div>
-                    <div class="form-group">
-                        <label for="Password2">Password</label><br>
-                        <input type="password" id="Password2" placeholder="Password" autocomplete="off"><br>
-                    </div>
-                    <div class="form-group">
-                        <p>terms and condition pdf URL</p>
-                        <br>
-                        <input type="radio" name="accounttnc" value="no" id="accounttncno" checked>I do not agree<br>
-                        <input type="radio" name="accounttnc" value="yes">I agree<br>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success btn-sm" id="RegisterButton" disabled>Register</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
