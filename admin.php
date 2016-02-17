@@ -19,25 +19,17 @@
         $HashedPassword = HashIt($Password);
         $Disabled = 0;
         $Attempts = 0;
-        $AdminCode = 3;
+        $AdminCode = 2;
         global $PDOconn;
-        $Query = 'CALL FetchSAdminsCount';
+        $Query = 'CALL AddAdminAccount (?,?,?,?,?)';
         $Statement = $PDOconn->prepare($Query);
+        $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+        $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
+        $Statement->bindParam(3, $Disabled, PDO::PARAM_INT, 1);
+        $Statement->bindParam(4, $Attempts, PDO::PARAM_INT, 1);
+        $Statement->bindParam(5, $AdminCode, PDO::PARAM_INT, 1);
         $Statement->execute();
-        $Response = $Statement->fetch(PDO::FETCH_ASSOC);
-        if(!$Response['Count'] == 3){
-            $Query = 'CALL AddSAdminAccount (?,?,?,?,?)';
-            $Statement = $PDOconn->prepare($Query);
-            $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-            $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
-            $Statement->bindParam(3, $Disabled, PDO::PARAM_INT, 1);
-            $Statement->bindParam(4, $Attempts, PDO::PARAM_INT, 1);
-            $Statement->bindParam(5, $AdminCode, PDO::PARAM_INT, 1);
-            $Statement->execute();
-            $MSG = "Super Admin created.";
-        }else{
-            $MSG = "You've reached the maximum allowed of super administrators (3).";
-        }
+        $MSG = "Super Admin created.";
         $PDOconn = null;
         echo "<script type='text/javascript'>alert('$MSG'); window.location = \"/petsignin/admin.php\";</script>";
     }
@@ -55,7 +47,7 @@
         $Password = $_POST['Password'];
         $HashedPassword = HashIt($Password);
         global $PDOconn;
-        $Query = 'CALL UpdateSAdminPassword (?,?)';
+        $Query = 'CALL UpdateAdminPassword (?,?)';
         $Statement = $PDOconn->prepare($Query);
         $Statement->bindParam(1, $HashedPassword, PDO::PARAM_STR, 255);
         $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);

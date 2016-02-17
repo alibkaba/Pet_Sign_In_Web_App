@@ -44,8 +44,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="PetName">Pet's Name</label><br>
-                        <input type="text" id="PetName" placeholder="Pet's Name">
+                        <label for="PetName">Pet's name</label><br>
+                        <input type="text" id="PetName" placeholder="Pet's name">
                     </div>
                     <div class="form-group">
                         <label for="DisplayPetBreeds">Pet's Breed</label><br>
@@ -154,7 +154,7 @@
                     <h4 class="modal-title">Account</h4>
                 </div>
                 <div class="modal-body">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ActivityModal" data-toggle="modal" id="ActivityButton">Activity</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ActivitiesModal" data-toggle="modal" id="ActivitiesButton">Activities</button>
                     <br>
                     <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ManageAccountsModal" data-toggle="modal" id="ManageAccountsButton">Manage Accounts</button>
                     <br>
@@ -167,7 +167,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="ActivityModal" role="dialog">
+    <div class="modal fade" id="ActivitiesModal" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -175,7 +175,7 @@
                     <h4 class="modal-title">Account</h4>
                 </div>
                 <div class="modal-body">
-                    <table class="table table-bordered" id="DisplayActivity">
+                    <table class="table table-bordered" id="DisplayActivities>
                         <thead>
                         <tr>
                             <th>Activity</th>
@@ -203,7 +203,7 @@
                     <div class="form-group">
                         <label for="DisplayAllAccounts">Accounts</label><br>
                         <select class="form-control" id="DisplayAllAccounts">
-                            <option value="">Select the user account</option>
+                            <option value="1">Select the user account</option>
                         </select>
                     </div>
                     <div class="checkbox" id="AccountDisabled">
@@ -212,17 +212,20 @@
                     <div class="form-group">
                         <label for="DisplayAllAccountsPets">Account's Pets</label><br>
                         <select class="form-control" id="DisplayAllAccountsPets" disabled>
-                            <option value="">Select the account first</option>
+                            <option value="">Account's pet(s)</option>
                         </select>
                     </div>
+                    <div class="checkbox" id="PetDisabled">
+                        <label><input type="checkbox" disabled>Disable pet</label>
+                    </div>
                     <div class="form-group">
-                        <label for="PetName">Pet's Name</label><br>
-                        <input type="text" id="DisplayPetName" placeholder="Pet's Name" disabled>
+                        <label for="PetName">Pet's name</label><br>
+                        <input type="text" id="DisplayPetName" placeholder="Pet's name" disabled>
                     </div>
                     <div class="form-group">
                         <label for="DisplayPetBreed">Pet's Breed</label><br>
                         <select class="form-control" id="DisplayPetBreed" disabled>
-                            <option value="">Select the pet first</option>
+                            <option value="">Pet's breed</option>
                         </select>
                     </div>
                     <div class="btn-group">
@@ -232,9 +235,6 @@
                             <option value="Boy">Boy</option>
                             <option value="Girl">Girl</option>
                         </select>
-                    </div>
-                    <div class="checkbox" id="PetDisabled">
-                        <label><input type="checkbox" disabled>Disable pet</label>
                     </div>
                 </div>
                 <div class="modal-footer">
