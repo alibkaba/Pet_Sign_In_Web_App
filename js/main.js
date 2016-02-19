@@ -58,7 +58,8 @@ $(document).ready(function() {
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
             console.log(Response_Data);
             if (Response_Data == "0") {
-                alert("You don't have rights to have that action.");
+                alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
+                window.location = "/petsignin/";
             }else{
                 DisplayActivities(Response_Data);
             }
@@ -79,7 +80,8 @@ $(document).ready(function() {
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
             console.log(Response_Data);
             if(Response_Data == "0"){
-                alert("You don't have rights to have that action.");
+                alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
+                window.location = "/petsignin/";
             }else{
                 DisplayErrors(Response_Data);
             }
@@ -163,20 +165,8 @@ $(document).ready(function() {
         document.getElementById("Gender").value = "";
         document.getElementById("pettncno").checked = true;
         document.getElementById("AddPetButton").disabled = true;
-        var Action = "FetchBreeds";
-        try{
-            var AjaxData = {
-                Action: Action
-            };
-            var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
-            console.log(Response_Data);
-            DisplayPetBreeds(Response_Data);
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            AddError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        }
+        Response_Data = FetchBreeds();
+        DisplayPetBreeds(Response_Data);
     });
 
     $( "#AddPetButton" ).click(function() {
@@ -296,6 +286,15 @@ $(document).ready(function() {
     });
 
     $( "#ManageAccountsButton" ).click(function() {
+        document.getElementById("DisplayAllAccounts").options.length = "1";
+        document.getElementById("AccountDisabled").disabled = true;
+        document.getElementById("DisplayAllAccountsPets").disabled = true;
+        document.getElementById("PetDisabled").disabled = true;
+        document.getElementById("DisplayPetName").disabled = true;
+        document.getElementById("DisplayPetBreed").disabled = true;
+        document.getElementById("DisplayGender").disabled = true;
+        document.getElementById("DisplayAllAccountsPets").disabled = true;
+        document.getElementById("UpdateAccountButton").disabled = true;
         document.getElementById("DisplayAllAccountsPets").options.length = "1";
         document.getElementById("DisplayPetName").value = "";
         document.getElementById("DisplayPetBreed").options.length = "1";
@@ -308,7 +307,8 @@ $(document).ready(function() {
             var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
             console.log(Response_Data);
             if (Response_Data == "0") {
-                alert("You don't have rights to have that action.");
+                alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
+                window.location = "/petsignin/";
             }else{
                 DisplayAllAccounts(Response_Data);
             }
@@ -321,19 +321,24 @@ $(document).ready(function() {
     });
 
     $( "#DisplayAllAccounts" ).change(function() {
-        if (this.value == "1") {
+        if (this.value == "0") {
             document.getElementById("AccountDisabled").disabled = true;
             document.getElementById("DisplayAllAccountsPets").disabled = true;
-            document.getElementById("DisplayAllAccountsPets").options.length = "1";
+            document.getElementById("PetDisabled").disabled = true;
             document.getElementById("DisplayPetName").disabled = true;
-            document.getElementById("DisplayPetName").value = "";
             document.getElementById("DisplayPetBreed").disabled = true;
             document.getElementById("DisplayGender").disabled = true;
             document.getElementById("DisplayAllAccountsPets").disabled = true;
+            document.getElementById("UpdateAccountButton").disabled = true;
+            document.getElementById("DisplayAllAccountsPets").options.length = "1";
+            document.getElementById("DisplayPetName").value = "";
             document.getElementById("DisplayPetBreed").options.length = "1";
             document.getElementById("DisplayGender").options.length = "1";
-            document.getElementById("UpdateAccountButton").disabled = true;
         }else{
+            document.getElementById("DisplayAllAccountsPets").options.length = "1";
+            document.getElementById("DisplayPetName").value = "";
+            document.getElementById("DisplayPetBreed").options.length = "1";
+            document.getElementById("DisplayGender").options.length = "1";
             var Email = this.value;
             var Action = "FetchUserStatus";
             try{
@@ -344,7 +349,8 @@ $(document).ready(function() {
                 var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
                 console.log(Response_Data);
                 if (Response_Data == "0") {
-                    alert("You don't have rights to have that action.");
+                    alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
+                    window.location = "/petsignin/";
                 }else{
                     DisplayAccountDisabled(Response_Data);
                     FetchUserPets(Email);
@@ -359,30 +365,34 @@ $(document).ready(function() {
     });
 
     $( "#DisplayAllAccountsPets" ).change(function() {
-        if (this.value == "1") {
+        if (this.value == "0") {
+            document.getElementById("PetDisabled").disabled = true;
             document.getElementById("DisplayPetName").disabled = true;
-            document.getElementById("DisplayPetName").value = "";
             document.getElementById("DisplayPetBreed").disabled = true;
             document.getElementById("DisplayGender").disabled = true;
-            document.getElementById("DisplayAllAccountsPets").disabled = true;
+            document.getElementById("UpdateAccountButton").disabled = true;
+            document.getElementById("DisplayPetName").value = "";
             document.getElementById("DisplayPetBreed").options.length = "1";
             document.getElementById("DisplayGender").options.length = "1";
-            document.getElementById("UpdateAccountButton").disabled = true;
         }else{
+            document.getElementById("DisplayPetName").value = "";
+            document.getElementById("DisplayPetBreed").options.length = "1";
+            document.getElementById("DisplayGender").options.length = "1";
             var PetID = this.value;
             var Action = "FetchPetStatus";
             try{
                 var AjaxData = {
-                    Email: Email,
+                    PetID: PetID,
                     Action: Action
                 };
                 var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
                 console.log(Response_Data);
                 if (Response_Data == "0") {
-                    alert("You don't have rights to have that action.");
+                    alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
+                    window.location = "/petsignin/";
                 }else{
                     DisplayPetDisabled(Response_Data);
-                    FetchPet(PetID);
+                    DisplayPetData(PetID);
                 }
             }catch(e){
                 var ErrorMSG = e;
@@ -392,22 +402,50 @@ $(document).ready(function() {
             }
         }
     });
+
+    $( "#DisplayPetName" ).change(function() {
+        var prev = $(this).data('val');
+        var current = $(this).val();
+        if(!prev == current){
+            document.getElementById("UpdateAccountButton").disabled = false;
+        }else{
+            document.getElementById("UpdateAccountButton").disabled = true;
+        }
+        console.log("Prev value " + prev);
+        console.log("New value " + current);
+    });
 });
 
+function FetchBreeds(){
+    var Action = "FetchBreeds";
+    try{
+        var AjaxData = {
+            Action: Action
+        };
+        var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
+        console.log(Response_Data);
+        return Response_Data;
+    }catch(e){
+        var ErrorMSG = e;
+        var FailedAction = Action;
+        AddError(FailedAction,ErrorMSG);
+        alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+    }
+}
 function FetchPet(PetID){
-    document.getElementById("DisplayAllAccountsPets").disabled = false;
     var Action = "FetchPet";
     try{
         var AjaxData = {
-            Email: Email,
+            PetID: PetID,
             Action: Action
         };
         var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
         console.log(Response_Data);
         if (Response_Data == "0") {
-            alert("You don't have rights to have that action.");
+            alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
+            window.location = "/petsignin/";
         }else{
-            DisplayUserPets(Response_Data);
+            return Response_Data;
         }
     }catch(e){
         var ErrorMSG = e;
@@ -418,22 +456,19 @@ function FetchPet(PetID){
 }
 
 function DisplayPetDisabled (Response_Data){
-    if(Response_Data == 0){
+    document.getElementById("PetDisabled").disabled = false;
+    if(Response_Data.Disabled == 0){
         document.getElementById("PetDisabled").checked = false;
     }else{
         document.getElementById("PetDisabled").checked = true;
     }
 }
 
-function DisplayPetData(Response_Data){
-    document.getElementById("DisplayPetName").text = Response_Data.Name;
-
-    var select = document.getElementById("DisplayAllAccountsPets");
-    var i;
-    for (i = 0; i < Response_Data.length; i++) {
-        select.options[select.options.length] = new Option(Response_Data[i].PetID, Response_Data[i].Name);
-    }
-    document.getElementById("PetDisabled").innerHTML = '<label><input type="checkbox">Disable account</label>';
+function DisplayPetData(PetID){
+    var Response_Data = FetchPet(PetID);
+    document.getElementById("DisplayAllAccountsPets").disabled = false;
+    document.getElementById("DisplayPetName").disabled = false;
+    document.getElementById("DisplayPetName").value = Response_Data.Name;
 }
 
 function FetchUserPets(Email){
@@ -447,7 +482,8 @@ function FetchUserPets(Email){
         var Response_Data = JSON.parse(OutgoingAjax(AjaxData));
         console.log(Response_Data);
         if (Response_Data == "0") {
-            alert("You don't have rights to have that action.");
+            alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
+            window.location = "/petsignin/";
         }else{
             DisplayUserPets(Response_Data);
         }
@@ -463,13 +499,13 @@ function DisplayUserPets(Response_Data){
     var select = document.getElementById("DisplayAllAccountsPets");
     var i;
     for (i = 0; i < Response_Data.length; i++) {
-        select.options[select.options.length] = new Option(Response_Data[i].PetID, Response_Data[i].Name);
+        select.options[select.options.length] = new Option(Response_Data[i].Name, Response_Data[i].PetID);
     }
-    document.getElementById("PetDisabled").innerHTML = '<label><input type="checkbox">Disable account</label>';
 }
 
 function DisplayAccountDisabled (Response_Data){
-    if(Response_Data == 0){
+    document.getElementById("AccountDisabled").disabled = false;
+    if(Response_Data.Disabled == 0){
         document.getElementById("AccountDisabled").checked = false;
     }else{
         document.getElementById("AccountDisabled").checked = true;

@@ -55,6 +55,10 @@ function DBOperation($Action){
             break;
         case "FetchUserStatus": FetchUserStatus($Action);
             break;
+        case "FetchPetStatus": FetchPetStatus($Action);
+            break;
+        case "FetchPet": FetchPet($Action);
+            break;
     }
 }
 
@@ -374,6 +378,34 @@ function FetchUserStatus($Action){
     $Query = 'CALL FetchUserStatus (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
+    echo json_encode($Response);
+    $PDOconn = null;
+}
+
+function FetchPetStatus($Action){
+    $Email = ValidateSession($Action);
+    CheckAdminRole($Email);
+    $PetID = stripslashes($_POST["PetID"]);
+    global $PDOconn;
+    $Query = 'CALL FetchPetStatus (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $PetID, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
+    echo json_encode($Response);
+    $PDOconn = null;
+}
+
+function FetchPet($Action){
+    $Email = ValidateSession($Action);
+    CheckAdminRole($Email);
+    $PetID = stripslashes($_POST["PetID"]);
+    global $PDOconn;
+    $Query = 'CALL FetchPet (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $PetID, PDO::PARAM_STR, 45);
     $Statement->execute();
     $Response = $Statement->fetch(PDO::FETCH_ASSOC);
     echo json_encode($Response);
