@@ -23,7 +23,7 @@ function DBOperation($Action){
     switch($Action) {
         case "UnitTest": UnitTest();
             break;
-        case "AddAccount": AddAccount();
+        case "AddAccount": AddAccount($Action);
             break;
         case "SignIn": SignIn();
             break;
@@ -62,26 +62,13 @@ function DBOperation($Action){
     }
 }
 
-function ResetActivationCode(){
-    $Email = stripslashes($_POST["Email"]);
-    $ActivationCode = hash('sha256', uniqid(rand(), true));
-    global $PDOconn;
-    $Query = 'UPDATE djkabau1_petsignin.Accounts set ActivationCode = (?) where Email = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $ActivationCode, PDO::PARAM_INT, 64);
-    $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
-    mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/petsignin/activate.php?confirm=$ActivationCode");
-    echo json_encode("0");
-    $PDOconn = null;
-}
-
 function ResetPassword(){
     $Email = stripslashes($_POST["Email"]);
     $ActivationCode = hash('sha256', uniqid(rand(), true));
     global $PDOconn;
-    $Query = 'UPDATE djkabau1_petsignin.Accounts set ActivationCode = (?) where Email = (?)';
+    $Query = 'UPDATE djkabau1_petsignin.Accounts set Password = (?) where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $ActivationCode, PDO::PARAM_INT, 64);
+    $Statement->bindParam(1, $Password, PDO::PARAM_INT, 8);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/petsignin/activate.php?confirm=$ActivationCode");
     echo json_encode("0");
@@ -96,21 +83,21 @@ function AddError($Action){
     $FailedAction = stripslashes($_POST["FailedAction"]);
     $ErrorMSG = stripslashes($_POST["ErrorMSG"]);
     global $PDOconn;
-    $Query = 'CALL AddError (?,?,?)';
+    $Query = 'CALL AddError (?, ?, ?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $FailedAction, PDO::PARAM_STR, 45);
-    $Statement->bindParam(3, $ErrorMSG, PDO::PARAM_STR, 100);
+    $Statement->bindParam(3, $ErrorMSG, PDO::PARAM_STR, 255);
     $Statement->execute();
     $PDOconn = null;
 }
 
 function AddActivity($Email,$ActivityMSG){
     global $PDOconn;
-    $Query = 'CALL AddActivity (?,?)';
+    $Query = 'CALL AddActivity (?, ?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    $Statement->bindParam(2, $ActivityMSG, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $ActivityMSG, PDO::PARAM_STR, 255);
     $Statement->execute();
 }
 
@@ -133,7 +120,7 @@ function UnitTest(){
     $Statement->execute();
 
     $UpdatedUTValue = "2";
-    $Query = 'CALL UTUpdate (?,?)';
+    $Query = 'CALL UTUpdate (?, ?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $UpdatedUTValue, PDO::PARAM_INT);
     $Statement->bindParam(2, $UTValue, PDO::PARAM_INT);
@@ -152,10 +139,10 @@ function UnitTest(){
 }
 
 function AddAttempt($UserData,$Email){
-    $NewAttempt = $UserData['Attempts'];
+    $NewAttempt = $UserData['Attempt'];
     $NewAttempt++;
     global $PDOconn;
-    $Query = 'CALL AddAttempt (?,?)';
+    $Query = 'CALL AddAttempt (?, ?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $NewAttempt, PDO::PARAM_INT, 1);
     $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
@@ -178,9 +165,9 @@ function SignIn(){
         $HashedPassword = $UserData['Password'];
         $PasswordResponse = ValidatePassword($Password,$HashedPassword);
         if($Email == $UserData['Email'] && $PasswordResponse == 1){
-            if($UserData['Attempts'] < 5){
+            if($UserData['Attempt'] < 5){
                 if($UserData['Disabled'] == 0) {
-                    ResetAttempts($Email);
+                    ResetAttempt($Email);
                     DeleteSession($Email);
                     $ActivityMSG = "You signed in.";
                     AddActivity($Email,$ActivityMSG);
@@ -189,7 +176,7 @@ function SignIn(){
                     $PDOconn = null;
                 }else{
                     AddAttempt($UserData,$Email);
-                    $ActivityMSG = "You attempted to sign in but your account wasn't activated.";
+                    $ActivityMSG = "You attempted to sign in but your account wasn't activated by an admin yet.";
                     AddActivity($Email,$ActivityMSG);
                     echo json_encode("3");
                     $PDOconn = null;
@@ -201,7 +188,7 @@ function SignIn(){
                 $PDOconn = null;
             }
         }else{
-            if($UserData['Attempts'] < 5){
+            if($UserData['Attempt'] < 5){
                 AddAttempt($UserData,$Email);
                 $ActivityMSG = "Your account will be locked out if you fail to sign in 5 times in a row.";
                 AddActivity($Email,$ActivityMSG);
@@ -235,47 +222,63 @@ function DeleteSession($Email){
     $Statement->execute();
 }
 
-function ResetAttempts($Email){
+function ResetAttempt($Email){
     global $PDOconn;
-    $Query = 'CALL ResetAttempts (?)';
+    $Query = 'CALL ResetAttempt (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
 }
 
-function AddAccount(){
+function AddAccount($Action){
     $Email = stripslashes($_POST["Email"]);
     $UserData = FetchUser($Email);
     if($Email == $UserData['Email']){
-        if($UserData['Attempts'] < 5){
+        if($UserData['Attempt'] < 5){
             AddAttempt($UserData,$Email);
-            $ActivityMSG = "Your account will be locked out when someone attempts to register with you account 5 times in a row.";
+            $ActivityMSG = "Account is already registered but will be locked when attempts reaches 5.";
             AddActivity($Email,$ActivityMSG);
             echo json_encode("1");
             exit;
         }else{
-            $ActivityMSG = "Your account is locked out because someone attempted to register an account using your email 5 times in a row.";
+            $ActivityMSG = "Account is already registered but was locked due to 5 registration attempts.";
             AddActivity($Email,$ActivityMSG);
             echo json_encode("0");
             exit;
         }
     }
+
     $Password = stripslashes($_POST["Password"]);
     $HashedPassword = HashIt($Password);
     $Disabled = 1;
-    $Attempts = 0;
+    $Attempt = 0;
     $AdminCode = 1;
     global $PDOconn;
-    $Query = 'CALL AddAccount (?,?,?,?,?,?,?)';
+    $Query = 'CALL AddAccount (?, ?, ?, ?, ?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
-    $Statement->bindParam(4, $Disabled, PDO::PARAM_INT, 1);
-    $Statement->bindParam(5, $Attempts, PDO::PARAM_INT, 1);
-    $Statement->bindParam(6, $AdminCode, PDO::PARAM_INT, 1);
+    $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 60);
+    $Statement->bindParam(3, $Disabled, PDO::PARAM_INT, 1);
+    $Statement->bindParam(4, $Attempt, PDO::PARAM_INT, 1);
+    $Statement->bindParam(5, $AdminCode, PDO::PARAM_INT, 1);
     $Statement->execute();
+    $ActivityMSG = "Your account was created.";
+    AddActivity($Email,$ActivityMSG);
+    $AdminAccounts = FetchAdmins($Action);
+    foreach ($AdminAccounts as $AdminEmail) {
+        mail($AdminEmail['Email'],"New account created","The following email: " . $Email . " been created.  Account is awaiting your approval.");
+    }
     echo json_encode("2");
     $PDOconn = null;
+}
+
+function FetchAdmins($Action){
+    global $PDOconn;
+    $Query = 'CALL FetchAdmins';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->execute();
+    $Response = $Statement->fetchAll();
+    return $Response;
 }
 
 function AddPet($Action){
@@ -285,7 +288,7 @@ function AddPet($Action){
     $Gender = stripslashes($_POST["Gender"]);
     $Disabled = 0;
     global $PDOconn;
-    $Query = 'CALL AddPet (?,?,?,?,?)';
+    $Query = 'CALL AddPet (?, ?, ?, ?, ?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $Name, PDO::PARAM_STR, 45);
@@ -415,11 +418,11 @@ function FetchPet($Action){
 function FetchUserPets($Action){
     $Email = ValidateSession($Action);
     CheckAdminRole($Email);
-    $Email = stripslashes($_POST["Email"]);
+    $AccountEmail = stripslashes($_POST["AccountEmail"]);
     global $PDOconn;
     $Query = 'CALL FetchUserPets (?)';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->bindParam(1, $AccountEmail, PDO::PARAM_STR, 45);
     $Statement->execute();
     $Response = $Statement->fetchAll();
     echo json_encode($Response);
@@ -436,13 +439,6 @@ function FetchUsers($Action){
     $Response = $Statement->fetchAll();
     echo json_encode($Response);
     $PDOconn = null;
-}
-
-function MailOut($Email, $Subject, $EmailMSG){ //fix this later, from and reply not working
-    $Headers = 'From: alibkaba@alibkaba.com' . " " .
-        'Reply-To: alibkaba@gmail.com' . " " .
-        'X-Mailer: PHP/' . phpversion();
-    mail($Email,$Subject,$EmailMSG,$Headers);
 }
 
 function FetchBreeds(){
@@ -464,21 +460,11 @@ function SignOut($Action){
     session_destroy();
 }
 
-function FetchSessionData($SessionID){
-    global $PDOconn;
-    $Query = 'CALL FetchSessionData (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
-    $Statement->execute();
-    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
-    return $Response;
-}
-
 function ValidateSession($Action){
     StartSession();
     if(isset($_SESSION['Session_ID'])){
         $SessionID = $_SESSION["Session_ID"];
-        $SessionData = FetchDBSessionData($SessionID);
+        $SessionData = FetchSession($SessionID);
         $Email = $SessionData['Email'];
         $BrowserData = GetBrowserData();
         $AccountRole = FetchAccountRole($Email);
@@ -511,7 +497,7 @@ function FetchAccountRole($Email){
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
     $Response = $Statement->fetch(PDO::FETCH_ASSOC);
-    if($Response['Disabled'] == 0 && $Response['Attempts'] == 0){
+    if($Response['Disabled'] == 0 && $Response['Attempt'] == 0){
         if($Response['AdminCode'] == 2){
             $AccountRole = 2;//admin
         }else{
@@ -525,9 +511,9 @@ function FetchAccountRole($Email){
     return $AccountRole;
 }
 
-function FetchDBSessionData($SessionID){
+function FetchSession($SessionID){
     global $PDOconn;
-    $Query = 'CALL FetchDBSessionData (?)';
+    $Query = 'CALL FetchSession (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
     $Statement->execute();
@@ -545,7 +531,7 @@ function AddSession($Email){
     $SessionPlatform = $BrowserData['Platform'];
 
     global $PDOconn;
-    $Query = 'CALL AddSession (?,?,?,?,?)';
+    $Query = 'CALL AddSession (?, ?, ?, ?, ?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
     $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);

@@ -38,8 +38,8 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.7636366">
-              <caret line="225" column="47" selection-start-line="225" selection-start-column="47" selection-end-line="225" selection-end-column="47" />
+            <state vertical-scroll-proportion="-5.2181816">
+              <caret line="237" column="119" selection-start-line="237" selection-start-column="100" selection-end-line="237" selection-end-column="119" />
               <folding />
             </state>
           </provider>
@@ -48,8 +48,8 @@
       <file leaf-file-name="main.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="2.5962837">
-              <caret line="515" column="61" selection-start-line="515" selection-start-column="61" selection-end-line="515" selection-end-column="61" />
+            <state vertical-scroll-proportion="0.4712838">
+              <caret line="453" column="23" selection-start-line="453" selection-start-column="23" selection-end-line="453" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -58,15 +58,13 @@
       <file leaf-file-name="operations.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/operations.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.9230769">
-              <caret line="391" column="39" selection-start-line="391" selection-start-column="39" selection-end-line="391" selection-end-column="39" />
+            <state vertical-scroll-proportion="-4.2909093">
+              <caret line="417" column="22" selection-start-line="417" selection-start-column="9" selection-end-line="417" selection-end-column="22" />
               <folding>
-                <marker date="1455847342151" expanded="true" signature="1970:2047" placeholder="UPDATE djkab..." />
-                <marker date="1455847342151" expanded="true" signature="2605:2682" placeholder="UPDATE djkab..." />
-                <marker date="1455847342151" expanded="true" signature="9972:9984" placeholder="INSERT INTO djkabau1_petsignin.Pets... " />
-                <marker date="1455847342151" expanded="true" signature="10687:10690" placeholder="INSERT INTO djkabau1_petsignin.Pets... " />
-                <marker date="1455847342151" expanded="true" signature="17359:17363" placeholder="SELECT * FRO..Session..." />
-                <marker date="1455847342151" expanded="true" signature="17944:17956" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
+                <marker date="1456039764725" expanded="true" signature="1971:2042" placeholder="UPDATE djkab..." />
+                <marker date="1456039764725" expanded="true" signature="8562:8588" placeholder="INSERT INTO djkabau1_petsignin.Accounts... " />
+                <marker date="1456039764725" expanded="true" signature="17215:17231" placeholder="INSERT INTO djkabau1_petsignin.Sessions... " />
+                <marker date="1456039764725" expanded="true" signature="17229:17231" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
               </folding>
             </state>
           </provider>
@@ -75,8 +73,8 @@
       <file leaf-file-name="admin.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/admin.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="33" column="90" selection-start-line="33" selection-start-column="84" selection-end-line="33" selection-end-column="90" />
+            <state vertical-scroll-proportion="-2.0">
+              <caret line="21" column="23" selection-start-line="21" selection-start-column="23" selection-end-line="21" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -122,10 +120,10 @@
         <option value="$PROJECT_DIR$/dashboard.html" />
         <option value="$PROJECT_DIR$/activate.php" />
         <option value="$PROJECT_DIR$/js/admin.php" />
-        <option value="$PROJECT_DIR$/admin.php" />
-        <option value="$PROJECT_DIR$/operations.php" />
         <option value="$PROJECT_DIR$/css/main.css" />
+        <option value="$PROJECT_DIR$/admin.php" />
         <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/operations.php" />
         <option value="$PROJECT_DIR$/js/main.js" />
       </list>
     </option>
@@ -147,8 +145,8 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="131" />
-    <option name="y" value="18" />
+    <option name="x" value="279" />
+    <option name="y" value="56" />
     <option name="width" value="1071" />
     <option name="height" value="759" />
   </component>
@@ -895,15 +893,15 @@
       <workItem from="1455632977112" duration="2254000" />
       <workItem from="1455662586814" duration="14098000" />
       <workItem from="1455844831707" duration="7062000" />
-      <workItem from="1456001602965" duration="11042000" />
+      <workItem from="1456001602965" duration="24224000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="414232000" />
+    <option name="totallyTimeSpent" value="427414000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="131" y="18" width="1071" height="759" extended-state="0" />
+    <frame x="279" y="56" width="1071" height="759" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -958,12 +956,10 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1455847342151" expanded="true" signature="1970:2047" placeholder="UPDATE djkab..." />
-            <marker date="1455847342151" expanded="true" signature="2605:2682" placeholder="UPDATE djkab..." />
-            <marker date="1455847342151" expanded="true" signature="9972:9984" placeholder="INSERT INTO djkabau1_petsignin.Pets... " />
-            <marker date="1455847342151" expanded="true" signature="10687:10690" placeholder="INSERT INTO djkabau1_petsignin.Pets... " />
-            <marker date="1455847342151" expanded="true" signature="17359:17363" placeholder="SELECT * FRO..Session..." />
-            <marker date="1455847342151" expanded="true" signature="17944:17956" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
+            <marker date="1456039764725" expanded="true" signature="1971:2042" placeholder="UPDATE djkab..." />
+            <marker date="1456039764725" expanded="true" signature="8562:8588" placeholder="INSERT INTO djkabau1_petsignin.Accounts... " />
+            <marker date="1456039764725" expanded="true" signature="17215:17231" placeholder="INSERT INTO djkabau1_petsignin.Sessions... " />
+            <marker date="1456039764725" expanded="true" signature="17229:17231" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
           </folding>
         </state>
       </provider>
@@ -989,12 +985,10 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="241" column="42" selection-start-line="241" selection-start-column="42" selection-end-line="241" selection-end-column="42" />
           <folding>
-            <marker date="1455847342151" expanded="true" signature="1970:2047" placeholder="UPDATE djkab..." />
-            <marker date="1455847342151" expanded="true" signature="2605:2682" placeholder="UPDATE djkab..." />
-            <marker date="1455847342151" expanded="true" signature="9972:9984" placeholder="INSERT INTO djkabau1_petsignin.Pets... " />
-            <marker date="1455847342151" expanded="true" signature="10687:10690" placeholder="INSERT INTO djkabau1_petsignin.Pets... " />
-            <marker date="1455847342151" expanded="true" signature="17359:17363" placeholder="SELECT * FRO..Session..." />
-            <marker date="1455847342151" expanded="true" signature="17944:17956" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
+            <marker date="1456039764725" expanded="true" signature="1971:2042" placeholder="UPDATE djkab..." />
+            <marker date="1456039764725" expanded="true" signature="8562:8588" placeholder="INSERT INTO djkabau1_petsignin.Accounts... " />
+            <marker date="1456039764725" expanded="true" signature="17215:17231" placeholder="INSERT INTO djkabau1_petsignin.Sessions... " />
+            <marker date="1456039764725" expanded="true" signature="17229:17231" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
           </folding>
         </state>
       </provider>
@@ -1012,12 +1006,10 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <marker date="1455847342151" expanded="true" signature="1970:2047" placeholder="UPDATE djkab..." />
-            <marker date="1455847342151" expanded="true" signature="2605:2682" placeholder="UPDATE djkab..." />
-            <marker date="1455847342151" expanded="true" signature="9972:9984" placeholder="INSERT INTO djkabau1_petsignin.Pets... " />
-            <marker date="1455847342151" expanded="true" signature="10687:10690" placeholder="INSERT INTO djkabau1_petsignin.Pets... " />
-            <marker date="1455847342151" expanded="true" signature="17359:17363" placeholder="SELECT * FRO..Session..." />
-            <marker date="1455847342151" expanded="true" signature="17944:17956" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
+            <marker date="1456039764725" expanded="true" signature="1971:2042" placeholder="UPDATE djkab..." />
+            <marker date="1456039764725" expanded="true" signature="8562:8588" placeholder="INSERT INTO djkabau1_petsignin.Accounts... " />
+            <marker date="1456039764725" expanded="true" signature="17215:17231" placeholder="INSERT INTO djkabau1_petsignin.Sessions... " />
+            <marker date="1456039764725" expanded="true" signature="17229:17231" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
           </folding>
         </state>
       </provider>
@@ -1342,14 +1334,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/admin.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="33" column="90" selection-start-line="33" selection-start-column="84" selection-end-line="33" selection-end-column="90" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/css/main.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-11.115385">
@@ -1358,33 +1342,39 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/admin.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.0">
+          <caret line="21" column="23" selection-start-line="21" selection-start-column="23" selection-end-line="21" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/operations.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.9230769">
-          <caret line="391" column="39" selection-start-line="391" selection-start-column="39" selection-end-line="391" selection-end-column="39" />
+        <state vertical-scroll-proportion="-4.2909093">
+          <caret line="417" column="22" selection-start-line="417" selection-start-column="9" selection-end-line="417" selection-end-column="22" />
           <folding>
-            <marker date="1455847342151" expanded="true" signature="1970:2047" placeholder="UPDATE djkab..." />
-            <marker date="1455847342151" expanded="true" signature="2605:2682" placeholder="UPDATE djkab..." />
-            <marker date="1455847342151" expanded="true" signature="9972:9984" placeholder="INSERT INTO djkabau1_petsignin.Pets... " />
-            <marker date="1455847342151" expanded="true" signature="10687:10690" placeholder="INSERT INTO djkabau1_petsignin.Pets... " />
-            <marker date="1455847342151" expanded="true" signature="17359:17363" placeholder="SELECT * FRO..Session..." />
-            <marker date="1455847342151" expanded="true" signature="17944:17956" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
+            <marker date="1456039764725" expanded="true" signature="1971:2042" placeholder="UPDATE djkab..." />
+            <marker date="1456039764725" expanded="true" signature="8562:8588" placeholder="INSERT INTO djkabau1_petsignin.Accounts... " />
+            <marker date="1456039764725" expanded="true" signature="17215:17231" placeholder="INSERT INTO djkabau1_petsignin.Sessions... " />
+            <marker date="1456039764725" expanded="true" signature="17229:17231" placeholder="INSERT INTO djkabau1_petsignin.Session..." />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.7636366">
-          <caret line="225" column="47" selection-start-line="225" selection-start-column="47" selection-end-line="225" selection-end-column="47" />
+        <state vertical-scroll-proportion="-5.2181816">
+          <caret line="237" column="119" selection-start-line="237" selection-start-column="100" selection-end-line="237" selection-end-column="119" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.5962837">
-          <caret line="515" column="61" selection-start-line="515" selection-start-column="61" selection-end-line="515" selection-end-column="61" />
+        <state vertical-scroll-proportion="0.4712838">
+          <caret line="453" column="23" selection-start-line="453" selection-start-column="23" selection-end-line="453" selection-end-column="23" />
           <folding />
         </state>
       </provider>

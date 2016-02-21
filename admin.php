@@ -18,7 +18,7 @@
         $Password = $_POST['Password'];
         $HashedPassword = HashIt($Password);
         $Disabled = 0;
-        $Attempts = 0;
+        $Attempt = 0;
         $AdminCode = 2;
         global $PDOconn;
         $Query = 'CALL AddAdminAccount (?,?,?,?,?)';
@@ -26,7 +26,7 @@
         $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
         $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 255);
         $Statement->bindParam(3, $Disabled, PDO::PARAM_INT, 1);
-        $Statement->bindParam(4, $Attempts, PDO::PARAM_INT, 1);
+        $Statement->bindParam(4, $Attempt, PDO::PARAM_INT, 1);
         $Statement->bindParam(5, $AdminCode, PDO::PARAM_INT, 1);
         $Statement->execute();
         $MSG = "Super Admin created.";

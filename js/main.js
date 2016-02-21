@@ -30,6 +30,7 @@ $(document).ready(function() {
                 Action: Action
             };
             var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
+            console.log(ResponseData);
             if(ResponseData == "0"){
                 alert("This account has been locked.  Reset your account or contact the administrator..");
             }else if (ResponseData == "1") {
@@ -37,9 +38,9 @@ $(document).ready(function() {
             }else if(ResponseData == "2"){
                 window.location = "/petsignin/";
             }else if(ResponseData == "3"){
-                alert("Please check your email to activate your account.");
+                alert("Please wait for an admin to activate your account or contact them @ ADMIN EMAIL.");
             }else{
-                alert("Please create an account.");
+                alert("This account doesn't exist.  Please click on \"Register for a new account\"");
             }
         }catch(e){
             var ErrorMSG = e;
@@ -130,7 +131,7 @@ $(document).ready(function() {
             }else if (ResponseData == "1"){
                 alert("This account already exists, please sign in instead.");
             }else if(ResponseData == "2"){
-                alert("Go to your email to activate your account.");
+                alert("Please wait 1-2 business days for account approval.");
                 window.location = "/petsignin/";
             }else{
                 alert("Please check your email to activate your account");
@@ -437,7 +438,7 @@ $(document).ready(function() {
     });
 
     $( "#DisplayPetName" ).change(function() {
-        var DefaultValue = document.getElementById("DisplayPetName").defaultValue;
+        var DefaultValue = document.getElementById("HiddenValue3").value;
         var NewValue = $(this).val();
         if(DefaultValue == NewValue){
             document.getElementById("DisplayPetName").style.backgroundColor = "transparent";
@@ -448,6 +449,32 @@ $(document).ready(function() {
         }
         console.log("Prev value " + DefaultValue);
         console.log("New value " + NewValue);
+    });
+
+    $( "#UpdateAccountButton" ).click(function() {
+        var AccountEmail = document.getElementById("HiddenValue1").value;
+        var OldPetDisabled = document.getElementById("HiddenValue2").value;
+        var OldName = document.getElementById("HiddenValue3").value;
+        var OldBreedID = document.getElementById("HiddenValue4").value;
+        var OldGender = document.getElementById("HiddenValue5").value;
+        var NewPetDisabled = document.getElementById("HiddenValue2").value;
+        var NewName = document.getElementById("HiddenValue3").value;
+        var NewBreedID = document.getElementById("HiddenValue4").value;
+        var NewGender = document.getElementById("HiddenValue5").value;
+        try{
+
+            var AjaxData = {
+                Action: Action
+            };
+            var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
+            console.log(ResponseData);
+            return ResponseData;
+        }catch(e){
+            var ErrorMSG = e;
+            var FailedAction = Action;
+            AddError(FailedAction,ErrorMSG);
+            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        }
     });
 });
 
@@ -467,6 +494,7 @@ function FetchBreeds(){
         alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
     }
 }
+
 function FetchPet(PetID){
     var Action = "FetchPet";
     try{
@@ -517,7 +545,9 @@ function DisplayPetData(PetData,Breeds){
     document.getElementById("DisplayPetBreed").disabled = false;
     document.getElementById("DisplayPetName").disabled = false;
     document.getElementById("DisplayGender").disabled = false;
-    document.getElementById("DisplayPetName").defaultValue  = PetData.Name;
+    document.getElementById("HiddenValue3").value = PetData.Name;
+    document.getElementById("HiddenValue4").value = PetData.BreedID;
+    document.getElementById("HiddenValue5").value = PetData.Gender;
     document.getElementById("DisplayPetName").value  = PetData.Name;
     var select = document.getElementById("DisplayPetBreed");
     var i;
@@ -548,10 +578,11 @@ function DisplayPetBreeds(ResponseData){
 
 function FetchUserPets(Email){
     document.getElementById("DisplayAllAccountsPets").disabled = false;
+    var AccountEmail = Email;
     var Action = "FetchUserPets";
     try{
         var AjaxData = {
-            Email: Email,
+            AccountEmail: AccountEmail,
             Action: Action
         };
         var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
