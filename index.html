@@ -93,7 +93,7 @@
                     </div>
                     <div class="form-group">
                         <p>terms and condition pdf URL</p>
-                        <br>
+
                         <input type="radio" name="accounttnc" value="no" id="accounttncno" checked>I do not agree<br>
                         <input type="radio" name="accounttnc" value="yes">I agree<br>
                     </div>
@@ -121,20 +121,17 @@
                     <div class="form-group">
                         <label for="DisplayPetBreeds">Pet's Breed</label><br>
                         <select class="form-control" id="DisplayPetBreeds">
-                            <option value="">Select your pet's breed</option>
+                            <option value="0">Select your pet's breed</option>
                         </select>
                     </div>
                     <div class="btn-group">
-                        <label for="Gender">Pet's Gender</label><br>
-                        <select class="form-control" id="Gender">
-                            <option value="">Select your pet's gender</option>
-                            <option value="Boy">Boy</option>
-                            <option value="Girl">Girl</option>
+                        <label for="DisplayGenders">Pet's Gender</label><br>
+                        <select class="form-control" id="DisplayGenders">
+                            <option value="0">Select your pet's gender</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <p>terms and condition pdf URL</p>
-                        <br>
                         <input type="radio" name="pettnc" value="no" id="pettncno" checked>I do not agree<br>
                         <input type="radio" name="pettnc" value="yes">I agree<br>
                     </div>
@@ -207,8 +204,8 @@
                             <option value="0">Select an account</option>
                         </select>
                     </div>
-                    <div class="checkbox">
-                        <label><input type="checkbox" id="AccountDisabled" disabled>Disable account</label>
+                    <div class="checkbox" id="AccountDisabledLabel">
+                        <label><input type="checkbox" id="AccountDisabled" disabled>Disable account</label><br>
                     </div>
                     <div class="form-group">
                         <label for="DisplayAllAccountsPets">Account's Pets</label><br>
@@ -216,25 +213,23 @@
                             <option value="0">Select pet</option>
                         </select>
                     </div>
-                    <div class="checkbox">
-                        <label><input type="checkbox" id="PetDisabled" disabled>Disable pet</label>
+                    <div class="checkbox" id="PetDisabledLabel">
+                        <label><input type="checkbox" id="PetDisabled" disabled>Disable pet</label><br>
                     </div>
                     <div class="form-group">
-                        <label for="PetName">Pet's name</label><br>
+                        <label for="PetName" id="DisplayPetNameLabel">Pet's name</label><br>
                         <input type="text" id="DisplayPetName" placeholder="Pet's name" disabled>
                     </div>
                     <div class="form-group">
-                        <label for="DisplayPetBreed">Pet's Breed</label><br>
+                        <label for="DisplayPetBreed" id="DisplayPetBreedLabel">Pet's Breed</label><br>
                         <select class="form-control" id="DisplayPetBreed" disabled>
-                            <option value="">Pet's breed</option>
+                            <option value="">--</option>
                         </select>
                     </div>
                     <div class="btn-group">
-                        <label for="Gender">Pet's Gender</label><br>
+                        <label for="DisplayGender" id="DisplayGenderLabel">Pet's Gender</label><br>
                         <select class="form-control" id="DisplayGender" disabled>
-                            <option value="">The pet's gender</option>
-                            <option value="Boy">Boy</option>
-                            <option value="Girl">Girl</option>
+                            <option value="">--</option>
                         </select>
                     </div>
                 </div>
@@ -271,6 +266,17 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="btn-group-vertical" data-toggle="buttons" id="HiddenValues">
+        <input type="hidden" id="HiddenValue1">
+        <input type="hidden" id="HiddenValue2">
+        <input type="hidden" id="HiddenValue3">
+        <input type="hidden" id="HiddenValue4">
+        <input type="hidden" id="HiddenValue5">
+        <input type="hidden" id="HiddenValue6">
+        <input type="hidden" id="HiddenValue7">
+        <input type="hidden" id="HiddenValue8">
+        <input type="hidden" id="HiddenValue9">
     </div>
     </body>
 </html>
