@@ -15,102 +15,53 @@ $(document).ready(function() {
 
     Start();
 
-    $( "#SignInButton" ).click(function() {
+    $("#SignInButton").click(function() {
         var Email = document.getElementById("Email1").value;
         var Password = document.getElementById("Password1").value;
         IsFieldFilled(Email);
         IsFieldFilled(Password);
         ValidateEmailDomain(Email);
-        ValidatePassword(Email,Password)
+        ValidatePassword(Email,Password);
         var Action = "SignIn";
-        try{
-            var AjaxData = {
-                Email: Email,
-                Password: Password,
-                Action: Action
-            };
-            var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-            console.log(ResponseData);
-            if(ResponseData == "0"){
-                alert("This account has been locked.  Reset your account or contact the administrator..");
-            }else if (ResponseData == "1") {
-                alert("Invalid user name and/or password.  If you forgot your password, reset it.");
-            }else if(ResponseData == "2"){
-                window.location = "/petsignin/";
-            }else if(ResponseData == "3"){
-                alert("Please wait for an admin to activate your account or contact them @ ADMIN EMAIL.");
-            }else{
-                alert("This account doesn't exist.  Please click on \"Register for a new account\"");
-            }
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            AddError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        }
+        PrepareAjax(Action,Email,Password);
     });
 
-    $( "#ActivitiesButton" ).click(function() {
+    $("#ActivitiesButton").click(function() {
         var Action = "FetchActivities";
-        try{
-            var AjaxData = {
-                Action: Action
-            };
-            var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-            console.log(ResponseData);
-            if (ResponseData == "0") {
-                alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
-                window.location = "/petsignin/";
-            }else{
-                DisplayActivities(ResponseData);
-            }
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            AddError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        }
+        PrepareAjax(Action);
     });
 
-    $( "#ErrorButton" ).click(function() {
+    $("#ViewErrorsButton").click(function() {
         var Action = "FetchErrors";
-        try{
-            var AjaxData = {
-                Action: Action
-            };
-            var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-            console.log(ResponseData);
-            if(ResponseData == "0"){
-                alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
-                window.location = "/petsignin/";
-            }else{
-                DisplayErrors(ResponseData);
-            }
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            AddError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        }
+        PrepareAjax(Action);
     });
 
-    $( "#Register" ).click(function() {
-        document.getElementById("Email2").value = "";
-        document.getElementById("Password2").value = "";
-        document.getElementById("accounttncno").checked = true;
-        document.getElementById("RegisterButton").disabled = true;
+    $("#Register").click(function() {
+        $("#Email2").val("");
+        $("#Password2").val("");
+        $("#accounttncno").is(':checked');
+        $("#RegisterButton").is(':disabled');
     });
 
     $('input[type=radio][name=accounttnc]').change(function() {
         if (this.value == "yes") {
-            document.getElementById("RegisterButton").disabled = false;
+            $("#RegisterButton").not(':disabled');
         }
         else if (this.value == "no") {
-            document.getElementById("RegisterButton").disabled = true;
+            $("#RegisterButton").is(':disabled');
         }
     });
 
-    $( "#RegisterButton" ).click(function() {
+    $('input[type=radio][name=pettnc]').change(function() {
+        if (this.value == "yes") {
+            $("#AddPetButton").not(':disabled');
+        }
+        else if (this.value == "no") {
+            $("#AddPetButton").is(':disabled');
+        }
+    });
+
+    $("#RegisterButton").click(function() {
         var Email = document.getElementById("Email2").value;
         var Password = document.getElementById("Password2").value;
         IsFieldFilled(Email);
@@ -118,304 +69,120 @@ $(document).ready(function() {
         ValidateEmailDomain(Email);
         ValidatePassword(Email,Password);
         var Action = "AddAccount";
-        try{
-            var AjaxData = {
-                Email: Email,
-                Password: Password,
-                Action: Action
-            };
-            var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-            console.log(ResponseData);
-            if(ResponseData == "0"){
-                alert("This account has been locked.  Reset your account or contact the administrator.");
-            }else if (ResponseData == "1"){
-                alert("This account already exists, please sign in instead.");
-            }else if(ResponseData == "2"){
-                alert("Please wait 1-2 business days for account approval.");
-                window.location = "/petsignin/";
-            }else{
-                alert("Please check your email to activate your account");
-            }
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            AddError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        }
+        PrepareAjax(Action,Email,Password);
     });
 
-    $( "#SignOut" ).click(function() {
+    $("#SignOut").click(function() {
         var Action = "SignOut";
-        try{
-            var AjaxData = {
-                Action: Action
-            };
-            OutgoingAjax(AjaxData);
-            window.location = "/petsignin/";
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            AddError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        }
+        PrepareAjax(Action);
     });
 
-    $( "#AddNewPetButton" ).click(function() {
-        document.getElementById("PetName").value = "";
-        document.getElementById("DisplayPetBreeds").options.length = "1";
-        document.getElementById("DisplayGender").value = "";
-        document.getElementById("pettncno").checked = true;
-        document.getElementById("AddPetButton").disabled = true;
-        ResponseData = FetchBreeds();
-        DisplayPetBreeds(ResponseData);
+    $("#AddNewPetButton").click(function() {
+        $("#PetName").val("");
+        $("#ViewGender").val("");
+        $("#pettncno").is(':checked');
+        $("#AddPetButton").is(':disabled');
+        document.getElementById("ViewPetBreeds").options.length = "1";
+        var Action = "FetchBreeds";
+        PrepareAjax(Action);
+        ViewPetBreeds(ResponseData);
     });
 
-    $( "#AddPetButton" ).click(function() {
+    $("#AddPetButton").click(function() {
         var Name = document.getElementById("PetName").value;
-        var BreedID = document.getElementById("DisplayPetBreeds").value;
-        var Gender = document.getElementById("DisplayGender").value;
+        var BreedID = document.getElementById("ViewPetBreeds").value;
+        var Gender = document.getElementById("ViewGender").value;
         IsFieldFilled(Name);
         IsFieldFilled(BreedID);
         IsFieldFilled(Gender);
         var Action = "AddPet";
-        try{
-            var AjaxData = {
-                Name: Name,
-                BreedID: BreedID,
-                Gender: Gender,
-                Action: Action
-            };
-            var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-            console.log(ResponseData);
-            if(ResponseData == "0"){
-                alert("This account has been locked.  Reset your account or contact the administrator.");
-            }else{
-                alert( Name + " was added.");
-                window.location = "/petsignin/";
-            }
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            AddError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        }
+        PrepareAjax(Action,Name,BreedID,Gender);
     });
 
-    $('input[type=radio][name=pettnc]').change(function() {
-        if (this.value == "yes") {
-            document.getElementById("AddPetButton").disabled = false;
-        }
-        else if (this.value == "no") {
-            document.getElementById("AddPetButton").disabled = true;
-        }
-    });
-
-    $( "#ResetAccountButton" ).click(function() {
-        var Email = document.getElementById("Email3").value;
-        IsFieldFilled(Email);
-        var Action = "ResetAccountButton";
-        try{
-            var AjaxData = {
-                Email: Email,
-                Action: Action
-            };
-            var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-            if(ResponseData == "0"){
-                alert("Invalid email, try again.");
-            }else{
-                alert("Please check your email to activate your account");
-            }
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            AddError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        }
-    });
-
-    $( "#ChangePasswordButton" ).click(function() {
-        var OldPassword = document.getElementById("OldPassword").value;
-        var OldPassword1 = document.getElementById("OldPassword1").value;
-        var NewPassword = document.getElementById("NewPassword").value;
-        IsFieldFilled(Email);
-        IsFieldFilled(OldPassword);
-        IsFieldFilled(OldPassword1);
-        IsFieldFilled(NewPassword);
-        var Action = "ResetAccountButton";
-        try{
-            var AjaxData = {
-                Email: Email,
-                Action: Action
-            };
-            var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-            if(ResponseData == "0"){
-                alert("Invalid email, try again.");
-            }else{
-                alert("Please check your email to activate your account");
-            }
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            AddError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        }
-    });
-
-    $( "#DisplayPet :input" ).change(function() {
-        var Name = this.value;
+    $("#ViewPet :input").change(function() {
         var Action = "SignInPet";
-        try{
-            var AjaxData = {
-                Name: Name,
-                Action: Action
-            };
-            var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-            console.log(ResponseData);
-            if (ResponseData == "0") {
-                alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
-                window.location = "/petsignin/";
-            }else{
-                alert('Your pet was signed in.');
-                window.location = "/petsignin/";
-            }
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            AddError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        }
+        var Name = this.value;
+        PrepareAjax(Action,Name);
     });
 
-    $( "#ManageAccountsButton" ).click(function() {
+    $("#ViewAccountsButton").click(function() {
         document.getElementById("AccountDisabled").disabled = true;
-        document.getElementById("DisplayAllAccountsPets").disabled = true;
+        document.getElementById("ViewAllAccountsPets").disabled = true;
         document.getElementById("PetDisabled").disabled = true;
-        document.getElementById("DisplayPetName").disabled = true;
-        document.getElementById("DisplayPetBreed").disabled = true;
-        document.getElementById("DisplayGender").disabled = true;
-        document.getElementById("DisplayAllAccountsPets").disabled = true;
+        document.getElementById("ViewName").disabled = true;
+        document.getElementById("ViewBreed").disabled = true;
+        document.getElementById("ViewGender").disabled = true;
+        document.getElementById("ViewAllAccountsPets").disabled = true;
         document.getElementById("UpdateAccountButton").disabled = true;
-        document.getElementById("DisplayAllAccounts").options.length = "1";
-        document.getElementById("DisplayAllAccountsPets").options.length = "1";
-        document.getElementById("DisplayPetName").value = "";
-        document.getElementById("DisplayPetBreed").options.length = "1";
-        document.getElementById("DisplayGender").options.length = "1";
+        document.getElementById("ViewAllAccounts").options.length = "1";
+        document.getElementById("ViewAllAccountsPets").options.length = "1";
+        document.getElementById("ViewName").value = "";
+        document.getElementById("ViewBreed").options.length = "1";
+        document.getElementById("ViewGender").options.length = "1";
         var Action = "FetchUsers";
-        try{
-            var AjaxData = {
-                Action: Action
-            };
-            var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-            console.log(ResponseData);
-            if (ResponseData == "0") {
-                alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
-                window.location = "/petsignin/";
-            }else{
-                DisplayAllAccounts(ResponseData);
-            }
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            AddError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-        }
+        PrepareAjax(Action);
     });
 
-    $( "#DisplayAllAccounts" ).change(function() {
+    $("#ViewAllAccounts").change(function() {
         if (this.value == "0") {
             document.getElementById("AccountDisabled").disabled = true;
             document.getElementById("AccountDisabled").checked = false;
-            document.getElementById("DisplayAllAccountsPets").disabled = true;
+            document.getElementById("ViewAllAccountsPets").disabled = true;
             document.getElementById("PetDisabled").disabled = true;
             document.getElementById("PetDisabled").checked = false;
-            document.getElementById("DisplayPetName").disabled = true;
-            document.getElementById("DisplayPetBreed").disabled = true;
-            document.getElementById("DisplayGender").disabled = true;
-            document.getElementById("DisplayAllAccountsPets").disabled = true;
+            document.getElementById("ViewName").disabled = true;
+            document.getElementById("ViewBreed").disabled = true;
+            document.getElementById("ViewGender").disabled = true;
+            document.getElementById("ViewAllAccountsPets").disabled = true;
             document.getElementById("UpdateAccountButton").disabled = true;
             document.getElementById("AccountDisabledLabel").style.backgroundColor = "transparent";
             document.getElementById("PetDisabledLabel").style.backgroundColor = "transparent";
-            document.getElementById("DisplayAllAccountsPets").options.length = "1";
-            document.getElementById("DisplayPetName").value = "";
-            document.getElementById("DisplayGender").text = "--";
-            document.getElementById("DisplayPetBreed").options.length = "1";
-            document.getElementById("DisplayGender").options.length = "1";
+            document.getElementById("ViewAllAccountsPets").options.length = "1";
+            document.getElementById("ViewName").value = "";
+            document.getElementById("ViewGender").text = "--";
+            document.getElementById("ViewBreed").options.length = "1";
+            document.getElementById("ViewGender").options.length = "1";
         }else{
-            document.getElementById("DisplayAllAccountsPets").options.length = "1";
-            document.getElementById("DisplayPetName").value = "";
-            document.getElementById("DisplayPetBreed").options.length = "1";
-            document.getElementById("DisplayGender").options.length = "1";
-            var Email = this.value;
+            document.getElementById("ViewAllAccountsPets").options.length = "1";
+            document.getElementById("ViewName").value = "";
+            document.getElementById("ViewBreed").options.length = "1";
+            document.getElementById("ViewGender").options.length = "1";
             var Action = "FetchUserStatus";
-            try{
-                var AjaxData = {
-                    Email: Email,
-                    Action: Action
-                };
-                var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-                console.log(ResponseData);
-                if (ResponseData == "0") {
-                    alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
-                    window.location = "/petsignin/";
-                }else{
-                    DisplayAccountDisabled(ResponseData);
-                    FetchUserPets(Email);
-                }
-            }catch(e){
-                var ErrorMSG = e;
-                var FailedAction = Action;
-                AddError(FailedAction,ErrorMSG);
-                alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-            }
+            var Email = this.value;
+            PrepareAjax(Action,Email);
+            Action = "FetchUserPets";
+            PrepareAjax(Action);
         }
     });
 
-    $( "#DisplayAllAccountsPets" ).change(function() {
+    $("#ViewAllAccountsPets").change(function() {
         if (this.value == "0") {
             document.getElementById("PetDisabled").disabled = true;
             document.getElementById("PetDisabled").checked = false;
-            document.getElementById("DisplayPetName").disabled = true;
-            document.getElementById("DisplayPetBreed").disabled = true;
-            document.getElementById("DisplayGender").disabled = true;
+            document.getElementById("ViewName").disabled = true;
+            document.getElementById("ViewBreed").disabled = true;
+            document.getElementById("ViewGender").disabled = true;
             document.getElementById("UpdateAccountButton").disabled = true;
             document.getElementById("PetDisabledLabel").style.backgroundColor = "transparent";
-            document.getElementById("DisplayPetName").value = "";
-            document.getElementById("DisplayPetBreed").value = "1";
-            document.getElementById("DisplayGender").selectedIndex.text = "--";
-            document.getElementById("DisplayPetBreed").options.length = "1";
-            document.getElementById("DisplayGender").options.length = "1";
+            document.getElementById("ViewName").value = "";
+            document.getElementById("ViewBreed").value = "1";
+            document.getElementById("ViewGender").selectedIndex.text = "--";
+            document.getElementById("ViewBreed").options.length = "1";
+            document.getElementById("ViewGender").options.length = "1";
         }else{
-            document.getElementById("DisplayPetName").value = "";
-            document.getElementById("DisplayPetBreed").options.length = "1";
-            document.getElementById("DisplayGender").options.length = "1";
-            var PetID = this.value;
+            document.getElementById("ViewName").value = "";
+            document.getElementById("ViewBreed").options.length = "1";
+            document.getElementById("ViewGender").options.length = "1";
             var Action = "FetchPetStatus";
-            try{
-                var AjaxData = {
-                    PetID: PetID,
-                    Action: Action
-                };
-                var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-                console.log(ResponseData);
-                if (ResponseData == "0") {
-                    alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
-                    window.location = "/petsignin/";
-                }else{
-                    DisplayPetDisabled(ResponseData);
-                    var PetData = FetchPet(PetID);
-                    var Breeds = FetchBreeds();
-                    DisplayPetData(PetData,Breeds);
-                }
-            }catch(e){
-                var ErrorMSG = e;
-                var FailedAction = Action;
-                AddError(FailedAction,ErrorMSG);
-                alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-            }
+            var PetID = this.value;
+            PrepareAjax(Action,PetID);
+            PetData = FetchPet(PetID);
+            var Breeds = FetchBreeds();
+            ViewPetData(PetData,Breeds);
         }
     });
 
-    $( "#AccountDisabled" ).change(function() {
+    $("#AccountDisabled").change(function() {
         var DefaultValue = document.getElementById("HiddenValue1").value;
         if(DefaultValue == 1 && this.checked || DefaultValue == 0 && !this.checked){
             document.getElementById("AccountDisabledLabel").style.backgroundColor = "transparent";
@@ -426,7 +193,7 @@ $(document).ready(function() {
         }
     });
 
-    $( "#PetDisabled" ).change(function() {
+    $("#PetDisabled").change(function() {
         var DefaultValue = document.getElementById("HiddenValue2").value;
         if(DefaultValue == 1 && this.checked || DefaultValue == 0 && !this.checked){
             document.getElementById("PetDisabledLabel").style.backgroundColor = "transparent";
@@ -437,66 +204,55 @@ $(document).ready(function() {
         }
     });
 
-    $( "#DisplayPetName" ).change(function() {
+    $("#ViewName").change(function() {
         var DefaultValue = document.getElementById("HiddenValue3").value;
         var NewValue = $(this).val();
         if(DefaultValue == NewValue){
-            document.getElementById("DisplayPetName").style.backgroundColor = "transparent";
+            document.getElementById("ViewName").style.backgroundColor = "transparent";
             document.getElementById("UpdateAccountButton").disabled = true;
         }else{
-            document.getElementById("DisplayPetName").style.backgroundColor = "lightgreen";
+            document.getElementById("ViewName").style.backgroundColor = "lightgreen";
             document.getElementById("UpdateAccountButton").disabled = false;
         }
         console.log("Prev value " + DefaultValue);
         console.log("New value " + NewValue);
     });
 
-    $( "#UpdateAccountButton" ).click(function() {
-        var AccountEmail = document.getElementById("HiddenValue1").value;
+    $("#UpdateAccountButton").click(function() {
+        var OldAccountDisabled = document.getElementById("HiddenValue1").value;
         var OldPetDisabled = document.getElementById("HiddenValue2").value;
         var OldName = document.getElementById("HiddenValue3").value;
         var OldBreedID = document.getElementById("HiddenValue4").value;
         var OldGender = document.getElementById("HiddenValue5").value;
-        var NewPetDisabled = document.getElementById("HiddenValue2").value;
-        var NewName = document.getElementById("HiddenValue3").value;
-        var NewBreedID = document.getElementById("HiddenValue4").value;
-        var NewGender = document.getElementById("HiddenValue5").value;
-        try{
-
-            var AjaxData = {
-                Action: Action
-            };
-            var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-            console.log(ResponseData);
-            return ResponseData;
-        }catch(e){
-            var ErrorMSG = e;
-            var FailedAction = Action;
-            AddError(FailedAction,ErrorMSG);
-            alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        var AccountDisabled = $("#AccountDisabled").val();
+        var PetDisabled = $("#PetDisabled").val();
+        var Name = $("#ViewName").val();
+        var BreedID = $("#ViewBreed").val();
+        var Gender = $("#ViewGender").val();
+        if(OldGender == Gender){
+            var Action = "UpdateGender";
+            UpdateAccountButton(Action,Gender);
+            try{
+                var AjaxData = {
+                    Gender: Gender,
+                    Action: Action
+                };
+                var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
+                console.log(ResponseData);
+                return ResponseData;
+            }catch(e){
+                var ErrorMSG = e;
+                var FailedAction = Action;
+                AddError(FailedAction,ErrorMSG);
+                alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+            }
         }
     });
 });
 
-function FetchBreeds(){
-    var Action = "FetchBreeds";
-    try{
-        var AjaxData = {
-            Action: Action
-        };
-        var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-        console.log(ResponseData);
-        return ResponseData;
-    }catch(e){
-        var ErrorMSG = e;
-        var FailedAction = Action;
-        AddError(FailedAction,ErrorMSG);
-        alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-    }
-}
-
 function FetchPet(PetID){
     var Action = "FetchPet";
+    PrepareAjax(Action);
     try{
         var AjaxData = {
             PetID: PetID,
@@ -518,7 +274,7 @@ function FetchPet(PetID){
     }
 }
 
-function DisplayAccountDisabled (ResponseData){
+function ViewAccountDisabled (ResponseData){
     document.getElementById("AccountDisabled").disabled = false;
     if(ResponseData.Disabled == 0){
         document.getElementById("AccountDisabled").checked = false;
@@ -529,7 +285,7 @@ function DisplayAccountDisabled (ResponseData){
     }
 }
 
-function DisplayPetDisabled (ResponseData){
+function ViewPetDisabled (ResponseData){
     document.getElementById("PetDisabled").disabled = false;
     if(ResponseData.Disabled == 0){
         document.getElementById("PetDisabled").checked = false;
@@ -540,16 +296,16 @@ function DisplayPetDisabled (ResponseData){
     }
 }
 
-function DisplayPetData(PetData,Breeds){
-    document.getElementById("DisplayAllAccountsPets").disabled = false;
-    document.getElementById("DisplayPetBreed").disabled = false;
-    document.getElementById("DisplayPetName").disabled = false;
-    document.getElementById("DisplayGender").disabled = false;
+function ViewPetData(PetData,Breeds){
+    document.getElementById("ViewAllAccountsPets").disabled = false;
+    document.getElementById("ViewPetBreed").disabled = false;
+    document.getElementById("ViewName").disabled = false;
+    document.getElementById("ViewGender").disabled = false;
     document.getElementById("HiddenValue3").value = PetData.Name;
     document.getElementById("HiddenValue4").value = PetData.BreedID;
     document.getElementById("HiddenValue5").value = PetData.Gender;
-    document.getElementById("DisplayPetName").value  = PetData.Name;
-    var select = document.getElementById("DisplayPetBreed");
+    document.getElementById("ViewName").value  = PetData.Name;
+    var select = document.getElementById("ViewPetBreed");
     var i;
     for (i = 0; i < Breeds.length; i++) {
         if(Breeds[i].BreedID == PetData.BreedID){
@@ -558,7 +314,7 @@ function DisplayPetData(PetData,Breeds){
             select.options[select.options.length] = new Option(Breeds[i].Name, Breeds[i].BreedID);
         }
     }
-    var select = document.getElementById("DisplayGender");
+    var select = document.getElementById("ViewGender");
     if(PetData.Gender == "Boy"){
         select.options[select.options.selectedIndex] = new Option("Boy", "Boy");
         select.options[select.options] = new Option("Girl", "Girl");
@@ -568,8 +324,8 @@ function DisplayPetData(PetData,Breeds){
     }
 }
 
-function DisplayPetBreeds(ResponseData){
-    var select = document.getElementById("DisplayPetBreeds");
+function ViewPetBreeds(ResponseData){
+    var select = document.getElementById("ViewPetBreeds");
     var i;
     for (i = 0; i < ResponseData.length; i++) {
         select.options[select.options.length] = new Option(ResponseData[i].Name, ResponseData[i].BreedID);
@@ -577,59 +333,41 @@ function DisplayPetBreeds(ResponseData){
 }
 
 function FetchUserPets(Email){
-    document.getElementById("DisplayAllAccountsPets").disabled = false;
+    document.getElementById("ViewAllAccountsPets").disabled = false;
     var AccountEmail = Email;
     var Action = "FetchUserPets";
-    try{
-        var AjaxData = {
-            AccountEmail: AccountEmail,
-            Action: Action
-        };
-        var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-        console.log(ResponseData);
-        if (ResponseData == "0") {
-            alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
-            window.location = "/petsignin/";
-        }else{
-            DisplayUserPets(ResponseData);
-        }
-    }catch(e){
-        var ErrorMSG = e;
-        var FailedAction = Action;
-        AddError(FailedAction,ErrorMSG);
-        alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-    }
+    PrepareAjax(Action, AccountEmail);
 }
 
-function DisplayUserPets(ResponseData){
-    var select = document.getElementById("DisplayAllAccountsPets");
+function ViewUserPets(ResponseData){
+    var select = document.getElementById("ViewAllAccountsPets");
     var i;
     for (i = 0; i < ResponseData.length; i++) {
         select.options[select.options.length] = new Option(ResponseData[i].Name, ResponseData[i].PetID);
     }
 }
 
-function DisplayAllAccounts(ResponseData){
-    var select = document.getElementById("DisplayAllAccounts");
+function ViewAllAccounts(ResponseData){
+    var select = document.getElementById("ViewAllAccounts");
     var i;
     for (i = 0; i < ResponseData.length; i++) {
         select.options[select.options.length] = new Option(ResponseData[i].Email, ResponseData[i].Email);
     }
 }
 
-function DisplaySignInPet(ResponseData){
-    var DisplaySignInPet = "";
+function ViewSignInPet(ResponseData){
+    var ViewSignInPet = "";
     for (var i = 0; i < ResponseData.length; i++) {
         if (ResponseData[i].DiffDate == "0"){
-            DisplaySignInPet += '<label class="btn btn-primary" disabled>';
+            ViewSignInPet += '<label class="btn btn-primary" disabled>';
         }else{
-            DisplaySignInPet += '<label class="btn btn-primary">';
+            ViewSignInPet += '<label class="btn btn-primary">';
         }
-        DisplaySignInPet += '<input type="radio" name="options" id="option1" autocomplete="off" value="' + ResponseData[i].Name + '">' + ResponseData[i].Name + '</button>';
+        ViewSignInPet += '<input type="radio" name="options" id="option1" autocomplete="off" value="' + ResponseData[i].Name + '">' + ResponseData[i].Name + '</button>';
 
-        DisplaySignInPet += '</label>';
+        ViewSignInPet += '</label>';
     }
-    document.getElementById("DisplaySignInPet").innerHTML = DisplaySignInPet;
+    document.getElementById("ViewSignInPet").innerHTML = ViewSignInPet;
 }
 
 //Multiple use
@@ -640,21 +378,126 @@ function IsFieldFilled(Field){
     }
 }
 
+function PrepareAjax(Action,D1,D2,D3,D4,D5,D6,D7,D8,D9){
+    var D1;
+    var D2;
+    var D3;
+    var D4;
+    var D5;
+    var D6;
+    var D7;
+    var D8;
+    var D9;
+    try{
+        var AjaxData = {
+            Action: Action,
+            D1: D1,
+            D2: D2,
+            D3: D3,
+            D4: D4,
+            D5: D5,
+            D6: D6,
+            D7: D7,
+            D8: D8,
+            D9: D9
+        };
+        var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
+        JSOperation(Action, ResponseData);
+    }catch(e){
+        var ErrorMSG = e;
+        var FailedAction = Action;
+        AddError(FailedAction,ErrorMSG);
+        alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+
+    }
+}
+
+function AddError(FailedAction, ErrorMSG) {
+    var Action = "AddError";
+    var AjaxData = {
+        Action: Action,
+        FailedAction: FailedAction,
+        ErrorMSG: ErrorMSG
+    }
+    OutgoingAjax(AjaxData);
+}
+
+function JSOperation(Action, ResponseData){
+    console.log(ResponseData);
+    switch(ResponseData) {
+        case "locked":
+            alert("This account has been locked.  Reset your account or contact the administrator.");
+            break;
+        case "notlocked":
+            alert("Your account will be locked out if you fail to sign in 5 times in a row.");
+            break;
+        case "invalid":
+            alert("Invalid email and/or password.  If you forgot your password, reset it.");
+            break;
+        case "notactive":
+            alert("Please wait for an admin to activate your account or contact them @ ADMIN EMAIL.");
+            break;
+        case "none":
+            alert("This account doesn't exist.  Please click on \"Register for a new account\"");
+            break;
+        case "refresh":
+            window.location = "/petsignin/";
+            break;
+        case 2:
+            ViewAdmin();
+            break;
+        case 1:
+            ViewRUser();
+            break;
+        case 0:
+            Visitor();
+            break;
+        case "expired":
+            alert("Your session expired, please sign in again.");
+            window.location = "/petsignin/";
+            break;
+        default:
+            JSOperation2(Action,ResponseData);
+    }
+}
+
+function JSOperation2(Action,ResponseData){
+    console.log(ResponseData);
+    switch(Action) {
+        case "FetchActivities":
+            ViewActivities(ResponseData);
+            break;
+        case "FetchErrors":
+            ViewErrors(ResponseData);
+            break;
+        case "FetchBreeds":
+            ViewPetBreeds(ResponseData);
+            break;
+        case "FetchSignInPet":
+            ViewSignInPet(ResponseData);
+            break;
+        case "FetchUserPets":
+            ViewUserPets(ResponseData);
+            break;
+        case "FetchUsers":
+            ViewAllAccounts(ResponseData);
+            break;
+        case "FetchUserStatus":
+            ViewAccountDisabled(ResponseData);
+            break;
+        case "FetchPetStatus":
+            ViewPetDisabled(ResponseData);
+            break;
+        default:
+            alert("nothing!");
+    }
+}
+
 function OutgoingAjax(AjaxData) {
     var IncomingAjaxData = $.ajax({
         data: AjaxData
     }).responseText;
     return IncomingAjaxData;
-}
-
-function AddError(FailedAction, ErrorMSG){
-    var Action = "AddError";
-    var AjaxData = {
-        FailedAction: FailedAction,
-        ErrorMSG: ErrorMSG,
-        Action: Action
-    };
-    OutgoingAjax(AjaxData);
 }
 
 //Single use
@@ -663,110 +506,64 @@ function Start(){
     ValidateSession();
 }
 
-function DisplayUser(){
-    document.getElementById("SignInAndRegister").style.display="block";
-    document.getElementById("SignInAndRegister").style.visibility="visible";
+function Visitor(){
+    document.getElementById("Visitor").style.display="block";
+    document.getElementById("Visitor").style.visibility="visible";
 }
 
-function DisplayRUser(){
+function ViewRUser(){
     FetchUserPetsStatus();
     document.getElementById("SignOut").style.display="block";
     document.getElementById("SignOut").style.visibility="visible";
     document.getElementById("Account").style.display="block";
     document.getElementById("Account").style.visibility="visible";
-    document.getElementById("ActivitiesButton").style.display="block";
-    document.getElementById("ActivitiesButton").style.visibility="visible";
+    document.getElementById("ViewActivitiesButton").style.display="block";
+    document.getElementById("ViewActivitiesButton").style.visibility="visible";
     document.getElementById("AddNewPetButton").style.display="block";
     document.getElementById("AddNewPetButton").style.visibility="visible";
 }
 
-function DisplayAdmin(){
+function ViewAdmin(){
     document.getElementById("SignOut").style.display="block";
     document.getElementById("SignOut").style.visibility="visible";
     document.getElementById("Account").style.display="block";
     document.getElementById("Account").style.visibility="visible";
-    document.getElementById("ActivitiesButton").style.display="block";
-    document.getElementById("ActivitiesButton").style.visibility="visible";
-    document.getElementById("ErrorButton").style.display="block";
-    document.getElementById("ErrorButton").style.visibility="visible";
+    document.getElementById("ViewActivitiesButton").style.display="block";
+    document.getElementById("ViewActivitiesButton").style.visibility="visible";
+    document.getElementById("ViewErrorsButton").style.display="block";
+    document.getElementById("ViewErrorsButton").style.visibility="visible";
     document.getElementById("AddPetButton").style.display="block";
     document.getElementById("AddPetButton").style.visibility="visible";
-    document.getElementById("ManageAccountsButton").style.display="block";
-    document.getElementById("ManageAccountsButton").style.visibility="visible";
-}
-
-function HideAll(){
-    document.getElementById("SignOut").style.display="none";
-    document.getElementById("SignOut").style.visibility="hidden";
-    document.getElementById("Account").style.display="none";
-    document.getElementById("Account").style.visibility="hidden";
-    document.getElementById("ActivitiesButton").style.display="none";
-    document.getElementById("ActivitiesButton").style.visibility="hidden";
-    document.getElementById("ErrorButton").style.display="none";
-    document.getElementById("ErrorButton").style.visibility="hidden";
-    document.getElementById("AddPetButton").style.display="none";
-    document.getElementById("AddPetButton").style.visibility="hidden";
-    document.getElementById("ManageAccountsButton").style.display="none";
-    document.getElementById("ManageAccountsButton").style.visibility="hidden";
+    document.getElementById("ViewAccountsButton").style.display="block";
+    document.getElementById("ViewAccountsButton").style.visibility="visible";
 }
 
 function ValidateSession(){
     var Action = "ValidateSession";
-    try{
-        var AjaxData = {
-            Action: Action
-        };
-        var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-        console.log(ResponseData);
-        if(ResponseData == "2"){
-            DisplayAdmin();
-        }else if(ResponseData == "1"){
-            DisplayRUser();
-        }else{
-            DisplayUser();
-        }
-    }catch(e){
-        var ErrorMSG = e;
-        var FailedAction = Action;
-        AddError(FailedAction,ErrorMSG);
-        alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-    }
+    PrepareAjax(Action);
 }
 
 function FetchSignInPet(){
     var Action = "FetchSignInPet";
-    try{
-        var AjaxData = {
-            Action: Action
-        };
-        var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-        if (ResponseData !== "") {
-            DisplaySignInPet(ResponseData);
-        }
-    }catch(e){
-        var ErrorMSG = e;
-        var FailedAction = Action;
-        AddError(FailedAction,ErrorMSG);
-        alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-    }
+    PrepareAjax(Action);
 }
 
-function DisplayActivities(ResponseData){
-    var DisplayActivities = '<thead><tr><th>Activities</th><th>Date</th></tr></thead><tbody>';
+function ViewActivities(ResponseData){
+    var ViewActivities = '<thead><tr><th>Activities</th><th>Date</th></tr></thead><tbody>';
     for (var i = 0; i < ResponseData.length; i++) {
-        DisplayActivities += '<tr><td>' + ResponseData[i].ActivityMSG + '</td><td>' + ResponseData[i].LogDate + '</td></tr>';
+        ViewActivities += '<tr><td>' + ResponseData[i].ActivityMSG + '</td><td>' + ResponseData[i].LogDate + '</td></tr>';
     }
-    DisplayActivities += '</tbody>';
-    document.getElementById("DisplayActivities").innerHTML = DisplayActivities;
+    ViewActivities += '</tbody>';
+    document.getElementById("ViewActivities").innerHTML = ViewActivities;
 }
 
-function DisplayErrors(ResponseData){
-    var DisplayErrors = '<thead><tr><th>Account</th><th>Action</th><th>Error Message</th><th>Date</th></tr></thead><tbody>';
+function ViewErrors(ResponseData){
+    var ViewErrors = '<thead><tr><th>Account</th><th>Action</th><th>Error Message</th><th>Date</th></tr></thead><tbody>';
     for (var i = 0; i < ResponseData.length; i++) {
-        DisplayErrors += '<tr><td>' + ResponseData[i].Email +  '<tr><td>' + ResponseData[i].Action + '<tr><td>' + ResponseData[i].ErrorMSG + '</td><td>' + ResponseData[i].LogDate + '</td></tr>';
+        ViewErrors += '<tr><td>' + ResponseData[i].Email +  '<tr><td>' + ResponseData[i].Action + '<tr><td>' + ResponseData[i].ErrorMSG + '</td><td>' + ResponseData[i].LogDate + '</td></tr>';
     }
-    DisplayErrors += '</tbody>';
-    document.getElementById("DisplayError").innerHTML = DisplayErrors;
+    ViewErrors += '</tbody>';
+    document.getElementById("ViewError").innerHTML = ViewErrors;
 }
 
 function UnitTest() {

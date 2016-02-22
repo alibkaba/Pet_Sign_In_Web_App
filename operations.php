@@ -15,11 +15,11 @@ function ValidateAjaxRequest() {
 function ValidateAction(){
     if (isset($_POST["Action"]) && !empty($_POST["Action"])) {
         $Action = $_POST["Action"];
-        DBOperation($Action);
+        PHPOperation($Action);
     }
 }
 
-function DBOperation($Action){
+function PHPOperation($Action){
     switch($Action) {
         case "UnitTest": UnitTest();
             break;
@@ -60,19 +60,6 @@ function DBOperation($Action){
         case "FetchPet": FetchPet($Action);
             break;
     }
-}
-
-function ResetPassword(){
-    $Email = stripslashes($_POST["Email"]);
-    $ActivationCode = hash('sha256', uniqid(rand(), true));
-    global $PDOconn;
-    $Query = 'UPDATE djkabau1_petsignin.Accounts set Password = (?) where Email = (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Password, PDO::PARAM_INT, 8);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    mail($Email,"Activate account","Please verify your account by clicking on this link: https://petsignin.alibkaba.com/petsignin/activate.php?confirm=$ActivationCode");
-    echo json_encode("0");
-    $PDOconn = null;
 }
 
 function AddError($Action){
@@ -158,8 +145,8 @@ function ValidatePassword($Password,$HashedPassword){
 }
 
 function SignIn(){
-    $Email = stripslashes($_POST["Email"]);
-    $Password = stripslashes($_POST["Password"]);
+    $Email = stripslashes($_POST["D1"]);
+    $Password = stripslashes($_POST["D2"]);
     $UserData = FetchUser($Email);
     if(!empty($UserData['Email'])){
         $HashedPassword = $UserData['Password'];
@@ -172,46 +159,46 @@ function SignIn(){
                     $ActivityMSG = "You signed in.";
                     AddActivity($Email,$ActivityMSG);
                     AddSession($Email);
-                    echo json_encode("2");
+                    echo json_encode("refresh");
                     $PDOconn = null;
                 }else{
                     AddAttempt($UserData,$Email);
                     $ActivityMSG = "You attempted to sign in but your account wasn't activated by an admin yet.";
                     AddActivity($Email,$ActivityMSG);
-                    echo json_encode("3");
+                    echo json_encode("notactive");
                     $PDOconn = null;
                 }
             }else{
-                $ActivityMSG = "Your account is locked out because someone attempted to sign in with your email 5 times in a row.";
+                $ActivityMSG = "Account was locked out due to multiple sign in attempts.";
                 AddActivity($Email,$ActivityMSG);
-                echo json_encode("0");
+                echo json_encode("locked");
                 $PDOconn = null;
             }
         }else{
             if($UserData['Attempt'] < 5){
                 AddAttempt($UserData,$Email);
-                $ActivityMSG = "Your account will be locked out if you fail to sign in 5 times in a row.";
+                $ActivityMSG = "Account to be locked due to multipel sign in attempts.";
                 AddActivity($Email,$ActivityMSG);
-                echo json_encode("1");
+                echo json_encode("notlocked");
                 $PDOconn = null;
             }else{
-                $ActivityMSG = "Your account is locked out because someone attempted to sign in with your email 5 times in a row.";
+                $ActivityMSG = "Account was locked out due to multiple sign in attempts.";
                 AddActivity($Email,$ActivityMSG);
-                echo json_encode("0");
+                echo json_encode("locked");
                 $PDOconn = null;
             }
         }
     }else{
-        echo json_encode("4");
+        echo json_encode("none");
     }
 }
 
 function SignInPet($Action){
     $Email = ValidateSession($Action);
-    $Name = stripslashes($_POST["Name"]);
+    $Name = stripslashes($_POST["D1"]);
     $ActivityMSG = "Your pet " . $Name . " has been signed in.";
     AddActivity($Email,$ActivityMSG);
-    echo json_encode("1");
+    echo json_encode("refreshpet");
 }
 
 function DeleteSession($Email){
@@ -231,24 +218,24 @@ function ResetAttempt($Email){
 }
 
 function AddAccount($Action){
-    $Email = stripslashes($_POST["Email"]);
+    $Email = stripslashes($_POST["D1"]);
     $UserData = FetchUser($Email);
     if($Email == $UserData['Email']){
         if($UserData['Attempt'] < 5){
             AddAttempt($UserData,$Email);
-            $ActivityMSG = "Account is already registered but will be locked when attempts reaches 5.";
+            $ActivityMSG = "Account to be locked due to multiple registration attempts.";
             AddActivity($Email,$ActivityMSG);
-            echo json_encode("1");
+            echo json_encode("notlocked");
             exit;
         }else{
-            $ActivityMSG = "Account is already registered but was locked due to 5 registration attempts.";
+            $ActivityMSG = "Account was locked out due to multiple registration attempts.";
             AddActivity($Email,$ActivityMSG);
-            echo json_encode("0");
+            echo json_encode("locked");
             exit;
         }
     }
 
-    $Password = stripslashes($_POST["Password"]);
+    $Password = stripslashes($_POST["D2"]);
     $HashedPassword = HashIt($Password);
     $Disabled = 1;
     $Attempt = 0;
@@ -266,9 +253,9 @@ function AddAccount($Action){
     AddActivity($Email,$ActivityMSG);
     $AdminAccounts = FetchAdmins($Action);
     foreach ($AdminAccounts as $AdminEmail) {
-        mail($AdminEmail['Email'],"New account created","The following email: " . $Email . " been created.  Account is awaiting your approval.");
+        mail($AdminEmail['Email'],"New account created","The following email: " . $Email . " been created.  Account was awaiting your approval.");
     }
-    echo json_encode("2");
+    echo json_encode("refresh");
     $PDOconn = null;
 }
 
@@ -283,9 +270,9 @@ function FetchAdmins($Action){
 
 function AddPet($Action){
     $Email = ValidateSession($Action);
-    $Name = stripslashes($_POST["Name"]);
-    $BreedID = stripslashes($_POST["BreedID"]);
-    $Gender = stripslashes($_POST["Gender"]);
+    $Name = stripslashes($_POST["D1"]);
+    $BreedID = stripslashes($_POST["D2"]);
+    $Gender = stripslashes($_POST["D3"]);
     $Disabled = 0;
     global $PDOconn;
     $Query = 'CALL AddPet (?, ?, ?, ?, ?)';
@@ -298,14 +285,14 @@ function AddPet($Action){
     $Statement->execute();
     $ActivityMSG = "Your new pet " . $Name . " has been added.";
     AddActivity($Email,$ActivityMSG);
-    echo json_encode("2");
+    echo json_encode("refresh");
     $PDOconn = null;
 }
 
 function AddBreed($Action){
     $Email = ValidateSession($Action);
     CheckAdminRole($Email);
-    $Name = stripslashes($_POST["Name"]);
+    $Name = stripslashes($_POST["D1"]);
     global $PDOconn;
     $Query = 'CALL AddBreed (?)';
     $Statement = $PDOconn->prepare($Query);
@@ -313,13 +300,13 @@ function AddBreed($Action){
     $Statement->execute();
     $ActivityMSG = "Your added " . $Name . " as a new Breed.";
     AddActivity($Email,$ActivityMSG);
-    echo json_encode("1");
+    echo json_encode("refresh");
     $PDOconn = null;
 }
 
 function CheckAdminRole($Email){
     if(!FetchAccountRole($Email) == 2){
-        echo json_encode("0");
+        echo json_encode("expired");
         exit;
     }
 }
@@ -362,7 +349,7 @@ function FetchUser($Email){
 function FetchSignInPet($Action){
     $Email = ValidateSession($Action);
     CheckAdminRole($Email);
-    $Email = stripslashes($_POST["Email"]);
+    $Email = stripslashes($_POST["D1"]);
     global $PDOconn;
     $Query = 'CALL FetchSignInPet (?)';
     $Statement = $PDOconn->prepare($Query);
@@ -376,7 +363,7 @@ function FetchSignInPet($Action){
 function FetchUserStatus($Action){
     $Email = ValidateSession($Action);
     CheckAdminRole($Email);
-    $Email = stripslashes($_POST["Email"]);
+    $Email = stripslashes($_POST["D1"]);
     global $PDOconn;
     $Query = 'CALL FetchUserStatus (?)';
     $Statement = $PDOconn->prepare($Query);
@@ -390,7 +377,7 @@ function FetchUserStatus($Action){
 function FetchPetStatus($Action){
     $Email = ValidateSession($Action);
     CheckAdminRole($Email);
-    $PetID = stripslashes($_POST["PetID"]);
+    $PetID = stripslashes($_POST["D1"]);
     global $PDOconn;
     $Query = 'CALL FetchPetStatus (?)';
     $Statement = $PDOconn->prepare($Query);
@@ -404,7 +391,7 @@ function FetchPetStatus($Action){
 function FetchPet($Action){
     $Email = ValidateSession($Action);
     CheckAdminRole($Email);
-    $PetID = stripslashes($_POST["PetID"]);
+    $PetID = stripslashes($_POST["D1"]);
     global $PDOconn;
     $Query = 'CALL FetchPet (?)';
     $Statement = $PDOconn->prepare($Query);
@@ -418,7 +405,7 @@ function FetchPet($Action){
 function FetchUserPets($Action){
     $Email = ValidateSession($Action);
     CheckAdminRole($Email);
-    $AccountEmail = stripslashes($_POST["AccountEmail"]);
+    $AccountEmail = stripslashes($_POST["D1"]);
     global $PDOconn;
     $Query = 'CALL FetchUserPets (?)';
     $Statement = $PDOconn->prepare($Query);
@@ -458,6 +445,7 @@ function SignOut($Action){
     AddActivity($Email,$ActivityMSG);
     session_unset();
     session_destroy();
+    echo json_encode("refresh");
 }
 
 function ValidateSession($Action){
@@ -477,14 +465,14 @@ function ValidateSession($Action){
         }else{
             session_unset();
             session_destroy();
-            echo json_encode("0");
+            echo json_encode("expired");
             $PDOconn = null;
         }
     }else{
         if($Action == "ValidateSession"){
-            echo json_encode("0");
+            echo json_encode(0);
         }else{
-            echo json_encode("0");
+            echo json_encode("expired");
             exit;
         }
     }
@@ -563,7 +551,7 @@ function GetBrowserData(){
         $Platform = 'Windows';
     }
 
-    // Next get the name of the useragent yes seperately and for good reason
+    // Next get the name of the useragent yes seperately and for refresh reason
     if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent))
     {
         $BrowserName = 'Internet Explorer';
