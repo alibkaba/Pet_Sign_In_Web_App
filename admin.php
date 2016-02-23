@@ -36,7 +36,7 @@
     ?>
 </form>
 
-<p>Update super admin password</p>
+<p>Update admin's password</p>
 <form action="#" method='post'>
     Email: <input type="text" name="Email"><br>
     Password: <input type="password" name="Password"><br>

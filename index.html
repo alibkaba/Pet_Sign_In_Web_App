@@ -55,16 +55,16 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Reset your account</h4>
+                    <h4 class="modal-title">Reset your password</h4>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="Email2">Email Address</label><br>
+                        <label for="Email3">Email Address</label><br>
                         <input type="text" id="Email3" placeholder="Email Address">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btn-sm" id="ResetAccountButton">Reset</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="ResetPassword" disabled>Reset</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -128,6 +128,8 @@
                     <label for="ViewGenders">Pet's Gender</label><br>
                     <select class="form-control" id="ViewGenders">
                         <option value="0">Select your pet's gender</option>
+                        <option value="Boy">Boy</option>
+                        <option value="Girl">Girl</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -156,9 +158,44 @@
                 <br>
                 <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ViewAccountsModal" data-toggle="modal" id="ViewAccountsButton">View accounts</button>
                 <br>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ErrorModal" data-toggle="modal" id="ViewErrorsButton">View errors</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#AddBreedModal" data-toggle="modal" id="AddBreed">View Breed</button>
+                <br>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ViewErrorModal" data-toggle="modal" id="ViewErrorsButton">View errors</button>
+                <br>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" data-target="#ChangePasswordModal" data-toggle="modal" id="ChangePasswordButton">Change password</button>
+                <br>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="ChangePasswordModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Change password</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="OldPassword">Old Password</label><br>
+                    <input type="password" id="OldPassword" placeholder="Old Password">
+                </div>
+                <div class="form-group">
+                    <label for="OldPassword1">Old Password</label><br>
+                    <input type="password" id="OldPassword1" placeholder="Old Password">
+                </div>
+                <div class="form-group">
+                    <label for="NewPassword">New Password</label><br>
+                    <input type="password" id="NewPassword" placeholder="New Password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" data-target="#AccountModal" data-toggle="modal">Back</button>
+                <button type="button" class="btn btn-success btn-sm" id="UpdatePasswordButton" disabled>Change password</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
@@ -204,45 +241,45 @@
                         <option value="0">Select an account</option>
                     </select>
                 </div>
-                <div class="checkbox" id="AccountDisabledLabel">
-                    <label><input type="checkbox" id="AccountDisabled" disabled>Disable account</label><br>
+                <div class="checkbox" id="AccountStatusLabel">
+                    <label><input type="checkbox" id="AccountStatus" disabled>Disable account</label><br>
                 </div>
                 <div class="form-group">
                     <label for="ViewAllAccountsPets">Account's Pets</label><br>
                     <select class="form-control" id="ViewAllAccountsPets" disabled>
-                        <option value="0">Select pet</option>
+                        <option value="0">Select a pet</option>
                     </select>
                 </div>
-                <div class="checkbox" id="PetDisabledLabel">
-                    <label><input type="checkbox" id="PetDisabled" disabled>Disable pet</label><br>
+                <div class="checkbox" id="PetStatusLabel">
+                    <label><input type="checkbox" id="PetStatus" disabled>Disable pet</label><br>
                 </div>
                 <div class="form-group">
-                    <label for="ViewName" id="ViewNameLabel">Pet's name</label><br>
-                    <input type="text" id="ViewName" placeholder="Pet's name" disabled>
+                    <label for="ViewPetName" id="ViewNameLabel">Pet's name</label><br>
+                    <input type="text" id="ViewPetName" placeholder="Pet's name" disabled>
                 </div>
                 <div class="form-group">
                     <label for="ViewBreed" id="ViewBreedLabel">Pet's Breed</label><br>
                     <select class="form-control" id="ViewBreed" disabled>
-                        <option value="">--</option>
+                        <option value=""></option>
                     </select>
                 </div>
                 <div class="btn-group">
                     <label for="ViewGender" id="ViewGenderLabel">Pet's Gender</label><br>
                     <select class="form-control" id="ViewGender" disabled>
-                        <option value="">--</option>
+                        <option value=""></option>
                     </select>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" data-target="#AccountModal" data-toggle="modal">Back</button>
-                <button type="button" class="btn btn-success" data-dismiss="modal" disabled id="UpdateAccountButton">Update</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" id="UpdateAccountButton" disabled>Update</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="ErrorModal" role="dialog">
+<div class="modal fade" id="ViewErrorModal" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">

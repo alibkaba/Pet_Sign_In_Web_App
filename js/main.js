@@ -26,7 +26,7 @@ $(document).ready(function() {
         PrepareAjax(Action,Email,Password);
     });
 
-    $("#ActivitiesButton").click(function() {
+    $("#ViewActivitiesButton").click(function() {
         var Action = "FetchActivities";
         PrepareAjax(Action);
     });
@@ -37,28 +37,92 @@ $(document).ready(function() {
     });
 
     $("#Register").click(function() {
-        $("#Email2").val("");
-        $("#Password2").val("");
-        $("#accounttncno").is(':checked');
-        $("#RegisterButton").is(':disabled');
+        document.getElementById("Email2").value = "";
+        document.getElementById("Password2").value = "";
+        document.getElementById("accounttncno").checked = true;
+        document.getElementById("RegisterButton").disabled = true;
+    });
+
+    $('#ChangePasswordButton').click(function() {
+        document.getElementById("OldPassword").value = "";
+        document.getElementById("OldPassword1").value = "";
+        document.getElementById("NewPassword").value = "";
+        document.getElementById("UpdatePasswordButton").disabled = true;
+    });
+
+    $('#ResetAccount').click(function() {
+        document.getElementById("Email3").value = "";
+        document.getElementById("ResetPassword").disabled = true;
+    });
+
+    $('#OldPassword').change(function() {
+        var Old = document.getElementById("OldPassword").value;
+        var Old1 = document.getElementById("OldPassword1").value;
+        var New = document.getElementById("NewPassword").value;
+        if (Old != "" && Old1 != "" && New != "") {
+            document.getElementById("UpdatePasswordButton").disabled = false;
+        }else{
+            document.getElementById("UpdatePasswordButton").disabled = true;
+        }
+    });
+
+    $('#Email3').change(function() {
+        var Email = document.getElementById("Email3").value;
+        if (Email != "") {
+            document.getElementById("ResetPassword").disabled = false;
+        }else{
+            document.getElementById("ResetPassword").disabled = true;
+        }
     });
 
     $('input[type=radio][name=accounttnc]').change(function() {
         if (this.value == "yes") {
-            $("#RegisterButton").not(':disabled');
+            document.getElementById("RegisterButton").disabled = false;
+        }else if (this.value == "no") {
+            document.getElementById("RegisterButton").disabled = true;
         }
-        else if (this.value == "no") {
-            $("#RegisterButton").is(':disabled');
-        }
+    });
+
+    $("#ViewSignInPet :input").change(function() {
+        var Action = "SignInPet";
+        var PetName = document.getElementById("SignInPet").value;
+        PrepareAjax(Action,PetName);
     });
 
     $('input[type=radio][name=pettnc]').change(function() {
         if (this.value == "yes") {
-            $("#AddPetButton").not(':disabled');
+            document.getElementById("AddPetButton").disabled = false;
+        }else if (this.value == "no") {
+            document.getElementById("AddPetButton").disabled = true;
         }
-        else if (this.value == "no") {
-            $("#AddPetButton").is(':disabled');
+    });
+
+    $("#ResetPassword").click(function() {
+        var Email = document.getElementById("Email3").value;
+        IsFieldFilled(Email);
+        var Action = "ResetPassword";
+        PrepareAjax(Action,Email);
+    });
+
+    $("#UpdatePasswordButton").click(function() {
+        var OldPassword = document.getElementById("OldPassword").value;
+        var OldPassword1 = document.getElementById("OldPassword1").value;
+        var NewPassword = document.getElementById("NewPassword").value;
+        IsFieldFilled(Email);
+        IsFieldFilled(OldPassword);
+        IsFieldFilled(OldPassword1);
+        IsFieldFilled(NewPassword);
+        if(OldPassword == OldPassword1 && OldPassword1 != NewPassword){
+            var Action = "ChangePassword";
+            PrepareAjax(Action,NewPassword);
+        }else{
+            alert("An error occured because you either don't have match old passwords or your new password is the same as the old one.")
         }
+    });
+
+    $("#SignOut").click(function() {
+        var Action = "SignOut";
+        PrepareAjax(Action);
     });
 
     $("#RegisterButton").click(function() {
@@ -78,194 +142,235 @@ $(document).ready(function() {
     });
 
     $("#AddNewPetButton").click(function() {
-        $("#PetName").val("");
-        $("#ViewGender").val("");
-        $("#pettncno").is(':checked');
-        $("#AddPetButton").is(':disabled');
-        document.getElementById("ViewPetBreeds").options.length = "1";
+        document.getElementById("ViewPetName").value = "";
+        document.getElementById("ViewPetBreeds").options.length = 1;
+        document.getElementById("ViewGenders").selectedIndex  = 0;
+        document.getElementById("pettncno").checked = true;
+        document.getElementById("AddPetButton").disabled = true;
         var Action = "FetchBreeds";
-        PrepareAjax(Action);
+        var ResponseData = Fetch(Action);
         ViewPetBreeds(ResponseData);
     });
 
     $("#AddPetButton").click(function() {
-        var Name = document.getElementById("PetName").value;
+        var PetName = document.getElementById("PetName").value;
         var BreedID = document.getElementById("ViewPetBreeds").value;
-        var Gender = document.getElementById("ViewGender").value;
-        IsFieldFilled(Name);
+        var Gender = document.getElementById("ViewGenders").value;
+        IsFieldFilled(PetName);
         IsFieldFilled(BreedID);
         IsFieldFilled(Gender);
         var Action = "AddPet";
-        PrepareAjax(Action,Name,BreedID,Gender);
-    });
-
-    $("#ViewPet :input").change(function() {
-        var Action = "SignInPet";
-        var Name = this.value;
-        PrepareAjax(Action,Name);
+        PrepareAjax(Action,PetName,BreedID,Gender);
     });
 
     $("#ViewAccountsButton").click(function() {
-        document.getElementById("AccountDisabled").disabled = true;
+        document.getElementById("AccountStatus").disabled = true;
         document.getElementById("ViewAllAccountsPets").disabled = true;
-        document.getElementById("PetDisabled").disabled = true;
-        document.getElementById("ViewName").disabled = true;
+        document.getElementById("PetStatus").disabled = true;
+        document.getElementById("ViewPetName").disabled = true;
         document.getElementById("ViewBreed").disabled = true;
         document.getElementById("ViewGender").disabled = true;
         document.getElementById("ViewAllAccountsPets").disabled = true;
         document.getElementById("UpdateAccountButton").disabled = true;
-        document.getElementById("ViewAllAccounts").options.length = "1";
-        document.getElementById("ViewAllAccountsPets").options.length = "1";
-        document.getElementById("ViewName").value = "";
-        document.getElementById("ViewBreed").options.length = "1";
-        document.getElementById("ViewGender").options.length = "1";
+        document.getElementById("AccountStatus").checked = false;
+        document.getElementById("PetStatus").checked = false;
+        document.getElementById("AccountStatusLabel").style.backgroundColor = "transparent";
+        document.getElementById("PetStatusLabel").style.backgroundColor = "transparent";
+        document.getElementById("ViewPetName").style.backgroundColor = "transparent";
+        document.getElementById("ViewBreed").style.backgroundColor = "transparent";
+        document.getElementById("ViewGender").style.backgroundColor = "transparent";
+        document.getElementById("ViewAllAccounts").options.length = 1;
+        document.getElementById("ViewAllAccountsPets").options.length = 1;
+        document.getElementById("ViewPetName").value = "";
+        document.getElementById("ViewBreed").selectedIndex  = "-1";
+        document.getElementById("ViewGender").selectedIndex  = "-1";
         var Action = "FetchUsers";
         PrepareAjax(Action);
     });
 
     $("#ViewAllAccounts").change(function() {
-        if (this.value == "0") {
-            document.getElementById("AccountDisabled").disabled = true;
-            document.getElementById("AccountDisabled").checked = false;
+        if (this.value == 0) {
+            document.getElementById("AccountStatus").disabled = true;
+            document.getElementById("AccountStatus").checked = false;
             document.getElementById("ViewAllAccountsPets").disabled = true;
-            document.getElementById("PetDisabled").disabled = true;
-            document.getElementById("PetDisabled").checked = false;
-            document.getElementById("ViewName").disabled = true;
+            document.getElementById("PetStatus").disabled = true;
+            document.getElementById("PetStatus").checked = false;
+            document.getElementById("ViewPetName").disabled = true;
             document.getElementById("ViewBreed").disabled = true;
             document.getElementById("ViewGender").disabled = true;
             document.getElementById("ViewAllAccountsPets").disabled = true;
             document.getElementById("UpdateAccountButton").disabled = true;
-            document.getElementById("AccountDisabledLabel").style.backgroundColor = "transparent";
-            document.getElementById("PetDisabledLabel").style.backgroundColor = "transparent";
-            document.getElementById("ViewAllAccountsPets").options.length = "1";
-            document.getElementById("ViewName").value = "";
-            document.getElementById("ViewGender").text = "--";
-            document.getElementById("ViewBreed").options.length = "1";
-            document.getElementById("ViewGender").options.length = "1";
+            document.getElementById("AccountStatusLabel").style.backgroundColor = "transparent";
+            document.getElementById("PetStatusLabel").style.backgroundColor = "transparent";
+            document.getElementById("ViewAllAccountsPets").options.length = 1;
+            document.getElementById("ViewPetName").value = "";
+            document.getElementById("ViewBreed").selectedIndex  = "-1";
+            document.getElementById("ViewGender").selectedIndex  = "-1";
         }else{
-            document.getElementById("ViewAllAccountsPets").options.length = "1";
-            document.getElementById("ViewName").value = "";
-            document.getElementById("ViewBreed").options.length = "1";
-            document.getElementById("ViewGender").options.length = "1";
+            document.getElementById("AccountStatusLabel").style.backgroundColor = "transparent";
+            document.getElementById("PetStatusLabel").style.backgroundColor = "transparent";
+            document.getElementById("ViewPetName").style.backgroundColor = "transparent";
+            document.getElementById("ViewBreed").style.backgroundColor = "transparent";
+            document.getElementById("ViewGender").style.backgroundColor = "transparent";
+            document.getElementById("HiddenValue1").value = this.value;
+            document.getElementById("ViewAllAccountsPets").options.length = 1;
+            document.getElementById("ViewPetName").value = "";
+            document.getElementById("ViewBreed").options.length = 1;
+            document.getElementById("ViewGender").options.length = 1;
             var Action = "FetchUserStatus";
-            var Email = this.value;
+            var Email = document.getElementById("ViewAllAccounts").value;
             PrepareAjax(Action,Email);
             Action = "FetchUserPets";
-            PrepareAjax(Action);
+            PrepareAjax(Action, Email);
         }
     });
 
     $("#ViewAllAccountsPets").change(function() {
-        if (this.value == "0") {
+        if (this.value == 0) {
             document.getElementById("PetDisabled").disabled = true;
-            document.getElementById("PetDisabled").checked = false;
-            document.getElementById("ViewName").disabled = true;
+            document.getElementById("PetStatus").checked = false;
+            document.getElementById("ViewPetName").disabled = true;
             document.getElementById("ViewBreed").disabled = true;
             document.getElementById("ViewGender").disabled = true;
             document.getElementById("UpdateAccountButton").disabled = true;
-            document.getElementById("PetDisabledLabel").style.backgroundColor = "transparent";
-            document.getElementById("ViewName").value = "";
-            document.getElementById("ViewBreed").value = "1";
-            document.getElementById("ViewGender").selectedIndex.text = "--";
-            document.getElementById("ViewBreed").options.length = "1";
-            document.getElementById("ViewGender").options.length = "1";
+            document.getElementById("PetStatusLabel").style.backgroundColor = "transparent";
+            document.getElementById("ViewPetName").value = "";
+            document.getElementById("ViewBreed").options.length = 1;
+            document.getElementById("ViewGender").options.length = 1;
+            document.getElementById("ViewBreed").selectedIndex  = "-1";
+            document.getElementById("ViewGender").selectedIndex  = "-1";
         }else{
-            document.getElementById("ViewName").value = "";
-            document.getElementById("ViewBreed").options.length = "1";
-            document.getElementById("ViewGender").options.length = "1";
+            document.getElementById("PetStatusLabel").style.backgroundColor = "transparent";
+            document.getElementById("ViewPetName").style.backgroundColor = "transparent";
+            document.getElementById("ViewBreed").style.backgroundColor = "transparent";
+            document.getElementById("ViewGender").style.backgroundColor = "transparent";
+            document.getElementById("ViewPetName").value = "";
+            document.getElementById("ViewBreed").options.length = 1;
+            document.getElementById("ViewGender").options.length = 1;
             var Action = "FetchPetStatus";
-            var PetID = this.value;
+            var PetID = document.getElementById("ViewAllAccountsPets").value;
             PrepareAjax(Action,PetID);
-            PetData = FetchPet(PetID);
-            var Breeds = FetchBreeds();
+            var Action = "FetchPet";
+            var PetData = Fetch(Action,PetID);
+            var Action = "FetchBreeds";
+            var Breeds = Fetch(Action);
             ViewPetData(PetData,Breeds);
         }
     });
 
-    $("#AccountDisabled").change(function() {
-        var DefaultValue = document.getElementById("HiddenValue1").value;
+    $("#AccountStatus").change(function() {
+        var DefaultValue = document.getElementById("AccountStatus").value;
+        if(this.checked){
+            document.getElementById("HiddenValue9").value = 1;
+        }else{
+            document.getElementById("HiddenValue9").value = 0;
+        }
         if(DefaultValue == 1 && this.checked || DefaultValue == 0 && !this.checked){
-            document.getElementById("AccountDisabledLabel").style.backgroundColor = "transparent";
+            document.getElementById("AccountStatusLabel").style.backgroundColor = "transparent";
             document.getElementById("UpdateAccountButton").disabled = true;
         }else{
-            document.getElementById("AccountDisabledLabel").style.backgroundColor = "lightgreen";
+            document.getElementById("AccountStatusLabel").style.backgroundColor = "lightgreen";
             document.getElementById("UpdateAccountButton").disabled = false;
         }
     });
 
-    $("#PetDisabled").change(function() {
+    $("#PetStatus").change(function() {
+        var DefaultValue = document.getElementById("PetStatus").value;
+        if(this.checked){
+            document.getElementById("HiddenValue8").value = 1;
+        }else{
+            document.getElementById("HiddenValue8").value = 0;
+        }
+        if(DefaultValue == 1 && this.checked || DefaultValue == 0 && !this.checked){
+            document.getElementById("PetStatusLabel").style.backgroundColor = "transparent";
+            document.getElementById("UpdateAccountButton").disabled = true;
+        }else{
+            document.getElementById("PetStatusLabel").style.backgroundColor = "lightgreen";
+            document.getElementById("UpdateAccountButton").disabled = false;
+        }
+    });
+
+    $("#ViewPetName").change(function() {
         var DefaultValue = document.getElementById("HiddenValue2").value;
-        if(DefaultValue == 1 && this.checked || DefaultValue == 0 && !this.checked){
-            document.getElementById("PetDisabledLabel").style.backgroundColor = "transparent";
+        var NewValue = document.getElementById("ViewPetName").value;
+        if(DefaultValue == NewValue){
+            document.getElementById("ViewPetName").style.backgroundColor = "transparent";
             document.getElementById("UpdateAccountButton").disabled = true;
         }else{
-            document.getElementById("PetDisabledLabel").style.backgroundColor = "lightgreen";
+            document.getElementById("ViewPetName").style.backgroundColor = "lightgreen";
             document.getElementById("UpdateAccountButton").disabled = false;
         }
     });
 
-    $("#ViewName").change(function() {
+    $("#ViewBreed").change(function() {
         var DefaultValue = document.getElementById("HiddenValue3").value;
-        var NewValue = $(this).val();
+        var NewValue = document.getElementById("ViewPetName").value;
         if(DefaultValue == NewValue){
-            document.getElementById("ViewName").style.backgroundColor = "transparent";
+            document.getElementById("ViewBreed").style.backgroundColor = "transparent";
             document.getElementById("UpdateAccountButton").disabled = true;
         }else{
-            document.getElementById("ViewName").style.backgroundColor = "lightgreen";
+            document.getElementById("ViewBreed").style.backgroundColor = "lightgreen";
             document.getElementById("UpdateAccountButton").disabled = false;
         }
-        console.log("Prev value " + DefaultValue);
-        console.log("New value " + NewValue);
+    });
+
+    $("#ViewGender").change(function() {
+        var DefaultValue = document.getElementById("HiddenValue4").value;
+        var NewValue = document.getElementById("ViewPetName").value;
+        if(DefaultValue == NewValue){
+            document.getElementById("ViewGender").style.backgroundColor = "transparent";
+            document.getElementById("UpdateAccountButton").disabled = true;
+        }else{
+            document.getElementById("ViewGender").style.backgroundColor = "lightgreen";
+            document.getElementById("UpdateAccountButton").disabled = false;
+        }
     });
 
     $("#UpdateAccountButton").click(function() {
-        var OldAccountDisabled = document.getElementById("HiddenValue1").value;
-        var OldPetDisabled = document.getElementById("HiddenValue2").value;
-        var OldName = document.getElementById("HiddenValue3").value;
-        var OldBreedID = document.getElementById("HiddenValue4").value;
-        var OldGender = document.getElementById("HiddenValue5").value;
-        var AccountDisabled = $("#AccountDisabled").val();
-        var PetDisabled = $("#PetDisabled").val();
-        var Name = $("#ViewName").val();
-        var BreedID = $("#ViewBreed").val();
-        var Gender = $("#ViewGender").val();
-        if(OldGender == Gender){
-            var Action = "UpdateGender";
-            UpdateAccountButton(Action,Gender);
-            try{
-                var AjaxData = {
-                    Gender: Gender,
-                    Action: Action
-                };
-                var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-                console.log(ResponseData);
-                return ResponseData;
-            }catch(e){
-                var ErrorMSG = e;
-                var FailedAction = Action;
-                AddError(FailedAction,ErrorMSG);
-                alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
-            }
+        var Email = document.getElementById("HiddenValue1").value;
+        var OldAccountStatus = document.getElementById("AccountStatus").value;
+        var OldPetStatus = document.getElementById("PetStatus").value;
+        var OldName = document.getElementById("HiddenValue2").value;
+        var OldBreedID = document.getElementById("HiddenValue3").value;
+        var OldGender = document.getElementById("HiddenValue4").value;
+        var AccountStatus = document.getElementById("HiddenValue9").value;
+        var PetStatus = document.getElementById("HiddenValue8").value;
+        var PetName = document.getElementById("ViewPetName").value;
+        var BreedID = document.getElementById("ViewBreed").value;
+        var Gender = document.getElementById("ViewGender").value;
+        if(OldAccountStatus != AccountStatus){
+            var Action = "UpdateAccountStatus";
+            PrepareAjax(Action,AccountStatus,Email);
+        }
+        if(OldPetStatus != PetStatus){
+            var Action = "UpdatePetStatus";
+            PrepareAjax(Action,PetStatus,Email);
+        }
+        if(OldName != PetName){
+            var Action = "UpdatePetName";
+            PrepareAjax(Action,PetName,Email);
+        }
+        if(OldBreedID != BreedID){
+            var Action = "UpdatePetBreed";
+            PrepareAjax(Action,BreedID,Email);
+        }
+        if(OldGender != Gender){
+            var Action = "UpdatePetGender";
+            PrepareAjax(Action,Gender,Email);
         }
     });
 });
 
-function FetchPet(PetID){
-    var Action = "FetchPet";
-    PrepareAjax(Action);
+function Fetch(Action,D1){
+    var D1;
     try{
         var AjaxData = {
-            PetID: PetID,
-            Action: Action
+            Action: Action,
+            D1: D1
         };
         var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
         console.log(ResponseData);
-        if (ResponseData == "0") {
-            alert("Your session either expired or you signed in somewhere else.  Please sign in again.");
-            window.location = "/petsignin/";
-        }else{
-            return ResponseData;
-        }
+        return ResponseData;
     }catch(e){
         var ErrorMSG = e;
         var FailedAction = Action;
@@ -274,38 +379,41 @@ function FetchPet(PetID){
     }
 }
 
-function ViewAccountDisabled (ResponseData){
-    document.getElementById("AccountDisabled").disabled = false;
+function ViewAccountStatus (ResponseData){
+    document.getElementById("AccountStatus").disabled = false;
     if(ResponseData.Disabled == 0){
-        document.getElementById("AccountDisabled").checked = false;
-        document.getElementById("HiddenValue1").value = 0;
+        document.getElementById("AccountStatus").checked = false;
+        document.getElementById("AccountStatus").value = 0;
+        document.getElementById("HiddenValue9").value = 0;
     }else{
-        document.getElementById("AccountDisabled").checked = true;
-        document.getElementById("HiddenValue1").value = 1;
+        document.getElementById("AccountStatus").checked = true;
+        document.getElementById("AccountStatus").value = 1;
+        document.getElementById("HiddenValue9").value = 1;
     }
 }
 
-function ViewPetDisabled (ResponseData){
-    document.getElementById("PetDisabled").disabled = false;
+function ViewPetStatus (ResponseData){
+    document.getElementById("PetStatus").disabled = false;
     if(ResponseData.Disabled == 0){
-        document.getElementById("PetDisabled").checked = false;
-        document.getElementById("HiddenValue2").value = 0;
+        document.getElementById("PetStatus").checked = false;
+        document.getElementById("PetStatus").value = 0;
+        document.getElementById("HiddenValue8").value = 0;
     }else{
-        document.getElementById("PetDisabled").checked = true;
-        document.getElementById("HiddenValue2").value = 1;
+        document.getElementById("PetStatus").checked = true;
+        document.getElementById("PetStatus").value = 1;
+        document.getElementById("HiddenValue8").value = 1;
     }
 }
 
 function ViewPetData(PetData,Breeds){
-    document.getElementById("ViewAllAccountsPets").disabled = false;
-    document.getElementById("ViewPetBreed").disabled = false;
-    document.getElementById("ViewName").disabled = false;
+    document.getElementById("ViewPetName").disabled = false;
+    document.getElementById("ViewBreed").disabled = false;
     document.getElementById("ViewGender").disabled = false;
-    document.getElementById("HiddenValue3").value = PetData.Name;
-    document.getElementById("HiddenValue4").value = PetData.BreedID;
-    document.getElementById("HiddenValue5").value = PetData.Gender;
-    document.getElementById("ViewName").value  = PetData.Name;
-    var select = document.getElementById("ViewPetBreed");
+    document.getElementById("HiddenValue2").value = PetData.Name;
+    document.getElementById("HiddenValue3").value = PetData.BreedID;
+    document.getElementById("HiddenValue4").value = PetData.Gender;
+    document.getElementById("ViewPetName").value  = PetData.Name;
+    var select = document.getElementById("ViewBreed");
     var i;
     for (i = 0; i < Breeds.length; i++) {
         if(Breeds[i].BreedID == PetData.BreedID){
@@ -317,10 +425,10 @@ function ViewPetData(PetData,Breeds){
     var select = document.getElementById("ViewGender");
     if(PetData.Gender == "Boy"){
         select.options[select.options.selectedIndex] = new Option("Boy", "Boy");
-        select.options[select.options] = new Option("Girl", "Girl");
+        select.options[select.options.length] = new Option("Girl", "Girl");
     }else{
         select.options[select.options.selectedIndex] = new Option("Girl", "Girl");
-        select.options[select.options] = new Option("Boy", "Boy");
+        select.options[select.options.length] = new Option("Boy", "Boy");
     }
 }
 
@@ -332,14 +440,8 @@ function ViewPetBreeds(ResponseData){
     }
 }
 
-function FetchUserPets(Email){
-    document.getElementById("ViewAllAccountsPets").disabled = false;
-    var AccountEmail = Email;
-    var Action = "FetchUserPets";
-    PrepareAjax(Action, AccountEmail);
-}
-
 function ViewUserPets(ResponseData){
+    document.getElementById("ViewAllAccountsPets").disabled = false;
     var select = document.getElementById("ViewAllAccountsPets");
     var i;
     for (i = 0; i < ResponseData.length; i++) {
@@ -358,12 +460,12 @@ function ViewAllAccounts(ResponseData){
 function ViewSignInPet(ResponseData){
     var ViewSignInPet = "";
     for (var i = 0; i < ResponseData.length; i++) {
-        if (ResponseData[i].DiffDate == "0"){
+        if (ResponseData[i].DiffDate == 0){
             ViewSignInPet += '<label class="btn btn-primary" disabled>';
         }else{
             ViewSignInPet += '<label class="btn btn-primary">';
         }
-        ViewSignInPet += '<input type="radio" name="options" id="option1" autocomplete="off" value="' + ResponseData[i].Name + '">' + ResponseData[i].Name + '</button>';
+        ViewSignInPet += '<input type="radio" name="options" id="SignInPet" autocomplete="off" value="' + ResponseData[i].Name + '">' + ResponseData[i].Name + '</button>';
 
         ViewSignInPet += '</label>';
     }
@@ -375,6 +477,125 @@ function IsFieldFilled(Field){
     if(Field == null || Field == ""){
         alert('Please fill all required field.');
         throw e = "Error: Please fill all required field";
+    }
+}
+
+//Single use
+function Start(){
+    UnitTest();
+    ValidateSession();
+}
+
+function Visitor(){
+    document.getElementById("Visitor").style.display="block";
+    document.getElementById("Visitor").style.visibility="visible";
+}
+
+function ViewUser(){
+    FetchSignInPet();
+    document.getElementById("SignOut").style.display="block";
+    document.getElementById("SignOut").style.visibility="visible";
+    document.getElementById("Account").style.display="block";
+    document.getElementById("Account").style.visibility="visible";
+    document.getElementById("ViewActivitiesButton").style.display="block";
+    document.getElementById("ViewActivitiesButton").style.visibility="visible";
+    document.getElementById("AddNewPetButton").style.display="block";
+    document.getElementById("AddNewPetButton").style.visibility="visible";
+    document.getElementById("ChangePasswordButton").style.display="block";
+    document.getElementById("ChangePasswordButton").style.visibility="visible";
+}
+
+function ViewAdmin(){
+    document.getElementById("SignOut").style.display="block";
+    document.getElementById("SignOut").style.visibility="visible";
+    document.getElementById("Account").style.display="block";
+    document.getElementById("Account").style.visibility="visible";
+    document.getElementById("ViewActivitiesButton").style.display="block";
+    document.getElementById("ViewActivitiesButton").style.visibility="visible";
+    document.getElementById("ViewErrorsButton").style.display="block";
+    document.getElementById("ViewErrorsButton").style.visibility="visible";
+    document.getElementById("AddPetButton").style.display="block";
+    document.getElementById("AddPetButton").style.visibility="visible";
+    document.getElementById("ViewAccountsButton").style.display="block";
+    document.getElementById("ViewAccountsButton").style.visibility="visible";
+    document.getElementById("AddBreed").style.display="block";
+    document.getElementById("AddBreed").style.visibility="visible";
+    document.getElementById("ChangePasswordButton").style.display="block";
+    document.getElementById("ChangePasswordButton").style.visibility="visible";
+}
+
+function ValidateSession(){
+    var Action = "ValidateSession";
+    PrepareAjax(Action);
+}
+
+function FetchSignInPet(){
+    var Action = "FetchSignInPet";
+    PrepareAjax(Action);
+}
+
+function ViewActivities(ResponseData){
+    var ViewActivities = '<thead><tr><th>Activities</th><th>Date</th></tr></thead><tbody>';
+    for (var i = 0; i < ResponseData.length; i++) {
+        ViewActivities += '<tr><td>' + ResponseData[i].ActivityMSG + '</td><td>' + ResponseData[i].LogDate + '</td></tr>';
+    }
+    ViewActivities += '</tbody>';
+    document.getElementById("ViewActivities").innerHTML = ViewActivities;
+}
+
+function ViewErrors(ResponseData){
+    var ViewErrors = '<thead><tr><th>Account</th><th>Action</th><th>Error Message</th><th>Date</th></tr></thead><tbody>';
+    for (var i = 0; i < ResponseData.length; i++) {
+        ViewErrors += '<tr><td>' + ResponseData[i].Email +  '<td>' + ResponseData[i].Action + '<td>' + ResponseData[i].ErrorMSG + '</td><td>' + ResponseData[i].LogDate + '</td></tr>';
+    }
+    ViewErrors += '</tbody>';
+    document.getElementById("ViewErrors").innerHTML = ViewErrors;
+}
+
+function UnitTest() {
+    var Action = "UnitTest";
+    var AjaxData = {
+        Action: Action
+    };
+    var AjaxData = OutgoingAjax(AjaxData);
+}
+
+function ValidateEmailDomain(Email) {
+    var re = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
+    if (re.test(Email)) {
+        if (Email.indexOf('@gmail.com', Email.length - '@gmail.com'.length) == -1) {
+            alert('Email must be a GMAIL e-mail address (your.name@gmail.com)');
+            throw e = "Email must be a GMAIL e-mail address (your.name@gmail.com)";
+        }
+    } else {
+        alert('Not a valid e-mail address');
+        throw e = "Not a valid e-mail address";
+    }
+}
+
+function ValidatePassword(Email,Password){
+    if(Password.length < 6) {
+        alert("Error: Password must contain at least six characters!");
+        throw e = "Error: Password must contain at least six characters!";
+    }
+    if(Password == Email) {
+        alert("Error: Password must be different from your email!");
+        throw e = "Error: Password must be different from your email!";
+    }
+    re = /[0-9]/;
+    if(!re.test(Password)) {
+        alert("Error: password must contain at least one number (0-9)!");
+        throw e = "Error: password must contain at least one number (0-9)!";
+    }
+    re = /[a-z]/;
+    if(!re.test(Password)) {
+        alert("Error: password must contain at least one lowercase letter (a-z)!");
+        throw e = "Error: password must contain at least one lowercase letter (a-z)!";
+    }
+    re = /[A-Z]/;
+    if(!re.test(Password)) {
+        alert("Error: password must contain at least one uppercase letter (A-Z)!");
+        throw e = "Error: password must contain at least one uppercase letter (A-Z)!";
     }
 }
 
@@ -429,7 +650,7 @@ function JSOperation(Action, ResponseData){
             alert("This account has been locked.  Reset your account or contact the administrator.");
             break;
         case "notlocked":
-            alert("Your account will be locked out if you fail to sign in 5 times in a row.");
+            alert("Your account will be locked out soon.");
             break;
         case "invalid":
             alert("Invalid email and/or password.  If you forgot your password, reset it.");
@@ -447,7 +668,7 @@ function JSOperation(Action, ResponseData){
             ViewAdmin();
             break;
         case 1:
-            ViewRUser();
+            ViewUser();
             break;
         case 0:
             Visitor();
@@ -470,9 +691,6 @@ function JSOperation2(Action,ResponseData){
         case "FetchErrors":
             ViewErrors(ResponseData);
             break;
-        case "FetchBreeds":
-            ViewPetBreeds(ResponseData);
-            break;
         case "FetchSignInPet":
             ViewSignInPet(ResponseData);
             break;
@@ -483,10 +701,10 @@ function JSOperation2(Action,ResponseData){
             ViewAllAccounts(ResponseData);
             break;
         case "FetchUserStatus":
-            ViewAccountDisabled(ResponseData);
+            ViewAccountStatus(ResponseData);
             break;
         case "FetchPetStatus":
-            ViewPetDisabled(ResponseData);
+            ViewPetStatus(ResponseData);
             break;
         default:
             alert("nothing!");
@@ -498,117 +716,4 @@ function OutgoingAjax(AjaxData) {
         data: AjaxData
     }).responseText;
     return IncomingAjaxData;
-}
-
-//Single use
-function Start(){
-    UnitTest();
-    ValidateSession();
-}
-
-function Visitor(){
-    document.getElementById("Visitor").style.display="block";
-    document.getElementById("Visitor").style.visibility="visible";
-}
-
-function ViewRUser(){
-    FetchUserPetsStatus();
-    document.getElementById("SignOut").style.display="block";
-    document.getElementById("SignOut").style.visibility="visible";
-    document.getElementById("Account").style.display="block";
-    document.getElementById("Account").style.visibility="visible";
-    document.getElementById("ViewActivitiesButton").style.display="block";
-    document.getElementById("ViewActivitiesButton").style.visibility="visible";
-    document.getElementById("AddNewPetButton").style.display="block";
-    document.getElementById("AddNewPetButton").style.visibility="visible";
-}
-
-function ViewAdmin(){
-    document.getElementById("SignOut").style.display="block";
-    document.getElementById("SignOut").style.visibility="visible";
-    document.getElementById("Account").style.display="block";
-    document.getElementById("Account").style.visibility="visible";
-    document.getElementById("ViewActivitiesButton").style.display="block";
-    document.getElementById("ViewActivitiesButton").style.visibility="visible";
-    document.getElementById("ViewErrorsButton").style.display="block";
-    document.getElementById("ViewErrorsButton").style.visibility="visible";
-    document.getElementById("AddPetButton").style.display="block";
-    document.getElementById("AddPetButton").style.visibility="visible";
-    document.getElementById("ViewAccountsButton").style.display="block";
-    document.getElementById("ViewAccountsButton").style.visibility="visible";
-}
-
-function ValidateSession(){
-    var Action = "ValidateSession";
-    PrepareAjax(Action);
-}
-
-function FetchSignInPet(){
-    var Action = "FetchSignInPet";
-    PrepareAjax(Action);
-}
-
-function ViewActivities(ResponseData){
-    var ViewActivities = '<thead><tr><th>Activities</th><th>Date</th></tr></thead><tbody>';
-    for (var i = 0; i < ResponseData.length; i++) {
-        ViewActivities += '<tr><td>' + ResponseData[i].ActivityMSG + '</td><td>' + ResponseData[i].LogDate + '</td></tr>';
-    }
-    ViewActivities += '</tbody>';
-    document.getElementById("ViewActivities").innerHTML = ViewActivities;
-}
-
-function ViewErrors(ResponseData){
-    var ViewErrors = '<thead><tr><th>Account</th><th>Action</th><th>Error Message</th><th>Date</th></tr></thead><tbody>';
-    for (var i = 0; i < ResponseData.length; i++) {
-        ViewErrors += '<tr><td>' + ResponseData[i].Email +  '<tr><td>' + ResponseData[i].Action + '<tr><td>' + ResponseData[i].ErrorMSG + '</td><td>' + ResponseData[i].LogDate + '</td></tr>';
-    }
-    ViewErrors += '</tbody>';
-    document.getElementById("ViewError").innerHTML = ViewErrors;
-}
-
-function UnitTest() {
-    var Action = "UnitTest";
-    var AjaxData = {
-        Action: Action
-    };
-    var AjaxData = OutgoingAjax(AjaxData);
-}
-
-function ValidateEmailDomain(Email) {
-    var re = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
-    if (re.test(Email)) {
-        if (Email.indexOf('@gmail.com', Email.length - '@gmail.com'.length) == -1) {
-            alert('Email must be a GMAIL e-mail address (your.name@gmail.com)');
-            throw e = "Email must be a GMAIL e-mail address (your.name@gmail.com)";
-        }
-    } else {
-        alert('Not a valid e-mail address');
-        throw e = "Not a valid e-mail address";
-    }
-}
-
-function ValidatePassword(Email,Password){
-    if(Password.length < 6) {
-        alert("Error: Password must contain at least six characters!");
-        throw e = "Error: Password must contain at least six characters!";
-    }
-    if(Password == Email) {
-        alert("Error: Password must be different from your email!");
-        throw e = "Error: Password must be different from your email!";
-    }
-    re = /[0-9]/;
-    if(!re.test(Password)) {
-        alert("Error: password must contain at least one number (0-9)!");
-        throw e = "Error: password must contain at least one number (0-9)!";
-    }
-    re = /[a-z]/;
-    if(!re.test(Password)) {
-        alert("Error: password must contain at least one lowercase letter (a-z)!");
-        throw e = "Error: password must contain at least one lowercase letter (a-z)!";
-    }
-    re = /[A-Z]/;
-    if(!re.test(Password)) {
-        alert("Error: password must contain at least one uppercase letter (A-Z)!");
-        throw e = "Error: password must contain at least one uppercase letter (A-Z)!";
-    }
 }

@@ -43,7 +43,9 @@ function PHPOperation($Action){
             break;
         case "ValidateSession": ValidateSession($Action);
             break;
-        case "ResetPassword": ResetPassword($Action);
+        case "ResetPassword": ResetPassword();
+            break;
+        case "ChangePassword": ChangePassword($Action);
             break;
         case "AddPet": AddPet($Action);
             break;
@@ -59,7 +61,146 @@ function PHPOperation($Action){
             break;
         case "FetchPet": FetchPet($Action);
             break;
+        case "UpdateAccountStatus": UpdateAccountStatus($Action);
+            break;
+        case "UpdatePetStatus": UpdatePetStatus($Action);
+            break;
+        case "UpdatePetName": UpdatePetName($Action);
+            break;
+        case "UpdatePetBreed": UpdatePetBreed($Action);
+            break;
+        case "UpdatePetGender": UpdatePetGender($Action);
+            break;
     }
+}
+
+function ChangePassword($Action){
+    $Email = ValidateSession($Action);
+    $New = stripslashes($_POST["D1"]);
+    global $PDOconn;
+    $Query = 'UPDATE djkabau1_petsignin.Accounts set Password = (?) where Email = (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Password, PDO::PARAM_INT, 64);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    mail($Email,"Password was changed","Your password was changed.");
+    $ActivityMSG = "Your password was changed.";
+    AddActivity($Email,$ActivityMSG);
+    echo json_encode("refresh");
+    $PDOconn = null;
+}
+
+function ResetPassword(){
+    $Email = stripslashes($_POST["D1"]);
+    $UserData = FetchUser($Email);
+    if(!empty($UserData['Email'])){
+        if($UserData['Attempt'] < 5){
+            if($UserData['Disabled'] == 0) {
+                $Password = hash('sha256', uniqid(rand(), true));
+                global $PDOconn;
+                $Query = 'UPDATE djkabau1_petsignin.Accounts set ActivationCode = (?) where Email = (?)';
+                $Statement = $PDOconn->prepare($Query);
+                $Statement->bindParam(1, $Password, PDO::PARAM_INT, 64);
+                $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+                mail($Email,"Password reset","Your new password.  $Password");
+                echo json_encode("0");
+                $PDOconn = null;
+            }else{
+                AddAttempt($UserData,$Email);
+                $ActivityMSG = "You attempted to reset your password but your account isn't activated by an admin yet.";
+                AddActivity($Email,$ActivityMSG);
+                echo json_encode("notactive");
+                $PDOconn = null;
+            }
+        }else{
+            $ActivityMSG = "You attempted to reset your password but your account is locked.";
+            AddActivity($Email,$ActivityMSG);
+            echo json_encode("locked");
+            $PDOconn = null;
+        }
+    }else{
+        echo json_encode("none");
+    }
+}
+
+function UpdateAccountStatus($Action){
+    $AdminEmail = ValidateSession($Action);
+    AdminRole($AdminEmail);
+    $Disabled = stripslashes($_POST["D1"]);
+    $Email = stripslashes($_POST["D2"]);
+    global $PDOconn;
+    $Query = 'CALL UpdateAccountStatus (?, ?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Disabled, PDO::PARAM_INT, 1);
+    $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    if($Disabled = 0){
+        $ActivityMSG = "Your account was activated.";
+        AddActivity($Email,$ActivityMSG);
+        mail($Email,"Account activated","The following email: " . $Email . " been activated by an Admin.");
+        $ActivityMSG = "You activated " . $Email . "'s account";
+        AddActivity($AdminEmail,$ActivityMSG);
+    }else{
+        $ActivityMSG = "Your account was dis-activated.";
+        AddActivity($Email,$ActivityMSG);
+        mail($Email,"Account dis-activated","The following email: " . $Email . " been dis-activated by an Admin.");
+        $ActivityMSG = "You dis-activated " . $Email . "'s account";
+        AddActivity($AdminEmail,$ActivityMSG);
+    }
+    echo json_encode("refresh");
+    $PDOconn = null;
+}
+
+function UserAdminRole($Email){
+    $Role = FetchAccountRole($Email);
+    if(!$Role == 1 || !$Role == 2){
+        echo json_encode("expired");
+        exit;
+    }
+    return $Role;
+}
+
+function AdminRole($Email){
+    $Role = FetchAccountRole($Email);
+    if(!$Role == 2){
+        echo json_encode("expired");
+        exit;
+    }
+}
+
+function UserRole($Email){
+    $Role = FetchAccountRole($Email);
+    if(!$Role == 1){
+        echo json_encode("expired");
+        exit;
+    }
+}
+
+function UpdatePetStatus($Action){
+    $AdminEmail = ValidateSession($Action);
+    AdminRole($AdminEmail);
+    $Disabled = stripslashes($_POST["D1"]);
+    $Email = stripslashes($_POST["D2"]);
+    global $PDOconn;
+    $Query = 'CALL UpdatePetStatus (?, ?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Disabled, PDO::PARAM_INT, 1);
+    $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    if($Disabled = 0){
+        $ActivityMSG = "Your account was activated.";
+        AddActivity($Email,$ActivityMSG);
+        mail($Email,"Account activated","The following email: " . $Email . " been activated by an Admin.");
+        $ActivityMSG = "You activated " . $Email . "'s account";
+        AddActivity($AdminEmail,$ActivityMSG);
+    }else{
+        $ActivityMSG = "Your account was dis-activated.";
+        AddActivity($Email,$ActivityMSG);
+        mail($Email,"Account dis-activated","The following email: " . $Email . " been dis-activated by an Admin.");
+        $ActivityMSG = "You dis-activated " . $Email . "'s account";
+        AddActivity($AdminEmail,$ActivityMSG);
+    }
+    echo json_encode("refresh");
+    $PDOconn = null;
 }
 
 function AddError($Action){
@@ -198,7 +339,7 @@ function SignInPet($Action){
     $Name = stripslashes($_POST["D1"]);
     $ActivityMSG = "Your pet " . $Name . " has been signed in.";
     AddActivity($Email,$ActivityMSG);
-    echo json_encode("refreshpet");
+    echo json_encode("refresh");
 }
 
 function DeleteSession($Email){
@@ -244,7 +385,7 @@ function AddAccount($Action){
     $Query = 'CALL AddAccount (?, ?, ?, ?, ?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 60);
+    $Statement->bindParam(2, $HashedPassword, PDO::PARAM_STR, 64);
     $Statement->bindParam(3, $Disabled, PDO::PARAM_INT, 1);
     $Statement->bindParam(4, $Attempt, PDO::PARAM_INT, 1);
     $Statement->bindParam(5, $AdminCode, PDO::PARAM_INT, 1);
@@ -291,29 +432,22 @@ function AddPet($Action){
 
 function AddBreed($Action){
     $Email = ValidateSession($Action);
-    CheckAdminRole($Email);
+    AdminRole($Email);
     $Name = stripslashes($_POST["D1"]);
     global $PDOconn;
     $Query = 'CALL AddBreed (?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Name, PDO::PARAM_STR, 45);
     $Statement->execute();
-    $ActivityMSG = "Your added " . $Name . " as a new Breed.";
+    $ActivityMSG = "You added " . $Name . " as a new Breed.";
     AddActivity($Email,$ActivityMSG);
     echo json_encode("refresh");
     $PDOconn = null;
 }
 
-function CheckAdminRole($Email){
-    if(!FetchAccountRole($Email) == 2){
-        echo json_encode("expired");
-        exit;
-    }
-}
-
 function FetchActivities($Action){
     $Email = ValidateSession($Action);
-    CheckAdminRole($Email);
+    AdminRole($Email);
     global $PDOconn;
     $Query = 'CALL FetchActivities (?)';
     $Statement = $PDOconn->prepare($Query);
@@ -326,7 +460,7 @@ function FetchActivities($Action){
 
 function FetchErrors($Action){
     $Email = ValidateSession($Action);
-    CheckAdminRole($Email);
+    AdminRole($Email);
     global $PDOconn;
     $Query = 'CALL FetchErrors';
     $Statement = $PDOconn->prepare($Query);
@@ -348,8 +482,7 @@ function FetchUser($Email){
 
 function FetchSignInPet($Action){
     $Email = ValidateSession($Action);
-    CheckAdminRole($Email);
-    $Email = stripslashes($_POST["D1"]);
+    UserRole($Email);
     global $PDOconn;
     $Query = 'CALL FetchSignInPet (?)';
     $Statement = $PDOconn->prepare($Query);
@@ -362,7 +495,7 @@ function FetchSignInPet($Action){
 
 function FetchUserStatus($Action){
     $Email = ValidateSession($Action);
-    CheckAdminRole($Email);
+    AdminRole($Email);
     $Email = stripslashes($_POST["D1"]);
     global $PDOconn;
     $Query = 'CALL FetchUserStatus (?)';
@@ -376,7 +509,7 @@ function FetchUserStatus($Action){
 
 function FetchPetStatus($Action){
     $Email = ValidateSession($Action);
-    CheckAdminRole($Email);
+    AdminRole($Email);
     $PetID = stripslashes($_POST["D1"]);
     global $PDOconn;
     $Query = 'CALL FetchPetStatus (?)';
@@ -390,7 +523,7 @@ function FetchPetStatus($Action){
 
 function FetchPet($Action){
     $Email = ValidateSession($Action);
-    CheckAdminRole($Email);
+    UserAdminRole($Email);
     $PetID = stripslashes($_POST["D1"]);
     global $PDOconn;
     $Query = 'CALL FetchPet (?)';
@@ -404,7 +537,7 @@ function FetchPet($Action){
 
 function FetchUserPets($Action){
     $Email = ValidateSession($Action);
-    CheckAdminRole($Email);
+    AdminRole($Email);
     $AccountEmail = stripslashes($_POST["D1"]);
     global $PDOconn;
     $Query = 'CALL FetchUserPets (?)';
@@ -418,7 +551,7 @@ function FetchUserPets($Action){
 
 function FetchUsers($Action){
     $Email = ValidateSession($Action);
-    CheckAdminRole($Email);
+    AdminRole($Email);
     global $PDOconn;
     $Query = 'CALL FetchUsers';
     $Statement = $PDOconn->prepare($Query);

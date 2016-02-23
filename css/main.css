@@ -15,7 +15,7 @@ body {
 }
 
 
-#Account, #SignOut, #ViewActivitiesButton, #ViewErrorsButton, #Visitor, #AddNewPetButton, #ViewAccountsButton, #HiddenValues{
+#Account, #SignOut, #ViewActivitiesButton, #ViewErrorsButton, #Visitor, #AddNewPetButton, #ViewAccountsButton, #HiddenValues, #ChangePasswordButton, #AddBreed{
     display: none;
     visibility: hidden;
 }
