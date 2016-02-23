@@ -26,27 +26,27 @@
         <entry file="file://$PROJECT_DIR$/css/main.css">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-5.2545457">
-              <caret line="17" column="158" selection-start-line="17" selection-start-column="158" selection-end-line="17" selection-end-column="158" />
+              <caret line="17" column="166" selection-start-line="17" selection-start-column="166" selection-end-line="17" selection-end-column="166" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5086906">
-              <caret line="181" column="36" selection-start-line="181" selection-start-column="36" selection-end-line="181" selection-end-column="36" />
+            <state vertical-scroll-proportion="-5.2181816">
+              <caret line="190" column="56" selection-start-line="190" selection-start-column="43" selection-end-line="190" selection-end-column="56" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="main.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/js/main.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-23.862068">
-              <caret line="519" column="77" selection-start-line="519" selection-start-column="77" selection-end-line="519" selection-end-column="77" />
+            <state vertical-scroll-proportion="0.27559054">
+              <caret line="142" column="37" selection-start-line="142" selection-start-column="37" selection-end-line="142" selection-end-column="37" />
               <folding />
             </state>
           </provider>
@@ -55,8 +55,8 @@
       <file leaf-file-name="operations.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/operations.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-8.309091">
-              <caret line="103" column="43" selection-start-line="103" selection-start-column="43" selection-end-line="103" selection-end-column="43" />
+            <state vertical-scroll-proportion="-5.2181816">
+              <caret line="482" column="23" selection-start-line="482" selection-start-column="9" selection-end-line="482" selection-end-column="23" />
               <folding>
                 <marker date="1456199730528" expanded="true" signature="2410:2481" placeholder="UPDATE djkab... " />
                 <marker date="1456199730528" expanded="true" signature="3207:3284" placeholder="UPDATE djkab... " />
@@ -117,8 +117,8 @@
         <option value="$PROJECT_DIR$/js/admin.php" />
         <option value="$PROJECT_DIR$/admin.php" />
         <option value="$PROJECT_DIR$/operations.php" />
-        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/css/main.css" />
+        <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/js/main.js" />
       </list>
     </option>
@@ -889,12 +889,12 @@
       <workItem from="1455662586814" duration="14098000" />
       <workItem from="1455844831707" duration="7062000" />
       <workItem from="1456001602965" duration="24822000" />
-      <workItem from="1456108304600" duration="34803000" />
+      <workItem from="1456108304600" duration="40452000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="462815000" />
+    <option name="totallyTimeSpent" value="468464000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1332,10 +1332,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/css/main.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.2545457">
+          <caret line="17" column="166" selection-start-line="17" selection-start-column="166" selection-end-line="17" selection-end-column="166" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/operations.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.309091">
-          <caret line="103" column="43" selection-start-line="103" selection-start-column="43" selection-end-line="103" selection-end-column="43" />
+        <state vertical-scroll-proportion="-5.2181816">
+          <caret line="482" column="23" selection-start-line="482" selection-start-column="9" selection-end-line="482" selection-end-column="23" />
           <folding>
             <marker date="1456199730528" expanded="true" signature="2410:2481" placeholder="UPDATE djkab... " />
             <marker date="1456199730528" expanded="true" signature="3207:3284" placeholder="UPDATE djkab... " />
@@ -1343,26 +1351,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/css/main.css">
+    <entry file="file://$PROJECT_DIR$/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.2545457">
-          <caret line="17" column="158" selection-start-line="17" selection-start-column="158" selection-end-line="17" selection-end-column="158" />
+        <state vertical-scroll-proportion="-5.2181816">
+          <caret line="190" column="56" selection-start-line="190" selection-start-column="43" selection-end-line="190" selection-end-column="56" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/js/main.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-23.862068">
-          <caret line="519" column="77" selection-start-line="519" selection-start-column="77" selection-end-line="519" selection-end-column="77" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5086906">
-          <caret line="181" column="36" selection-start-line="181" selection-start-column="36" selection-end-line="181" selection-end-column="36" />
+        <state vertical-scroll-proportion="0.27559054">
+          <caret line="142" column="37" selection-start-line="142" selection-start-column="37" selection-end-line="142" selection-end-column="37" />
           <folding />
         </state>
       </provider>
