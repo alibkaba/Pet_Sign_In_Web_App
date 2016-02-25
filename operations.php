@@ -73,6 +73,8 @@ function PHPOperation($Action){
             break;
         case "UpdateBreed": UpdateBreed($Action);
             break;
+        case "FetchPetNameCount": FetchPetNameCount($Action);
+            break;
     }
 }
 
@@ -157,12 +159,13 @@ function UpdatePetStatus($Action){
     AdminRole($AdminEmail);
     $Disabled = stripslashes($_POST["D1"]);
     $PetName = stripslashes($_POST["D2"]);
-    $Email = stripslashes($_POST["D3"]);
+    $PetID = stripslashes($_POST["D3"]);
+    $Email = stripslashes($_POST["D4"]);
     global $PDOconn;
     $Query = 'CALL UpdatePetStatus (?, ?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $Disabled, PDO::PARAM_INT, 1);
-    $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $PetID, PDO::PARAM_INT);
     $Statement->execute();
     if($Disabled == 0){
         $ActivityMSG = $PetName . " has been activated by an Admin.";
@@ -190,7 +193,7 @@ function UpdatePetName($Action){
     global $PDOconn;
     $Query = 'CALL UpdatePetName (?, ?)';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $PetName, PDO::PARAM_INT, 1);
+    $Statement->bindParam(1, $PetName, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
     $ActivityMSG = $OldPetName . "'s name was changed to " . $PetName . " by an Admin.";
@@ -209,10 +212,11 @@ function UpdatePetBreed($Action){
     $PetName = stripslashes($_POST["D2"]);
     $Email = stripslashes($_POST["D3"]);
     global $PDOconn;
-    $Query = 'CALL UpdatePetBreed (?, ?)';
+    $Query = 'CALL UpdatePetBreed (?, ?, ?)';
     $Statement = $PDOconn->prepare($Query);
     $Statement->bindParam(1, $BreedID, PDO::PARAM_INT);
-    $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $PetName, PDO::PARAM_STR, 45);
+    $Statement->bindParam(3, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
     $ActivityMSG = $PetName . "'s breed was changed by an Admin.";
     AddActivity($Email,$ActivityMSG);
@@ -267,26 +271,24 @@ function AddBreed($Action){
     AdminRole($Email);
     $Name = stripslashes($_POST["D1"]);
     global $PDOconn;
-    $Query = 'CALL FetchBreed';
+    $Query = 'CALL FetchBreedNameCount (?)';
     $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Name, PDO::PARAM_STR, 45);
     $Statement->execute();
-    $Response = $Statement->fetchAll();
-    $Name1 = $Name;
-    foreach($Response as $row){
-        $Breed = $row['Name'];
-        if(strtolower($Breed) == strtolower($Name1)){
-            $Query = 'CALL AddBreed (?)';
-            $Statement = $PDOconn->prepare($Query);
-            $Statement->bindParam(1, $Name, PDO::PARAM_STR, 45);
-            $Statement->execute();
-            $ActivityMSG = "You added " . $Name . " as a new breed.";
-            AddActivity($Email,$ActivityMSG);
-            echo json_encode("refresh");
-            exit;
-        }else{
-            echo json_encode("breedexist");
-            exit;
-        }
+    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
+    $Statement->closeCursor();
+    if($Response['Count'] == 0){
+        $Query = 'CALL AddBreed (?)';
+        $Statement = $PDOconn->prepare($Query);
+        $Statement->bindParam(1, $Name, PDO::PARAM_STR, 45);
+        $Statement->execute();
+        $ActivityMSG = "You added " . $Name . " as a new breed.";
+        AddActivity($Email,$ActivityMSG);
+        echo json_encode("refresh");
+        exit;
+    }else{
+        echo json_encode("breedexist");
+        exit;
     }
 }
 
@@ -623,7 +625,7 @@ function FetchPetStatus($Action){
 
 function FetchPet($Action){
     $Email = ValidateSession($Action);
-    UserAdminRole($Email);
+    AdminRole($Email);
     $PetID = stripslashes($_POST["D1"]);
     global $PDOconn;
     $Query = 'CALL FetchPet (?)';
@@ -645,6 +647,21 @@ function FetchUserPets($Action){
     $Statement->bindParam(1, $AccountEmail, PDO::PARAM_STR, 45);
     $Statement->execute();
     $Response = $Statement->fetchAll();
+    echo json_encode($Response);
+    $PDOconn = null;
+}
+
+function FetchPetNameCount($Action){
+    $Email = ValidateSession($Action);
+    $Name = stripslashes($_POST["D1"]);
+    global $PDOconn;
+    $Query = 'CALL FetchPetNameCount (?, ?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $Name, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
+    $Statement->closeCursor();
     echo json_encode($Response);
     $PDOconn = null;
 }

@@ -104,6 +104,7 @@ $(document).ready(function() {
         PrepareAjax(Action,Email);
     });
 
+    //ViewBreedsModal
     $("#ViewBreeds1").change(function() {
         if (this.value == 0) {
             document.getElementById("ViewBreedName").disabled = true;
@@ -221,7 +222,7 @@ $(document).ready(function() {
     });
 
     $("#AddNewPetButton").click(function() {
-        document.getElementById("ViewPetName").value = "";
+        document.getElementById("PetName").value = "";
         document.getElementById("ViewBreeds").options.length = 1;
         document.getElementById("ViewGenders").selectedIndex  = 0;
         document.getElementById("pettncno").checked = true;
@@ -238,10 +239,17 @@ $(document).ready(function() {
         IsFieldFilled(PetName);
         IsFieldFilled(BreedID);
         IsFieldFilled(Gender);
-        var Action = "AddPet";
-        PrepareAjax(Action,PetName,BreedID,Gender);
+        var Action = "FetchPetNameCount";
+        var ResponseData = Fetch(Action,PetName);
+        if(ResponseData['Count'] == 0){
+            var Action = "AddPet";
+            PrepareAjax(Action,PetName,BreedID,Gender);
+        }else{
+            alert("You already have a pet name " + PetName + ".  Pick a different name.")
+        }
     });
 
+    //AddBreedButton
     $("#ViewBreedsButton").click(function() {
         document.getElementById("ViewBreedName").disabled = true;
         document.getElementById("ViewBreedName").disabled = true;
@@ -274,6 +282,7 @@ $(document).ready(function() {
         document.getElementById("ViewGender").style.backgroundColor = "transparent";
         document.getElementById("ViewAllAccounts").options.length = 1;
         document.getElementById("ViewAllAccountsPets").options.length = 1;
+        document.getElementById("Document").value = "Pet Document";
         document.getElementById("ViewBreed").innerHTML = "";
         document.getElementById("ViewGender").innerHTML = "";
         document.getElementById("ViewPetName").value = "";
@@ -299,6 +308,7 @@ $(document).ready(function() {
             document.getElementById("ViewBreed").style.backgroundColor = "transparent";
             document.getElementById("ViewGender").style.backgroundColor = "transparent";
             document.getElementById("ViewAllAccountsPets").options.length = 1;
+            document.getElementById("Document").innerHTML = "Pet Document";
             document.getElementById("ViewBreed").innerHTML = "";
             document.getElementById("ViewGender").innerHTML = "";
             document.getElementById("ViewPetName").value = "";
@@ -309,6 +319,7 @@ $(document).ready(function() {
             document.getElementById("ViewBreed").style.backgroundColor = "transparent";
             document.getElementById("ViewGender").style.backgroundColor = "transparent";
             document.getElementById("ViewAllAccountsPets").options.length = 1;
+            document.getElementById("Document").innerHTML = "Pet Document";
             document.getElementById("ViewBreed").innerHTML = "";
             document.getElementById("ViewGender").innerHTML = "";
             document.getElementById("ViewPetName").value = "";
@@ -335,6 +346,7 @@ $(document).ready(function() {
             document.getElementById("ViewPetName").style.backgroundColor = "transparent";
             document.getElementById("ViewBreed").style.backgroundColor = "transparent";
             document.getElementById("ViewGender").style.backgroundColor = "transparent";
+            document.getElementById("Document").innerHTML = "Pet Document";
             document.getElementById("ViewBreed").innerHTML = "";
             document.getElementById("ViewGender").innerHTML = "";
             document.getElementById("ViewPetName").value = "";
@@ -343,10 +355,12 @@ $(document).ready(function() {
             document.getElementById("ViewPetName").style.backgroundColor = "transparent";
             document.getElementById("ViewBreed").style.backgroundColor = "transparent";
             document.getElementById("ViewGender").style.backgroundColor = "transparent";
+            document.getElementById("Document").innerHTML = "Pet Document";
             document.getElementById("ViewBreed").innerHTML = "";
             document.getElementById("ViewGender").innerHTML = "";
             document.getElementById("ViewPetName").value = "";
             var PetID = this.value;
+            document.getElementById("HiddenValue7").value = PetID;
             var Action = "FetchPetStatus";
             PrepareAjax(Action,PetID);
             var Action = "FetchPet";
@@ -425,10 +439,12 @@ $(document).ready(function() {
         var OldName = document.getElementById("HiddenValue2").value;
         var OldBreedID = document.getElementById("HiddenValue3").value;
         var OldGender = document.getElementById("HiddenValue4").value;
+        var PetID = document.getElementById("HiddenValue7").value;
         var AccountStatus = document.getElementById("HiddenValue9").value;
         var PetStatus = document.getElementById("HiddenValue8").value;
         var PetName = document.getElementById("ViewPetName").value;
-        var BreedID = document.getElementById("ViewBreed").value;
+        var SelectedBreed = document.getElementById("ViewBreed");
+        var BreedID = SelectedBreed.options[SelectedBreed.selectedIndex].value;
         var Gender = document.getElementById("ViewGender").value;
         if(OldAccountStatus != AccountStatus){
             var Action = "UpdateAccountStatus";
@@ -436,7 +452,7 @@ $(document).ready(function() {
         }
         if(OldPetStatus != PetStatus && PetStatus != ""){
             var Action = "UpdatePetStatus";
-            PrepareAjax(Action,PetStatus,PetName,Email);
+            PrepareAjax(Action,PetStatus,PetName,PetID,Email);
         }
         if(OldName != PetName && PetName != ""){
             var Action = "UpdatePetName";
@@ -521,14 +537,27 @@ function ViewPetData(PetData,Breeds){
     document.getElementById("ViewBreed").disabled = false;
     document.getElementById("ViewGender").disabled = false;
     document.getElementById("HiddenValue2").value = PetData.Name;
-    var DefaultValue = document.getElementById("HiddenValue3").value = PetData.BreedID;
+    document.getElementById("HiddenValue3").value = PetData.BreedID;
     document.getElementById("HiddenValue4").value = PetData.Gender;
+    var Document = PetData.Document;
     document.getElementById("ViewPetName").value  = PetData.Name;
+
+    if(Document != "" && !Document){
+        document.getElementById("Document").innerHTML = "Pet Document";
+    }else{
+        document.getElementById("Document").innerHTML = '<a href="https://alibkaba.com/petsignin/uploads/' + Document + '">Pet document</a>';
+    }
+
     var select = document.getElementById("ViewBreed");
     var i;
+    var PetIndex;
     for (i = 0; i < Breeds.length; i++) {
         select.options[select.options.length] = new Option(Breeds[i].Name, Breeds[i].BreedID);
+        if(Breeds[i].BreedID == PetData.BreedID){
+            PetIndex = i;
+        }
     }
+    document.getElementById("ViewBreed").selectedIndex = PetIndex;
 
     var select = document.getElementById("ViewGender");
     if(PetData.Gender == "Boy"){
@@ -590,7 +619,7 @@ function ViewSignInPet(ResponseData){
 
             ViewSignInPet += '</label>';
         }else{
-            ViewSignInPet += '<label class="btn btn-danger" disabled><input type="radio" name="options" id="SignInPet" autocomplete="off" value="' + ResponseData[i].Name + '">' + ResponseData[i].Name + '</button>';
+            ViewSignInPet += '<label class="btn btn-danger" disabled><input type="radio" name="options" id="SignInPet" autocomplete="off" value="' + ResponseData[i].Name + '">' + ResponseData[i].Name + '</button></label>';
         }
     }
     document.getElementById("ViewSignInPet").innerHTML = ViewSignInPet;
