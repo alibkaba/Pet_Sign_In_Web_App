@@ -104,20 +104,6 @@ $(document).ready(function() {
         PrepareAjax(Action,Email);
     });
 
-    $("#ViewBreedsButton").click(function() {
-        document.getElementById("ViewBreeds1").options.length = 1;
-        document.getElementById("ViewBreedName").disabled = true;
-        document.getElementById("ViewBreedName").disabled = true;
-        document.getElementById("UpdateBreedButton").disabled = true;
-        document.getElementById("AddBreedButton").disabled = true;
-        document.getElementById("AddBreedName").value = "";
-        document.getElementById("ViewBreedName").style.backgroundColor = "transparent";
-        document.getElementById("AddBreedName").style.backgroundColor = "transparent";
-        var Action = "FetchBreeds";
-        var ResponseData = Fetch(Action);
-        ViewBreeds1(ResponseData);
-    });
-
     $("#ViewBreeds1").change(function() {
         if (this.value == 0) {
             document.getElementById("ViewBreedName").disabled = true;
@@ -137,9 +123,50 @@ $(document).ready(function() {
         }
     });
 
+    //ViewAccountsModal
+    $("#ViewBreed").change(function() {
+        var DefaultValue = document.getElementById("HiddenValue3").value;
+        var NewValue = document.getElementById("ViewBreed").value;
+        if(DefaultValue == NewValue){
+            document.getElementById("ViewBreed").style.backgroundColor = "transparent";
+            document.getElementById("UpdateAccountButton").disabled = true;
+        }else{
+            document.getElementById("ViewBreed").style.backgroundColor = "lightgreen";
+            document.getElementById("UpdateAccountButton").disabled = false;
+        }
+    });
+
+    //ViewAccountsModal
+    $("#ViewGender").change(function() {
+        var DefaultValue = document.getElementById("HiddenValue4").value;
+        var NewValue = document.getElementById("ViewGender").value;
+        console.log(DefaultValue);
+        console.log(NewValue);
+        if (DefaultValue == NewValue) {
+            document.getElementById("ViewGender").style.backgroundColor = "transparent";
+            document.getElementById("UpdateAccountButton").disabled = true;
+        }else{
+            document.getElementById("ViewGender").style.backgroundColor = "lightgreen";
+            document.getElementById("UpdateAccountButton").disabled = false;
+        }
+    });
+
+    $("#ViewPetName").change(function() {
+        var DefaultValue = document.getElementById("HiddenValue2").value;
+        var NewValue = document.getElementById("ViewPetName").value;
+        if(DefaultValue == NewValue){
+            document.getElementById("ViewPetName").style.backgroundColor = "transparent";
+            document.getElementById("UpdateAccountButton").disabled = true;
+        }else{
+            document.getElementById("ViewPetName").style.backgroundColor = "lightgreen";
+            document.getElementById("UpdateAccountButton").disabled = false;
+        }
+    });
+
+    //ViewBreedsModal
     $("#ViewBreedName").change(function() {
         var DefaultValue = document.getElementById("HiddenValue2").value;
-        var NewValue = document.getElementById("AddBreedName").value;
+        var NewValue = document.getElementById("ViewBreedName").value;
         if(DefaultValue == NewValue){
             document.getElementById("ViewBreedName").style.backgroundColor = "transparent";
             document.getElementById("UpdateBreedButton").disabled = true;
@@ -147,16 +174,16 @@ $(document).ready(function() {
             document.getElementById("ViewBreedName").style.backgroundColor = "lightgreen";
             document.getElementById("UpdateBreedButton").disabled = false;
         }
-        console.log(NewValue);
     });
 
-    $("#AddBreedName").change(function() {
-        var NewValue = document.getElementById("AddBreedName").value;
+    //ViewBreedsModal
+    $("#AddNewBreed").change(function() {
+        var NewValue = document.getElementById("AddNewBreed").value;
         if(NewValue == ""){
-            document.getElementById("AddBreedName").style.backgroundColor = "transparent";
+            document.getElementById("AddNewBreed").style.backgroundColor = "transparent";
             document.getElementById("AddBreedButton").disabled = true;
         }else{
-            document.getElementById("AddBreedName").style.backgroundColor = "lightgreen";
+            document.getElementById("AddNewBreed").style.backgroundColor = "lightgreen";
             document.getElementById("AddBreedButton").disabled = false;
         }
     });
@@ -193,11 +220,6 @@ $(document).ready(function() {
         PrepareAjax(Action,Email,Password);
     });
 
-    $("#SignOut").click(function() {
-        var Action = "SignOut";
-        PrepareAjax(Action);
-    });
-
     $("#AddNewPetButton").click(function() {
         document.getElementById("ViewPetName").value = "";
         document.getElementById("ViewBreeds").options.length = 1;
@@ -220,6 +242,21 @@ $(document).ready(function() {
         PrepareAjax(Action,PetName,BreedID,Gender);
     });
 
+    $("#ViewBreedsButton").click(function() {
+        document.getElementById("ViewBreedName").disabled = true;
+        document.getElementById("ViewBreedName").disabled = true;
+        document.getElementById("UpdateBreedButton").disabled = true;
+        document.getElementById("AddBreedButton").disabled = true;
+        document.getElementById("ViewBreeds1").options.length = 1;
+        document.getElementById("ViewBreedName").value = "";
+        document.getElementById("AddNewBreed").value = "";
+        document.getElementById("ViewBreedName").style.backgroundColor = "transparent";
+        document.getElementById("AddNewBreed").style.backgroundColor = "transparent";
+        var Action = "FetchBreeds";
+        var ResponseData = Fetch(Action);
+        ViewBreeds1(ResponseData);
+    });
+
     $("#ViewAccountsButton").click(function() {
         document.getElementById("AccountStatus").disabled = true;
         document.getElementById("ViewAllAccountsPets").disabled = true;
@@ -227,7 +264,6 @@ $(document).ready(function() {
         document.getElementById("ViewPetName").disabled = true;
         document.getElementById("ViewBreed").disabled = true;
         document.getElementById("ViewGender").disabled = true;
-        document.getElementById("ViewAllAccountsPets").disabled = true;
         document.getElementById("UpdateAccountButton").disabled = true;
         document.getElementById("AccountStatus").checked = false;
         document.getElementById("PetStatus").checked = false;
@@ -238,42 +274,45 @@ $(document).ready(function() {
         document.getElementById("ViewGender").style.backgroundColor = "transparent";
         document.getElementById("ViewAllAccounts").options.length = 1;
         document.getElementById("ViewAllAccountsPets").options.length = 1;
+        document.getElementById("ViewBreed").innerHTML = "";
+        document.getElementById("ViewGender").innerHTML = "";
         document.getElementById("ViewPetName").value = "";
-        document.getElementById("ViewBreed").selectedIndex  = "-1";
-        document.getElementById("ViewGender").selectedIndex  = "-1";
         var Action = "FetchUsers";
         PrepareAjax(Action);
     });
 
+    //ViewAccountsModal
     $("#ViewAllAccounts").change(function() {
         if (this.value == 0) {
             document.getElementById("AccountStatus").disabled = true;
-            document.getElementById("AccountStatus").checked = false;
             document.getElementById("ViewAllAccountsPets").disabled = true;
             document.getElementById("PetStatus").disabled = true;
-            document.getElementById("PetStatus").checked = false;
             document.getElementById("ViewPetName").disabled = true;
             document.getElementById("ViewBreed").disabled = true;
             document.getElementById("ViewGender").disabled = true;
-            document.getElementById("ViewAllAccountsPets").disabled = true;
             document.getElementById("UpdateAccountButton").disabled = true;
+            document.getElementById("AccountStatus").checked = false;
+            document.getElementById("PetStatus").checked = false;
             document.getElementById("AccountStatusLabel").style.backgroundColor = "transparent";
             document.getElementById("PetStatusLabel").style.backgroundColor = "transparent";
+            document.getElementById("ViewPetName").style.backgroundColor = "transparent";
+            document.getElementById("ViewBreed").style.backgroundColor = "transparent";
+            document.getElementById("ViewGender").style.backgroundColor = "transparent";
             document.getElementById("ViewAllAccountsPets").options.length = 1;
+            document.getElementById("ViewBreed").innerHTML = "";
+            document.getElementById("ViewGender").innerHTML = "";
             document.getElementById("ViewPetName").value = "";
-            document.getElementById("ViewBreed").selectedIndex  = "-1";
-            document.getElementById("ViewGender").selectedIndex  = "-1";
         }else{
             document.getElementById("AccountStatusLabel").style.backgroundColor = "transparent";
             document.getElementById("PetStatusLabel").style.backgroundColor = "transparent";
             document.getElementById("ViewPetName").style.backgroundColor = "transparent";
             document.getElementById("ViewBreed").style.backgroundColor = "transparent";
             document.getElementById("ViewGender").style.backgroundColor = "transparent";
-            document.getElementById("HiddenValue1").value = this.value;
             document.getElementById("ViewAllAccountsPets").options.length = 1;
+            document.getElementById("ViewBreed").innerHTML = "";
+            document.getElementById("ViewGender").innerHTML = "";
             document.getElementById("ViewPetName").value = "";
-            document.getElementById("ViewBreed").options.length = 1;
-            document.getElementById("ViewGender").options.length = 1;
+            document.getElementById("HiddenValue1").value = this.value;
             var Action = "FetchUserStatus";
             var Email = document.getElementById("ViewAllAccounts").value;
             PrepareAjax(Action,Email);
@@ -282,30 +321,33 @@ $(document).ready(function() {
         }
     });
 
+    //ViewAccountsModal
     $("#ViewAllAccountsPets").change(function() {
         if (this.value == 0) {
-            document.getElementById("PetDisabled").disabled = true;
-            document.getElementById("PetStatus").checked = false;
+            document.getElementById("PetStatus").disabled = true;
             document.getElementById("ViewPetName").disabled = true;
             document.getElementById("ViewBreed").disabled = true;
             document.getElementById("ViewGender").disabled = true;
             document.getElementById("UpdateAccountButton").disabled = true;
+            document.getElementById("AccountStatus").checked = false;
+            document.getElementById("PetStatus").checked = false;
             document.getElementById("PetStatusLabel").style.backgroundColor = "transparent";
+            document.getElementById("ViewPetName").style.backgroundColor = "transparent";
+            document.getElementById("ViewBreed").style.backgroundColor = "transparent";
+            document.getElementById("ViewGender").style.backgroundColor = "transparent";
+            document.getElementById("ViewBreed").innerHTML = "";
+            document.getElementById("ViewGender").innerHTML = "";
             document.getElementById("ViewPetName").value = "";
-            document.getElementById("ViewBreed").options.length = 1;
-            document.getElementById("ViewGender").options.length = 1;
-            document.getElementById("ViewBreed").selectedIndex  = "-1";
-            document.getElementById("ViewGender").selectedIndex  = "-1";
         }else{
             document.getElementById("PetStatusLabel").style.backgroundColor = "transparent";
             document.getElementById("ViewPetName").style.backgroundColor = "transparent";
             document.getElementById("ViewBreed").style.backgroundColor = "transparent";
             document.getElementById("ViewGender").style.backgroundColor = "transparent";
+            document.getElementById("ViewBreed").innerHTML = "";
+            document.getElementById("ViewGender").innerHTML = "";
             document.getElementById("ViewPetName").value = "";
-            document.getElementById("ViewBreed").options.length = 1;
-            document.getElementById("ViewGender").options.length = 1;
+            var PetID = this.value;
             var Action = "FetchPetStatus";
-            var PetID = document.getElementById("ViewAllAccountsPets").value;
             PrepareAjax(Action,PetID);
             var Action = "FetchPet";
             var PetData = Fetch(Action,PetID);
@@ -315,6 +357,7 @@ $(document).ready(function() {
         }
     });
 
+    //ViewAccountsModal
     $("#AccountStatus").change(function() {
         var DefaultValue = document.getElementById("AccountStatus").value;
         if(this.checked){
@@ -331,6 +374,7 @@ $(document).ready(function() {
         }
     });
 
+    //ViewAccountsModal
     $("#PetStatus").change(function() {
         var DefaultValue = document.getElementById("PetStatus").value;
         if(this.checked){
@@ -347,6 +391,7 @@ $(document).ready(function() {
         }
     });
 
+    //AddNewPetModal
     $("#ViewPetName").change(function() {
         var DefaultValue = document.getElementById("HiddenValue2").value;
         var NewValue = document.getElementById("ViewPetName").value;
@@ -359,18 +404,7 @@ $(document).ready(function() {
         }
     });
 
-    $("#ViewBreed").change(function() {
-        var DefaultValue = document.getElementById("HiddenValue3").value;
-        var NewValue = document.getElementById("ViewPetName").value;
-        if(DefaultValue == NewValue){
-            document.getElementById("ViewBreed").style.backgroundColor = "transparent";
-            document.getElementById("UpdateAccountButton").disabled = true;
-        }else{
-            document.getElementById("ViewBreed").style.backgroundColor = "lightgreen";
-            document.getElementById("UpdateAccountButton").disabled = false;
-        }
-    });
-
+    //AddNewPetModal
     $("#ViewGender").change(function() {
         var DefaultValue = document.getElementById("HiddenValue4").value;
         var NewValue = document.getElementById("ViewPetName").value;
@@ -383,6 +417,7 @@ $(document).ready(function() {
         }
     });
 
+    //ViewAccountsModal
     $("#UpdateAccountButton").click(function() {
         var Email = document.getElementById("HiddenValue1").value;
         var OldAccountStatus = document.getElementById("AccountStatus").value;
@@ -399,22 +434,40 @@ $(document).ready(function() {
             var Action = "UpdateAccountStatus";
             PrepareAjax(Action,AccountStatus,Email);
         }
-        if(OldPetStatus != PetStatus){
+        if(OldPetStatus != PetStatus && PetStatus != ""){
             var Action = "UpdatePetStatus";
-            PrepareAjax(Action,PetStatus,Email);
+            PrepareAjax(Action,PetStatus,PetName,Email);
         }
-        if(OldName != PetName){
+        if(OldName != PetName && PetName != ""){
             var Action = "UpdatePetName";
-            PrepareAjax(Action,PetName,Email);
+            PrepareAjax(Action,PetName,OldName,Email);
         }
-        if(OldBreedID != BreedID){
+        if(OldBreedID != BreedID && BreedID != ""){
             var Action = "UpdatePetBreed";
-            PrepareAjax(Action,BreedID,Email);
+            PrepareAjax(Action,BreedID,PetName,Email);
         }
-        if(OldGender != Gender){
+        if(OldGender != Gender && Gender != ""){
             var Action = "UpdatePetGender";
-            PrepareAjax(Action,Gender,Email);
+            PrepareAjax(Action,Gender,PetName,Email);
         }
+    });
+
+    //ViewBreedsModal
+    $("#UpdateBreedButton").click(function() {
+        var OldBreedName = document.getElementById("HiddenValue2").value;
+        var NewBreedName = document.getElementById("ViewBreedName").value;
+        var BreedID = document.getElementById("ViewBreeds1").value;
+        if(OldBreedName != NewBreedName){
+            var Action = "UpdateBreed";
+            PrepareAjax(Action,NewBreedName,OldBreedName,BreedID);
+        }
+    });
+
+    //ViewBreedsModal
+    $("#AddBreedButton").click(function() {
+        var NewBreedName = document.getElementById("AddNewBreed").value;
+        var Action = "AddBreed";
+        PrepareAjax(Action,NewBreedName);
     });
 });
 
@@ -462,33 +515,34 @@ function ViewPetStatus (ResponseData){
     }
 }
 
+//ViewAccountsModal
 function ViewPetData(PetData,Breeds){
     document.getElementById("ViewPetName").disabled = false;
     document.getElementById("ViewBreed").disabled = false;
     document.getElementById("ViewGender").disabled = false;
     document.getElementById("HiddenValue2").value = PetData.Name;
-    document.getElementById("HiddenValue3").value = PetData.BreedID;
+    var DefaultValue = document.getElementById("HiddenValue3").value = PetData.BreedID;
     document.getElementById("HiddenValue4").value = PetData.Gender;
     document.getElementById("ViewPetName").value  = PetData.Name;
     var select = document.getElementById("ViewBreed");
     var i;
     for (i = 0; i < Breeds.length; i++) {
-        if(Breeds[i].BreedID == PetData.BreedID){
-            select.options[select.options.selectedIndex] = new Option(Breeds[i].Name, Breeds[i].BreedID);
-        }else{
-            select.options[select.options.length] = new Option(Breeds[i].Name, Breeds[i].BreedID);
-        }
+        select.options[select.options.length] = new Option(Breeds[i].Name, Breeds[i].BreedID);
     }
+
     var select = document.getElementById("ViewGender");
     if(PetData.Gender == "Boy"){
-        select.options[select.options.selectedIndex] = new Option("Boy", "Boy");
-        select.options[select.options.length] = new Option("Girl", "Girl");
-    }else{
-        select.options[select.options.selectedIndex] = new Option("Girl", "Girl");
         select.options[select.options.length] = new Option("Boy", "Boy");
+        select.options[select.options.length] = new Option("Girl", "Girl");
+        document.getElementById("ViewGender").selectedIndex  = 0;
+    }else{
+        select.options[select.options.length] = new Option("Boy", "Boy");
+        select.options[select.options.length] = new Option("Girl", "Girl");
+        document.getElementById("ViewGender").selectedIndex  = 1;
     }
 }
 
+//AddNewPetModal
 function ViewBreeds(ResponseData){
     var select = document.getElementById("ViewBreeds");
     var i;
@@ -505,6 +559,7 @@ function ViewBreeds1(ResponseData){
     }
 }
 
+//ViewAccountsModal
 function ViewUserPets(ResponseData){
     document.getElementById("ViewAllAccountsPets").disabled = false;
     var select = document.getElementById("ViewAllAccountsPets");
@@ -525,14 +580,18 @@ function ViewAllAccounts(ResponseData){
 function ViewSignInPet(ResponseData){
     var ViewSignInPet = "";
     for (var i = 0; i < ResponseData.length; i++) {
-        if (ResponseData[i].DiffDate == 0){
-            ViewSignInPet += '<label class="btn btn-primary" disabled>';
-        }else{
-            ViewSignInPet += '<label class="btn btn-primary">';
-        }
-        ViewSignInPet += '<input type="radio" name="options" id="SignInPet" autocomplete="off" value="' + ResponseData[i].Name + '">' + ResponseData[i].Name + '</button>';
+        if (ResponseData[i].Disabled == 0){
+            if (ResponseData[i].DiffDate == 0){
+                ViewSignInPet += '<label class="btn btn-primary" disabled>';
+            }else{
+                ViewSignInPet += '<label class="btn btn-primary">';
+            }
+            ViewSignInPet += '<input type="radio" name="options" id="SignInPet" autocomplete="off" value="' + ResponseData[i].Name + '">' + ResponseData[i].Name + '</button>';
 
-        ViewSignInPet += '</label>';
+            ViewSignInPet += '</label>';
+        }else{
+            ViewSignInPet += '<label class="btn btn-danger" disabled><input type="radio" name="options" id="SignInPet" autocomplete="off" value="' + ResponseData[i].Name + '">' + ResponseData[i].Name + '</button>';
+        }
     }
     document.getElementById("ViewSignInPet").innerHTML = ViewSignInPet;
 }
@@ -721,7 +780,7 @@ function JSOperation(Action, ResponseData){
             alert("Invalid email and/or password.  If you forgot your password, reset it.");
             break;
         case "notactive":
-            alert("Please wait for an admin to activate your account or contact them @ ADMIN EMAIL.");
+            alert("Your account is not activate.  Wait or contact an Admin.");
             break;
         case "none":
             alert("This account doesn't exist.  Please click on \"Register for a new account\"");
@@ -741,6 +800,9 @@ function JSOperation(Action, ResponseData){
         case "expired":
             alert("Your session expired, please sign in again.");
             window.location = "/petsignin/";
+            break;
+        case "breedexist":
+            alert("The breed already exist.");
             break;
         default:
             JSOperation2(Action,ResponseData);

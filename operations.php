@@ -71,6 +71,8 @@ function PHPOperation($Action){
             break;
         case "UpdatePetGender": UpdatePetGender($Action);
             break;
+        case "UpdateBreed": UpdateBreed($Action);
+            break;
     }
 }
 
@@ -80,7 +82,7 @@ function ChangePassword($Action){
     global $PDOconn;
     $Query = 'UPDATE djkabau1_petsignin.Accounts set Password = (?) where Email = (?)';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Password, PDO::PARAM_INT, 64);
+    $Statement->bindParam(1, $Password, PDO::PARAM_STR, 64);
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     mail($Email,"Password was changed","Your password was changed.");
     $ActivityMSG = "Your password was changed.";
@@ -99,7 +101,7 @@ function ResetPassword(){
                 global $PDOconn;
                 $Query = 'UPDATE djkabau1_petsignin.Accounts set ActivationCode = (?) where Email = (?)';
                 $Statement = $PDOconn->prepare($Query);
-                $Statement->bindParam(1, $Password, PDO::PARAM_INT, 64);
+                $Statement->bindParam(1, $Password, PDO::PARAM_STR, 64);
                 $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
                 mail($Email,"Password reset","Your new password.  $Password");
                 echo json_encode("0");
@@ -133,16 +135,16 @@ function UpdateAccountStatus($Action){
     $Statement->bindParam(1, $Disabled, PDO::PARAM_INT, 1);
     $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
     $Statement->execute();
-    if($Disabled = 0){
-        $ActivityMSG = "Your account was activated.";
+    if($Disabled == 0){
+        $ActivityMSG = "Your account was activated by an Admin.";
         AddActivity($Email,$ActivityMSG);
-        mail($Email,"Account activated","The following email: " . $Email . " been activated by an Admin.");
+        mail($Email,"Account activated","Your account was activated by an Admin.");
         $ActivityMSG = "You activated " . $Email . "'s account";
         AddActivity($AdminEmail,$ActivityMSG);
     }else{
-        $ActivityMSG = "Your account was dis-activated.";
+        $ActivityMSG = "Your account was dis-activated by an Admin.";
         AddActivity($Email,$ActivityMSG);
-        mail($Email,"Account dis-activated","The following email: " . $Email . " been dis-activated by an Admin.");
+        mail($Email,"Account dis-activated","Your account was dis-activated by an Admin.");
         $ActivityMSG = "You dis-activated " . $Email . "'s account";
         AddActivity($AdminEmail,$ActivityMSG);
     }
@@ -150,9 +152,147 @@ function UpdateAccountStatus($Action){
     $PDOconn = null;
 }
 
+function UpdatePetStatus($Action){
+    $AdminEmail = ValidateSession($Action);
+    AdminRole($AdminEmail);
+    $Disabled = stripslashes($_POST["D1"]);
+    $PetName = stripslashes($_POST["D2"]);
+    $Email = stripslashes($_POST["D3"]);
+    global $PDOconn;
+    $Query = 'CALL UpdatePetStatus (?, ?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Disabled, PDO::PARAM_INT, 1);
+    $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    if($Disabled == 0){
+        $ActivityMSG = $PetName . " has been activated by an Admin.";
+        AddActivity($Email,$ActivityMSG);
+        mail($Email,"Pet activated","Your pet " . $PetName . " has been activated by an Admin.");
+        $ActivityMSG = "You activated " . $Email . "'s pet " . $PetName . ".";
+        AddActivity($AdminEmail,$ActivityMSG);
+    }else{
+        $ActivityMSG = $PetName . " has been dis-activated by an Admin.";
+        AddActivity($Email,$ActivityMSG);
+        mail($Email,"Pet dis-activated","Your pet " . $PetName . " has been dis-activated by an Admin.");
+        $ActivityMSG = "You dis-activated " . $Email . "'s pet " . $PetName . ".";
+        AddActivity($AdminEmail,$ActivityMSG);
+    }
+    echo json_encode("refresh");
+    $PDOconn = null;
+}
+
+function UpdatePetName($Action){
+    $AdminEmail = ValidateSession($Action);
+    AdminRole($AdminEmail);
+    $PetName = stripslashes($_POST["D1"]);
+    $OldPetName = stripslashes($_POST["D2"]);
+    $Email = stripslashes($_POST["D3"]);
+    global $PDOconn;
+    $Query = 'CALL UpdatePetName (?, ?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $PetName, PDO::PARAM_INT, 1);
+    $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $ActivityMSG = $OldPetName . "'s name was changed to " . $PetName . " by an Admin.";
+    AddActivity($Email,$ActivityMSG);
+    mail($Email,"Pet name change","Your pet " . $OldPetName . "'s name was changed to " . $PetName . " by an Admin.");
+    $ActivityMSG = "You changed " . $Email . "'s pet name to " . $PetName . " from " . $OldPetName . ".";
+    AddActivity($AdminEmail,$ActivityMSG);
+    echo json_encode("refresh");
+    $PDOconn = null;
+}
+
+function UpdatePetBreed($Action){
+    $AdminEmail = ValidateSession($Action);
+    AdminRole($AdminEmail);
+    $BreedID = stripslashes($_POST["D1"]);
+    $PetName = stripslashes($_POST["D2"]);
+    $Email = stripslashes($_POST["D3"]);
+    global $PDOconn;
+    $Query = 'CALL UpdatePetBreed (?, ?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $BreedID, PDO::PARAM_INT);
+    $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $ActivityMSG = $PetName . "'s breed was changed by an Admin.";
+    AddActivity($Email,$ActivityMSG);
+    mail($Email,"Pet breed change", $PetName . "'s breed was changed by an Admin.");
+    $ActivityMSG = "You've changed the breed of " . $Email . "'s pet name " . $PetName . ".";
+    AddActivity($AdminEmail,$ActivityMSG);
+    echo json_encode("refresh");
+    $PDOconn = null;
+}
+
+function UpdatePetGender($Action){
+    $AdminEmail = ValidateSession($Action);
+    AdminRole($AdminEmail);
+    $Gender = stripslashes($_POST["D1"]);
+    $PetName = stripslashes($_POST["D2"]);
+    $Email = stripslashes($_POST["D3"]);
+    global $PDOconn;
+    $Query = 'CALL UpdatePetGender (?, ?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Gender, PDO::PARAM_STR, 4);
+    $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $ActivityMSG = $PetName . "'s gender was changed to a " . $Gender . " by an Admin.";
+    AddActivity($Email,$ActivityMSG);
+    mail($Email,"Pet gender change","Your pet " . $PetName . "'s gender was changed to " . $Gender . " by an Admin.");
+    $ActivityMSG = "You changed the gender of " . $Email . "'s pet name " . $PetName . ".";
+    AddActivity($AdminEmail,$ActivityMSG);
+    echo json_encode("refresh");
+    $PDOconn = null;
+}
+
+function UpdateBreed($Action){
+    $Email = ValidateSession($Action);
+    AdminRole($Email);
+    $BreedName = stripslashes($_POST["D1"]);
+    $OldBreedName = stripslashes($_POST["D2"]);
+    $BreedID = stripslashes($_POST["D3"]);
+    global $PDOconn;
+    $Query = 'CALL UpdateBreed (?, ?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $BreedName, PDO::PARAM_INT);
+    $Statement->bindParam(2, $BreedID, PDO::PARAM_STR, 45);
+    $Statement->execute();
+    $ActivityMSG = "Breed changed to " . $BreedName . " from " . $OldBreedName . " by an Admin.";
+    AddActivity($Email,$ActivityMSG);
+    echo json_encode("refresh");
+    $PDOconn = null;
+}
+
+function AddBreed($Action){
+    $Email = ValidateSession($Action);
+    AdminRole($Email);
+    $Name = stripslashes($_POST["D1"]);
+    global $PDOconn;
+    $Query = 'CALL FetchBreed';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->execute();
+    $Response = $Statement->fetchAll();
+    $Name1 = $Name;
+    foreach($Response as $row){
+        $Breed = $row['Name'];
+        if(strtolower($Breed) == strtolower($Name1)){
+            $Query = 'CALL AddBreed (?)';
+            $Statement = $PDOconn->prepare($Query);
+            $Statement->bindParam(1, $Name, PDO::PARAM_STR, 45);
+            $Statement->execute();
+            $ActivityMSG = "You added " . $Name . " as a new breed.";
+            AddActivity($Email,$ActivityMSG);
+            echo json_encode("refresh");
+            exit;
+        }else{
+            echo json_encode("breedexist");
+            exit;
+        }
+    }
+}
+
 function UserAdminRole($Email){
     $Role = FetchAccountRole($Email);
-    if(!$Role == 1 || !$Role == 2){
+    if($Role != 1 || !$Role == 2){
         echo json_encode("expired");
         exit;
     }
@@ -161,7 +301,7 @@ function UserAdminRole($Email){
 
 function AdminRole($Email){
     $Role = FetchAccountRole($Email);
-    if(!$Role == 2){
+    if($Role != 2){
         echo json_encode("expired");
         exit;
     }
@@ -169,38 +309,10 @@ function AdminRole($Email){
 
 function UserRole($Email){
     $Role = FetchAccountRole($Email);
-    if(!$Role == 1){
+    if($Role != 1){
         echo json_encode("expired");
         exit;
     }
-}
-
-function UpdatePetStatus($Action){
-    $AdminEmail = ValidateSession($Action);
-    AdminRole($AdminEmail);
-    $Disabled = stripslashes($_POST["D1"]);
-    $Email = stripslashes($_POST["D2"]);
-    global $PDOconn;
-    $Query = 'CALL UpdatePetStatus (?, ?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Disabled, PDO::PARAM_INT, 1);
-    $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
-    $Statement->execute();
-    if($Disabled = 0){
-        $ActivityMSG = "Your account was activated.";
-        AddActivity($Email,$ActivityMSG);
-        mail($Email,"Account activated","The following email: " . $Email . " been activated by an Admin.");
-        $ActivityMSG = "You activated " . $Email . "'s account";
-        AddActivity($AdminEmail,$ActivityMSG);
-    }else{
-        $ActivityMSG = "Your account was dis-activated.";
-        AddActivity($Email,$ActivityMSG);
-        mail($Email,"Account dis-activated","The following email: " . $Email . " been dis-activated by an Admin.");
-        $ActivityMSG = "You dis-activated " . $Email . "'s account";
-        AddActivity($AdminEmail,$ActivityMSG);
-    }
-    echo json_encode("refresh");
-    $PDOconn = null;
 }
 
 function AddError($Action){
@@ -331,6 +443,7 @@ function SignIn(){
         }
     }else{
         echo json_encode("none");
+        $PDOconn = null;
     }
 }
 
@@ -392,9 +505,10 @@ function AddAccount($Action){
     $Statement->execute();
     $ActivityMSG = "Your account was created.";
     AddActivity($Email,$ActivityMSG);
+    mail($Email,"Your account was created","The following email: " . $Email . " has been created.  The account will be activated by an Admin.  In the meantime, get familiar with the pet policy. https://petsignin.alibkaba.com/petsignin/petpolicy.pdf");
     $AdminAccounts = FetchAdmins($Action);
     foreach ($AdminAccounts as $AdminEmail) {
-        mail($AdminEmail['Email'],"New account created","The following email: " . $Email . " been created.  Account was awaiting your approval.");
+        mail($AdminEmail['Email'],"New account created","The following email: " . $Email . " has been created.  Account is awaiting your approval.");
     }
     echo json_encode("refresh");
     $PDOconn = null;
@@ -414,7 +528,7 @@ function AddPet($Action){
     $Name = stripslashes($_POST["D1"]);
     $BreedID = stripslashes($_POST["D2"]);
     $Gender = stripslashes($_POST["D3"]);
-    $Disabled = 0;
+    $Disabled = 1;
     global $PDOconn;
     $Query = 'CALL AddPet (?, ?, ?, ?, ?)';
     $Statement = $PDOconn->prepare($Query);
@@ -426,21 +540,7 @@ function AddPet($Action){
     $Statement->execute();
     $ActivityMSG = "Your new pet " . $Name . " has been added.";
     AddActivity($Email,$ActivityMSG);
-    echo json_encode("refresh");
-    $PDOconn = null;
-}
-
-function AddBreed($Action){
-    $Email = ValidateSession($Action);
-    AdminRole($Email);
-    $Name = stripslashes($_POST["D1"]);
-    global $PDOconn;
-    $Query = 'CALL AddBreed (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Name, PDO::PARAM_STR, 45);
-    $Statement->execute();
-    $ActivityMSG = "You added " . $Name . " as a new Breed.";
-    AddActivity($Email,$ActivityMSG);
+    mail($Email,"Your pet was added","The following pet: " . $Name . " has been added.  Please go to this link (https://petsignin.alibkaba.com/petsignin/upload.html) URL to upload the necessary documentation of your pet requested from the pet policy: Pet Policy https://petsignin.alibkaba.com/petsignin/petpolicy.pdf");
     echo json_encode("refresh");
     $PDOconn = null;
 }
