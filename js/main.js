@@ -628,8 +628,8 @@ function ViewSignInPet(ResponseData){
 //Multiple use
 function IsFieldFilled(Field){
     if(Field == null || Field == ""){
-        alert('Please fill all required field.');
-        throw e = "Error: Please fill all required field";
+        alert('Please fill all of the fields.');
+        throw e = "Error: Please fill all of the fields.";
     }
 }
 
@@ -717,38 +717,38 @@ function ValidateEmailDomain(Email) {
     var re = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
     if (re.test(Email)) {
         if (Email.indexOf('@gmail.com', Email.length - '@gmail.com'.length) == -1) {
-            alert('Email must be a GMAIL e-mail address (your.name@gmail.com)');
-            throw e = "Email must be a GMAIL e-mail address (your.name@gmail.com)";
+            alert('Error: Please enter a valid GMAIL e-mail address (your.name@gmail.com).');
+            throw e = "Error: Please enter a valid GMAIL e-mail address (your.name@gmail.com).";
         }
     } else {
-        alert('Not a valid e-mail address');
-        throw e = "Not a valid e-mail address";
+        alert('Error: Not a valid e-mail address');
+        throw e = "Error: Not a valid e-mail address";
     }
 }
 
 function ValidatePassword(Email,Password){
     if(Password.length < 6) {
-        alert("Error: Password must contain at least six characters!");
-        throw e = "Error: Password must contain at least six characters!";
+        alert("Error: Password must contain at least six characters.");
+        throw e = "Error: Password must contain at least six characters.";
     }
     if(Password == Email) {
-        alert("Error: Password must be different from your email!");
-        throw e = "Error: Password must be different from your email!";
+        alert("Error: Password must be different from your email.");
+        throw e = "Error: Password must be different from your email.";
     }
     re = /[0-9]/;
     if(!re.test(Password)) {
-        alert("Error: password must contain at least one number (0-9)!");
-        throw e = "Error: password must contain at least one number (0-9)!";
+        alert("Error: password must contain at least one number (0-9).");
+        throw e = "Error: password must contain at least one number (0-9).";
     }
     re = /[a-z]/;
     if(!re.test(Password)) {
-        alert("Error: password must contain at least one lowercase letter (a-z)!");
-        throw e = "Error: password must contain at least one lowercase letter (a-z)!";
+        alert("Error: password must contain at least one lowercase letter (a-z).");
+        throw e = "Error: password must contain at least one lowercase letter (a-z).";
     }
     re = /[A-Z]/;
     if(!re.test(Password)) {
-        alert("Error: password must contain at least one uppercase letter (A-Z)!");
-        throw e = "Error: password must contain at least one uppercase letter (A-Z)!";
+        alert("Error: password must contain at least one uppercase letter (A-Z).");
+        throw e = "Error: password must contain at least one uppercase letter (A-Z).";
     }
 }
 

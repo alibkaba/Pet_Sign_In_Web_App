@@ -507,7 +507,7 @@ function AddAccount($Action){
     $Statement->execute();
     $ActivityMSG = "Your account was created.";
     AddActivity($Email,$ActivityMSG);
-    mail($Email,"Your account was created","The following email: " . $Email . " has been created.  The account will be activated by an Admin.  In the meantime, get familiar with the pet policy. https://petsignin.alibkaba.com/petsignin/petpolicy.pdf");
+    mail($Email,"Your account was created","The following email: " . $Email . " has been created.  The account will be activated by an Admin.  In the meantime, familiarize yourself with the pet policy. https://petsignin.alibkaba.com/petsignin/petpolicy.pdf");
     $AdminAccounts = FetchAdmins($Action);
     foreach ($AdminAccounts as $AdminEmail) {
         mail($AdminEmail['Email'],"New account created","The following email: " . $Email . " has been created.  Account is awaiting your approval.");
