@@ -35,28 +35,5 @@
     }
     ?>
 </form>
-
-<p>Update admin's password</p>
-<form action="#" method='post'>
-    Email: <input type="text" name="Email"><br>
-    Password: <input type="password" name="Password"><br>
-    <input type="submit" name="update" value="Submit" data-theme="b"/>
-    <?php
-    if(isset($_POST['update'])){
-        $Email = $_POST['Email'];
-        $Password = $_POST['Password'];
-        $HashedPassword = HashIt($Password);
-        global $PDOconn;
-        $Query = 'CALL UpdateAdminPassword (?,?)';
-        $Statement = $PDOconn->prepare($Query);
-        $Statement->bindParam(1, $HashedPassword, PDO::PARAM_STR, 255);
-        $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
-        $Statement->execute();
-        $PDOconn = null;
-        $MSG = "Password was changed.";
-        echo "<script type='text/javascript'>alert('$MSG'); window.location = \"/petsignin/admin.php\";</script>";
-    }
-    ?>
-</form>
 </body>
 </html>

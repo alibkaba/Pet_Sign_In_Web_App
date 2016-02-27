@@ -66,6 +66,28 @@ $(document).ready(function() {
         }
     });
 
+    $('#OldPassword1').change(function() {
+        var Old = document.getElementById("OldPassword").value;
+        var Old1 = document.getElementById("OldPassword1").value;
+        var New = document.getElementById("NewPassword").value;
+        if (Old != "" && Old1 != "" && New != "") {
+            document.getElementById("UpdatePasswordButton").disabled = false;
+        }else{
+            document.getElementById("UpdatePasswordButton").disabled = true;
+        }
+    });
+
+    $('#NewPassword').change(function() {
+        var Old = document.getElementById("OldPassword").value;
+        var Old1 = document.getElementById("OldPassword1").value;
+        var New = document.getElementById("NewPassword").value;
+        if (Old != "" && Old1 != "" && New != "") {
+            document.getElementById("UpdatePasswordButton").disabled = false;
+        }else{
+            document.getElementById("UpdatePasswordButton").disabled = true;
+        }
+    });
+
     $('#Email3').change(function() {
         var Email = document.getElementById("Email3").value;
         if (Email != "") {
@@ -193,15 +215,14 @@ $(document).ready(function() {
         var OldPassword = document.getElementById("OldPassword").value;
         var OldPassword1 = document.getElementById("OldPassword1").value;
         var NewPassword = document.getElementById("NewPassword").value;
-        IsFieldFilled(Email);
         IsFieldFilled(OldPassword);
         IsFieldFilled(OldPassword1);
         IsFieldFilled(NewPassword);
         if(OldPassword == OldPassword1 && OldPassword1 != NewPassword){
-            var Action = "ChangePassword";
-            PrepareAjax(Action,NewPassword);
+            var Action = "UpdatePassword";
+            PrepareAjax(Action,OldPassword,NewPassword);
         }else{
-            alert("An error occured because you either don't have match old passwords or your new password is the same as the old one.")
+            alert("Error 27: Your old passwords don't match and/or they match with your new password.")
         }
     });
 
@@ -245,7 +266,7 @@ $(document).ready(function() {
             var Action = "AddPet";
             PrepareAjax(Action,PetName,BreedID,Gender);
         }else{
-            alert("You already have a pet name " + PetName + ".  Pick a different name.")
+            alert("Error 51: You already have a pet name " + PetName + ".  Please pick a different name.")
         }
     });
 
@@ -313,6 +334,8 @@ $(document).ready(function() {
             document.getElementById("ViewGender").innerHTML = "";
             document.getElementById("ViewPetName").value = "";
         }else{
+            document.getElementById("AccountStatus").checked = false;
+            document.getElementById("PetStatus").checked = false;
             document.getElementById("AccountStatusLabel").style.backgroundColor = "transparent";
             document.getElementById("PetStatusLabel").style.backgroundColor = "transparent";
             document.getElementById("ViewPetName").style.backgroundColor = "transparent";
@@ -351,6 +374,7 @@ $(document).ready(function() {
             document.getElementById("ViewGender").innerHTML = "";
             document.getElementById("ViewPetName").value = "";
         }else{
+            document.getElementById("PetStatus").checked = false;
             document.getElementById("PetStatusLabel").style.backgroundColor = "transparent";
             document.getElementById("ViewPetName").style.backgroundColor = "transparent";
             document.getElementById("ViewBreed").style.backgroundColor = "transparent";
@@ -443,8 +467,12 @@ $(document).ready(function() {
         var AccountStatus = document.getElementById("HiddenValue9").value;
         var PetStatus = document.getElementById("HiddenValue8").value;
         var PetName = document.getElementById("ViewPetName").value;
-        var SelectedBreed = document.getElementById("ViewBreed");
-        var BreedID = SelectedBreed.options[SelectedBreed.selectedIndex].value;
+        if(typeof document.getElementById("ViewBreed" === "undefined")){
+            var BreedID = "";
+        }else{
+            var SelectedBreed = document.getElementById("ViewBreed");
+            var BreedID = SelectedBreed.options[SelectedBreed.selectedIndex].value;
+        }
         var Gender = document.getElementById("ViewGender").value;
         if(OldAccountStatus != AccountStatus){
             var Action = "UpdateAccountStatus";
@@ -501,7 +529,7 @@ function Fetch(Action,D1){
         var ErrorMSG = e;
         var FailedAction = Action;
         AddError(FailedAction,ErrorMSG);
-        alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        alert('Error 5: Oops, something went wrong.  Contact an administrator with this error message.');
     }
 }
 
@@ -628,8 +656,8 @@ function ViewSignInPet(ResponseData){
 //Multiple use
 function IsFieldFilled(Field){
     if(Field == null || Field == ""){
-        alert('Please fill all of the fields.');
-        throw e = "Error: Please fill all of the fields.";
+        alert('Error 26: Please fill all of the fields.');
+        throw e = "Error 26: Please fill all of the fields.";
     }
 }
 
@@ -717,38 +745,38 @@ function ValidateEmailDomain(Email) {
     var re = /^\s*[\w\-\+_]+(\.[\w\-\+_]+)*\@[\w\-\+_]+\.[\w\-\+_]+(\.[\w\-\+_]+)*\s*$/;
     if (re.test(Email)) {
         if (Email.indexOf('@gmail.com', Email.length - '@gmail.com'.length) == -1) {
-            alert('Error: Please enter a valid GMAIL e-mail address (your.name@gmail.com).');
-            throw e = "Error: Please enter a valid GMAIL e-mail address (your.name@gmail.com).";
+            alert('Error 10: Please enter a valid GMAIL e-mail address (your.name@gmail.com).');
+            throw e = "Error 10: Please enter a valid GMAIL e-mail address (your.name@gmail.com).";
         }
     } else {
-        alert('Error: Not a valid e-mail address');
-        throw e = "Error: Not a valid e-mail address";
+        alert('Error 11: Not a valid e-mail address.');
+        throw e = "Error 11: Not a valid e-mail address.";
     }
 }
 
 function ValidatePassword(Email,Password){
     if(Password.length < 6) {
-        alert("Error: Password must contain at least six characters.");
-        throw e = "Error: Password must contain at least six characters.";
+        alert("Error 20: Password must contain at least six characters.");
+        throw e = "Error 20: Password must contain at least six characters.";
     }
     if(Password == Email) {
-        alert("Error: Password must be different from your email.");
-        throw e = "Error: Password must be different from your email.";
+        alert("Error 21: Password must be different from your email.");
+        throw e = "Error 21: Password must be different from your email.";
     }
     re = /[0-9]/;
     if(!re.test(Password)) {
-        alert("Error: password must contain at least one number (0-9).");
-        throw e = "Error: password must contain at least one number (0-9).";
+        alert("Error 22: password must contain at least one number (0-9).");
+        throw e = "Error 22: password must contain at least one number (0-9).";
     }
     re = /[a-z]/;
     if(!re.test(Password)) {
-        alert("Error: password must contain at least one lowercase letter (a-z).");
-        throw e = "Error: password must contain at least one lowercase letter (a-z).";
+        alert("Error 23: password must contain at least one lowercase letter (a-z).");
+        throw e = "Error 23: password must contain at least one lowercase letter (a-z).";
     }
     re = /[A-Z]/;
     if(!re.test(Password)) {
-        alert("Error: password must contain at least one uppercase letter (A-Z).");
-        throw e = "Error: password must contain at least one uppercase letter (A-Z).";
+        alert("Error 24: password must contain at least one uppercase letter (A-Z).");
+        throw e = "Error 24: password must contain at least one uppercase letter (A-Z).";
     }
 }
 
@@ -781,7 +809,7 @@ function PrepareAjax(Action,D1,D2,D3,D4,D5,D6,D7,D8,D9){
         var ErrorMSG = e;
         var FailedAction = Action;
         AddError(FailedAction,ErrorMSG);
-        alert('Oops, something broke.  Take note of the steps you took to get this error and email it to admin@company.com for help.');
+        alert('Error 1: Oops, something went wrong.  Contact an administrator with this error message.');
 
     }
 }
@@ -800,19 +828,27 @@ function JSOperation(Action, ResponseData){
     console.log(ResponseData);
     switch(ResponseData) {
         case "locked":
-            alert("This account has been locked.  Reset your account or contact the administrator.");
+            alert("Error 89: This account has been locked.  Reset your account or contact the administrator.");
             break;
         case "notlocked":
-            alert("Your account will be locked out soon.");
+            alert("Error 87: Your account will be locked out soon.");
             break;
         case "invalid":
-            alert("Invalid email and/or password.  If you forgot your password, reset it.");
+            alert("Error 25: Invalid email and/or password.  If you forgot your password, reset it.");
             break;
         case "notactive":
-            alert("Your account is not activate.  Wait or contact an Admin.");
+            alert("Error 15: Your account is not activate.  Wait or contact an Admin.");
             break;
         case "none":
-            alert("This account doesn't exist.  Please click on \"Register for a new account\"");
+            alert("Error 19: This account doesn't exist.  Please click on \"Register for a new account\".");
+            break;
+        case "pupdated":
+            alert("Password was updated.");
+            window.location = "/petsignin/";
+            break;
+        case "xupdated":
+            alert("Error 28: Your old passwords don't match and/or they match with your new password.");
+            window.location = "/petsignin/";
             break;
         case "refresh":
             window.location = "/petsignin/";
@@ -827,11 +863,11 @@ function JSOperation(Action, ResponseData){
             Visitor();
             break;
         case "expired":
-            alert("Your session expired, please sign in again.");
+            alert("Error 99: Your session expired, please sign in again.");
             window.location = "/petsignin/";
             break;
         case "breedexist":
-            alert("The breed already exist.");
+            alert("Error 50: This breed already exist.");
             break;
         default:
             JSOperation2(Action,ResponseData);
@@ -863,7 +899,7 @@ function JSOperation2(Action,ResponseData){
             ViewPetStatus(ResponseData);
             break;
         default:
-            alert("nothing!");
+            alert("Error 9: Oops, something went wrong.  Contact an administrator with this error message.!");
     }
 }
 
