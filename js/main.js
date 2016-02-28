@@ -529,7 +529,7 @@ function Fetch(Action,D1){
         var ErrorMSG = e;
         var FailedAction = Action;
         AddError(FailedAction,ErrorMSG);
-        alert('Error 5: Oops, something went wrong.  Contact an administrator with this error message.');
+        alert('Error 3: Oops, something went wrong.  Contact an administrator with this error message.');
     }
 }
 
@@ -899,7 +899,7 @@ function JSOperation2(Action,ResponseData){
             ViewPetStatus(ResponseData);
             break;
         default:
-            alert("Error 9: Oops, something went wrong.  Contact an administrator with this error message.!");
+            alert("Error 2: Oops, something went wrong.  Contact an administrator with this error message.!");
     }
 }
 
