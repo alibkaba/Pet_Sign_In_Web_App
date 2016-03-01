@@ -21,7 +21,6 @@ $(document).ready(function() {
         IsFieldFilled(Email);
         IsFieldFilled(Password);
         ValidateEmailDomain(Email);
-        ValidatePassword(Email,Password);
         var Action = "SignIn";
         PrepareAjax(Action,Email,Password);
     });
@@ -43,18 +42,17 @@ $(document).ready(function() {
         document.getElementById("RegisterButton").disabled = true;
     });
 
+    //UpdatePasswordButton
     $('#ChangePasswordButton').click(function() {
         document.getElementById("OldPassword").value = "";
         document.getElementById("OldPassword1").value = "";
         document.getElementById("NewPassword").value = "";
         document.getElementById("UpdatePasswordButton").disabled = true;
+        var Action = "FetchUserEmail";
+        PrepareAjax(Action);
     });
 
-    $('#ResetAccount').click(function() {
-        document.getElementById("Email3").value = "";
-        document.getElementById("ResetPassword").disabled = true;
-    });
-
+    //UpdatePasswordButton
     $('#OldPassword').change(function() {
         var Old = document.getElementById("OldPassword").value;
         var Old1 = document.getElementById("OldPassword1").value;
@@ -65,7 +63,7 @@ $(document).ready(function() {
             document.getElementById("UpdatePasswordButton").disabled = true;
         }
     });
-
+    //UpdatePasswordButton
     $('#OldPassword1').change(function() {
         var Old = document.getElementById("OldPassword").value;
         var Old1 = document.getElementById("OldPassword1").value;
@@ -76,7 +74,7 @@ $(document).ready(function() {
             document.getElementById("UpdatePasswordButton").disabled = true;
         }
     });
-
+    //UpdatePasswordButton
     $('#NewPassword').change(function() {
         var Old = document.getElementById("OldPassword").value;
         var Old1 = document.getElementById("OldPassword1").value;
@@ -88,6 +86,31 @@ $(document).ready(function() {
         }
     });
 
+    //UpdatePasswordButton
+    $("#UpdatePasswordButton").click(function() {
+        var OldPassword = document.getElementById("OldPassword").value;
+        var OldPassword1 = document.getElementById("OldPassword1").value;
+        var NewPassword = document.getElementById("NewPassword").value;
+        var Email = document.getElementById("HiddenValue1").value;
+        IsFieldFilled(OldPassword);
+        IsFieldFilled(OldPassword1);
+        IsFieldFilled(NewPassword);
+        if(OldPassword == OldPassword1 && OldPassword1 != NewPassword){
+            ValidatePassword(Email,NewPassword);
+            var Action = "UpdatePassword";
+            PrepareAjax(Action,OldPassword,NewPassword);
+        }else{
+            alert("Error 27: Your old passwords don't match and/or they match with your new password.")
+        }
+    });
+
+    //ResetPassword
+    $('#ResetAccount').click(function() {
+        document.getElementById("Email3").value = "";
+        document.getElementById("ResetPassword").disabled = true;
+    });
+
+    //ResetPassword
     $('#Email3').change(function() {
         var Email = document.getElementById("Email3").value;
         if (Email != "") {
@@ -97,6 +120,7 @@ $(document).ready(function() {
         }
     });
 
+    //RegisterButton
     $('input[type=radio][name=accounttnc]').change(function() {
         if (this.value == "yes") {
             document.getElementById("RegisterButton").disabled = false;
@@ -208,21 +232,6 @@ $(document).ready(function() {
         }else{
             document.getElementById("AddNewBreed").style.backgroundColor = "lightgreen";
             document.getElementById("AddBreedButton").disabled = false;
-        }
-    });
-
-    $("#UpdatePasswordButton").click(function() {
-        var OldPassword = document.getElementById("OldPassword").value;
-        var OldPassword1 = document.getElementById("OldPassword1").value;
-        var NewPassword = document.getElementById("NewPassword").value;
-        IsFieldFilled(OldPassword);
-        IsFieldFilled(OldPassword1);
-        IsFieldFilled(NewPassword);
-        if(OldPassword == OldPassword1 && OldPassword1 != NewPassword){
-            var Action = "UpdatePassword";
-            PrepareAjax(Action,OldPassword,NewPassword);
-        }else{
-            alert("Error 27: Your old passwords don't match and/or they match with your new password.")
         }
     });
 
@@ -546,6 +555,7 @@ function ViewAccountStatus (ResponseData){
     }
 }
 
+//UpdateAccountButton
 function ViewPetStatus (ResponseData){
     document.getElementById("PetStatus").disabled = false;
     if(ResponseData.Disabled == 0){
@@ -557,6 +567,11 @@ function ViewPetStatus (ResponseData){
         document.getElementById("PetStatus").value = 1;
         document.getElementById("HiddenValue8").value = 1;
     }
+}
+
+//UpdatePasswordButton
+function ViewSessionEmail (ResponseData){
+    document.getElementById("HiddenValue1").value = ResponseData;
 }
 
 //ViewAccountsModal
@@ -755,9 +770,9 @@ function ValidateEmailDomain(Email) {
 }
 
 function ValidatePassword(Email,Password){
-    if(Password.length < 6) {
-        alert("Error 20: Password must contain at least six characters.");
-        throw e = "Error 20: Password must contain at least six characters.";
+    if(Password.length < 8 || Password.length > 15) {
+        alert("Error 20: Password must be between 8 and 15 characters long.");
+        throw e = "Error 20: Password must be between 8 and 15 characters long.";
     }
     if(Password == Email) {
         alert("Error 21: Password must be different from your email.");
@@ -765,18 +780,18 @@ function ValidatePassword(Email,Password){
     }
     re = /[0-9]/;
     if(!re.test(Password)) {
-        alert("Error 22: password must contain at least one number (0-9).");
-        throw e = "Error 22: password must contain at least one number (0-9).";
+        alert("Error 22: Password must contain at least one number (0-9).");
+        throw e = "Error 22: Password must contain at least one number (0-9).";
     }
     re = /[a-z]/;
     if(!re.test(Password)) {
-        alert("Error 23: password must contain at least one lowercase letter (a-z).");
-        throw e = "Error 23: password must contain at least one lowercase letter (a-z).";
+        alert("Error 23: Password must contain at least one lowercase letter (a-z).");
+        throw e = "Error 23: Password must contain at least one lowercase letter (a-z).";
     }
     re = /[A-Z]/;
     if(!re.test(Password)) {
-        alert("Error 24: password must contain at least one uppercase letter (A-Z).");
-        throw e = "Error 24: password must contain at least one uppercase letter (A-Z).";
+        alert("Error 24: Password must contain at least one uppercase letter (A-Z).");
+        throw e = "Error 24: Password must contain at least one uppercase letter (A-Z).";
     }
 }
 
@@ -897,6 +912,9 @@ function JSOperation2(Action,ResponseData){
             break;
         case "FetchPetStatus":
             ViewPetStatus(ResponseData);
+            break;
+        case "FetchUserEmail":
+            ViewSessionEmail(ResponseData);
             break;
         default:
             alert("Error 2: Oops, something went wrong.  Contact an administrator with this error message.!");

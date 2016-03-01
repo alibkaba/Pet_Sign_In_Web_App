@@ -1,8 +1,5 @@
 <html>
 <body>
-<p>Due to the password encryption, you must create your Super Admins in this page and immediately delete this admin.php from your web directory.  (the page doesn't have to be called admin)</p>
-<p>The email doesn't have to be a working one but it needs to have the correct email extension.</p>
-
 <p>Create Admin</p>
 <form action="#" method='post'>
     Email: <input type="text" name="Email"><br>
@@ -31,7 +28,7 @@
         $Statement->execute();
         $MSG = "Super Admin created.";
         $PDOconn = null;
-        echo "<script type='text/javascript'>alert('$MSG'); window.location = \"/petsignin/admin.php\";</script>";
+        echo "<script type='text/javascript'>alert('$MSG'); window.location = \"/petsignin/sa/admin.php\";</script>";
     }
     ?>
 </form>

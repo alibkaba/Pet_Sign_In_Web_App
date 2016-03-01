@@ -3,7 +3,6 @@ require_once('db.php');
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-
 ValidateAjaxRequest();
 
 function ValidateAjaxRequest() {
@@ -75,6 +74,8 @@ function PHPOperation($Action){
             break;
         case "FetchPetNameCount": FetchPetNameCount($Action);
             break;
+        case "FetchUserEmail": FetchUserEmail($Action);
+            break;
     }
 }
 
@@ -86,6 +87,206 @@ function Execute($Action,$Statement){
         $PHP = 1;
         AddError($Action,$ErrorMSG,$PHP);
     }
+}
+
+function AdminRole($Action,$Email){
+    $Role = FetchAccountRole($Action,$Email);
+    if($Role != 2){
+        echo json_encode("expired");
+        exit;
+    }
+}
+
+function UserRole($Action,$Email){
+    $Role = FetchAccountRole($Action,$Email);
+    if($Role != 1){
+        echo json_encode("expired");
+        exit;
+    }
+}
+
+function AddActivity($Action,$Email,$ActivityMSG){
+    global $PDOconn;
+    $Query = 'CALL AddActivity (?, ?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    $Statement->bindParam(2, $ActivityMSG, PDO::PARAM_STR, 255);
+    Execute($Action,$Statement);
+}
+
+function HashIt($Password){
+    $HashedPassword = password_hash($Password, PASSWORD_DEFAULT);
+    return $HashedPassword;
+}
+
+function FetchUser($Action,$Email){
+    global $PDOconn;
+    $Query = 'CALL FetchUser (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    Execute($Action,$Statement);
+    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
+    return $Response;
+}
+
+function FetchAdmins($Action){
+    global $PDOconn;
+    $Query = 'CALL FetchAdmins';
+    $Statement = $PDOconn->prepare($Query);
+    Execute($Action,$Statement);
+    $Response = $Statement->fetchAll();
+    return $Response;
+}
+
+function ValidatePassword($Password,$HashedPassword){
+    if (password_verify($Password, $HashedPassword)) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+function FetchAccountRole($Action,$Email){
+    global $PDOconn;
+    $Query = 'CALL FetchAccountRole (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
+    Execute($Action,$Statement);
+    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
+    if($Response['Disabled'] == 0 && $Response['Attempt'] == 0){
+        if($Response['AdminCode'] == 2){
+            $AccountRole = 2;//admin
+        }else{
+            $AccountRole = 1;//registered user
+        }
+    }else{
+        session_unset();
+        session_destroy();
+        $AccountRole = 0;//user
+    }
+    return $AccountRole;
+}
+
+function FetchSession($Action,$SessionID){
+    global $PDOconn;
+    $Query = 'CALL FetchSession (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
+    Execute($Action,$Statement);
+    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
+    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
+    return $Response;
+}
+
+function PasswordGenerator(){
+    //https://www.catchstudio.com/labs/password-generator/
+    //$Password = hash('sha256', uniqid(rand(), true));
+    // Characters to use for the password
+    $Strings = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-+=_,!@$#*%<>[]{}";
+
+    // Desired length of the password
+    $PasswordLength = 12;
+
+    // Length of the string to take characters from
+    $StringLength = strlen($Strings);
+
+    // RANDOM.ORG - We are pulling our list of random numbers as a
+    // single request, instead of iterating over each character individually
+    $uri = "http://www.random.org/integers/?";
+    $Random = file_get_contents(
+        $uri ."num=$PasswordLength&min=0&max=".($StringLength-1)."&col=1&base=10&format=plain&rnd=new"
+    );
+    $Indexes = explode("\n", $Random);
+    array_pop($Indexes);
+
+    // We now have an array of random indexes which we will use to build our password
+    $Password = '';
+    foreach ($Indexes as $int){
+        $Password .= substr($Strings, $int, 1);
+    }
+
+    return $Password;
+}
+
+function GetBrowserData(){
+    $SessionIP = $_SERVER['REMOTE_ADDR'];
+    $u_agent = $_SERVER['HTTP_USER_AGENT'];
+    $BrowserName = 'Unknown';
+    $Platform = 'Unknown';
+
+    if (preg_match('/linux/i', $u_agent)) {
+        $Platform = 'Linux';
+    }
+    elseif (preg_match('/macintosh|mac os x/i', $u_agent)) {
+        $Platform = 'Mac';
+    }
+    elseif (preg_match('/windows|win32/i', $u_agent)) {
+        $Platform = 'Windows';
+    }
+
+    // Next get the name of the useragent yes seperately and for refresh reason
+    if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent))
+    {
+        $BrowserName = 'Internet Explorer';
+    }
+    elseif(preg_match('/Firefox/i',$u_agent))
+    {
+        $BrowserName = 'Mozilla Firefox';
+    }
+    elseif(preg_match('/Chrome/i',$u_agent))
+    {
+        $BrowserName = 'Google Chrome';
+    }
+    elseif(preg_match('/Safari/i',$u_agent))
+    {
+        $BrowserName = 'Apple Safari';
+    }
+    elseif(preg_match('/Opera/i',$u_agent))
+    {
+        $BrowserName = 'Opera';
+    }
+    elseif(preg_match('/Netscape/i',$u_agent))
+    {
+        $BrowserName = 'Netscape';
+    }
+
+    return array(
+        'IP' => $SessionIP,
+        'Browser' => $BrowserName,
+        'Platform' => $Platform
+    );
+}
+
+//Single use
+function UnitTest($Action){
+    global $PDOconn;
+    $Query = 'CALL UTCreate';
+    $Statement = $PDOconn->prepare($Query);
+    Execute($Action,$Statement);
+
+    $UTValue = "1";
+    $Query = 'CALL UTInsert (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $UTValue, PDO::PARAM_INT);
+    Execute($Action,$Statement);
+
+    $UpdatedUTValue = "2";
+    $Query = 'CALL UTUpdate (?, ?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $UpdatedUTValue, PDO::PARAM_INT);
+    $Statement->bindParam(2, $UTValue, PDO::PARAM_INT);
+    Execute($Action,$Statement);
+
+    $Query = 'CALL UTDelete (?)';
+    $Statement = $PDOconn->prepare($Query);
+    $Statement->bindParam(1, $UpdatedValue, PDO::PARAM_INT);
+    Execute($Action,$Statement);
+
+    $Query = 'CALL UTDrop';
+    $Statement = $PDOconn->prepare($Query);
+    Execute($Action,$Statement);
+    echo json_encode("Unit Test successful");//do I need try and catch for unit test? do I need to fetch?
+    $PDOconn = null;
 }
 
 function AddError($Action,$ErrorMSG,$PHP){
@@ -124,7 +325,7 @@ function UpdateAccountStatus($Action){
         $ActivityMSG = "Your account was activated by an Admin.";
         AddActivity($Action,$Email,$ActivityMSG);
         mail($Email,"Account activated","Your account was activated by an Admin.");
-        $ActivityMSG = "You activated " . $Email . "'s account";
+        $ActivityMSG = "You activated " . $Email . "'s account.";
         AddActivity($Action,$AdminEmail,$ActivityMSG);
     }else{
         $ActivityMSG = "Your account was dis-activated by an Admin.";
@@ -275,68 +476,6 @@ function AddBreed($Action){
     }
 }
 
-function AdminRole($Action,$Email){
-    $Role = FetchAccountRole($Action,$Email);
-    if($Role != 2){
-        echo json_encode("expired");
-        exit;
-    }
-}
-
-function UserRole($Action,$Email){
-    $Role = FetchAccountRole($Action,$Email);
-    if($Role != 1){
-        echo json_encode("expired");
-        exit;
-    }
-}
-
-function AddActivity($Action,$Email,$ActivityMSG){
-    global $PDOconn;
-    $Query = 'CALL AddActivity (?, ?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    $Statement->bindParam(2, $ActivityMSG, PDO::PARAM_STR, 255);
-    Execute($Action,$Statement);
-}
-
-function HashIt($Password){
-    $HashedPassword = password_hash($Password, PASSWORD_DEFAULT);
-    return $HashedPassword;
-}
-
-//Single use
-function UnitTest($Action){
-    global $PDOconn;
-    $Query = 'CALL UTCreate';
-    $Statement = $PDOconn->prepare($Query);
-    Execute($Action,$Statement);
-
-    $UTValue = "1";
-    $Query = 'CALL UTInsert (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $UTValue, PDO::PARAM_INT);
-    Execute($Action,$Statement);
-
-    $UpdatedUTValue = "2";
-    $Query = 'CALL UTUpdate (?, ?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $UpdatedUTValue, PDO::PARAM_INT);
-    $Statement->bindParam(2, $UTValue, PDO::PARAM_INT);
-    Execute($Action,$Statement);
-
-    $Query = 'CALL UTDelete (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $UpdatedValue, PDO::PARAM_INT);
-    Execute($Action,$Statement);
-
-    $Query = 'CALL UTDrop';
-    $Statement = $PDOconn->prepare($Query);
-    Execute($Action,$Statement);
-    echo json_encode("Unit Test successful");//do I need try and catch for unit test? do I need to fetch?
-    $PDOconn = null;
-}
-
 function AddAttempt($Action,$UserData,$Email){
     $NewAttempt = $UserData['Attempt'];
     $NewAttempt++;
@@ -346,14 +485,6 @@ function AddAttempt($Action,$UserData,$Email){
     $Statement->bindParam(1, $NewAttempt, PDO::PARAM_INT, 1);
     $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
     Execute($Action,$Statement);
-}
-
-function ValidatePassword($Password,$HashedPassword){
-    if (password_verify($Password, $HashedPassword)) {
-        return 1;
-    } else {
-        return 0;
-    }
 }
 
 function SignIn($Action){
@@ -458,36 +589,6 @@ function ResetPassword($Action){
     }
 }
 
-function PasswordGenerator(){
-    //https://www.catchstudio.com/labs/password-generator/
-    //$Password = hash('sha256', uniqid(rand(), true));
-    // Characters to use for the password
-    $Strings = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-+=_,!@$#*%<>[]{}";
-
-    // Desired length of the password
-    $PasswordLength = 12;
-
-    // Length of the string to take characters from
-    $StringLength = strlen($Strings);
-
-    // RANDOM.ORG - We are pulling our list of random numbers as a
-    // single request, instead of iterating over each character individually
-    $uri = "http://www.random.org/integers/?";
-    $Random = file_get_contents(
-        $uri ."num=$PasswordLength&min=0&max=".($StringLength-1)."&col=1&base=10&format=plain&rnd=new"
-    );
-    $Indexes = explode("\n", $Random);
-    array_pop($Indexes);
-
-    // We now have an array of random indexes which we will use to build our password
-    $Password = '';
-    foreach ($Indexes as $int){
-        $Password .= substr($Strings, $int, 1);
-    }
-
-    return $Password;
-}
-
 function SignInPet($Action){
     $Email = ValidateSession($Action);
     $Name = stripslashes($_POST["D1"]);
@@ -554,15 +655,6 @@ function AddAccount($Action){
     $PDOconn = null;
 }
 
-function FetchAdmins($Action){
-    global $PDOconn;
-    $Query = 'CALL FetchAdmins';
-    $Statement = $PDOconn->prepare($Query);
-    Execute($Action,$Statement);
-    $Response = $Statement->fetchAll();
-    return $Response;
-}
-
 function AddPet($Action){
     $Email = ValidateSession($Action);
     $Name = stripslashes($_POST["D1"]);
@@ -607,16 +699,6 @@ function FetchErrors($Action){
     $Response = $Statement->fetchAll();
     echo json_encode($Response);
     $PDOconn = null;
-}
-
-function FetchUser($Action,$Email){
-    global $PDOconn;
-    $Query = 'CALL FetchUser (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    Execute($Action,$Statement);
-    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
-    return $Response;
 }
 
 function FetchSignInPet($Action){
@@ -765,35 +847,9 @@ function ValidateSession($Action){
     }
 }
 
-function FetchAccountRole($Action,$Email){
-    global $PDOconn;
-    $Query = 'CALL FetchAccountRole (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
-    Execute($Action,$Statement);
-    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
-    if($Response['Disabled'] == 0 && $Response['Attempt'] == 0){
-        if($Response['AdminCode'] == 2){
-            $AccountRole = 2;//admin
-        }else{
-            $AccountRole = 1;//registered user
-        }
-    }else{
-        session_unset();
-        session_destroy();
-        $AccountRole = 0;//user
-    }
-    return $AccountRole;
-}
-
-function FetchSession($Action,$SessionID){
-    global $PDOconn;
-    $Query = 'CALL FetchSession (?)';
-    $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
-    Execute($Action,$Statement);
-    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
-    return $Response;
+function FetchUserEmail($Action){
+    $Email = ValidateSession($Action);
+    echo json_encode($Email);
 }
 
 function AddSession($Action,$Email){
@@ -820,53 +876,4 @@ function StartSession(){
     ini_set('session.cookie_lifetime', 1800);
     ini_set('session.gc_maxlifetime', 1800);
     session_start();
-}
-
-function GetBrowserData(){
-    $SessionIP = $_SERVER['REMOTE_ADDR'];
-    $u_agent = $_SERVER['HTTP_USER_AGENT'];
-    $BrowserName = 'Unknown';
-    $Platform = 'Unknown';
-
-    if (preg_match('/linux/i', $u_agent)) {
-        $Platform = 'Linux';
-    }
-    elseif (preg_match('/macintosh|mac os x/i', $u_agent)) {
-        $Platform = 'Mac';
-    }
-    elseif (preg_match('/windows|win32/i', $u_agent)) {
-        $Platform = 'Windows';
-    }
-
-    // Next get the name of the useragent yes seperately and for refresh reason
-    if(preg_match('/MSIE/i',$u_agent) && !preg_match('/Opera/i',$u_agent))
-    {
-        $BrowserName = 'Internet Explorer';
-    }
-    elseif(preg_match('/Firefox/i',$u_agent))
-    {
-        $BrowserName = 'Mozilla Firefox';
-    }
-    elseif(preg_match('/Chrome/i',$u_agent))
-    {
-        $BrowserName = 'Google Chrome';
-    }
-    elseif(preg_match('/Safari/i',$u_agent))
-    {
-        $BrowserName = 'Apple Safari';
-    }
-    elseif(preg_match('/Opera/i',$u_agent))
-    {
-        $BrowserName = 'Opera';
-    }
-    elseif(preg_match('/Netscape/i',$u_agent))
-    {
-        $BrowserName = 'Netscape';
-    }
-
-    return array(
-        'IP' => $SessionIP,
-        'Browser' => $BrowserName,
-        'Platform' => $Platform
-    );
 }
