@@ -18,8 +18,8 @@ $(document).ready(function() {
     $("#SignInButton").click(function() {
         var Email = document.getElementById("Email1").value;
         var Password = document.getElementById("Password1").value;
-        IsFieldFilled(Email);
-        IsFieldFilled(Password);
+        CheckRequiredField(Email);
+        CheckRequiredField(Password);
         ValidateEmailDomain(Email);
         var Action = "SignIn";
         PrepareAjax(Action,Email,Password);
@@ -92,9 +92,9 @@ $(document).ready(function() {
         var OldPassword1 = document.getElementById("OldPassword1").value;
         var NewPassword = document.getElementById("NewPassword").value;
         var Email = document.getElementById("HiddenValue1").value;
-        IsFieldFilled(OldPassword);
-        IsFieldFilled(OldPassword1);
-        IsFieldFilled(NewPassword);
+        CheckRequiredField(OldPassword);
+        CheckRequiredField(OldPassword1);
+        CheckRequiredField(NewPassword);
         if(OldPassword == OldPassword1 && OldPassword1 != NewPassword){
             ValidatePassword(Email,NewPassword);
             var Action = "UpdatePassword";
@@ -145,7 +145,7 @@ $(document).ready(function() {
 
     $("#ResetPassword").click(function() {
         var Email = document.getElementById("Email3").value;
-        IsFieldFilled(Email);
+        CheckRequiredField(Email);
         var Action = "ResetPassword";
         PrepareAjax(Action,Email);
     });
@@ -243,8 +243,8 @@ $(document).ready(function() {
     $("#RegisterButton").click(function() {
         var Email = document.getElementById("Email2").value;
         var Password = document.getElementById("Password2").value;
-        IsFieldFilled(Email);
-        IsFieldFilled(Password);
+        CheckRequiredField(Email);
+        CheckRequiredField(Password);
         ValidateEmailDomain(Email);
         ValidatePassword(Email,Password);
         var Action = "AddAccount";
@@ -266,9 +266,9 @@ $(document).ready(function() {
         var PetName = document.getElementById("PetName").value;
         var BreedID = document.getElementById("ViewBreeds").value;
         var Gender = document.getElementById("ViewGenders").value;
-        IsFieldFilled(PetName);
-        IsFieldFilled(BreedID);
-        IsFieldFilled(Gender);
+        CheckRequiredField(PetName);
+        CheckRequiredField(BreedID);
+        CheckRequiredField(Gender);
         var Action = "FetchPetNameCount";
         var ResponseData = Fetch(Action,PetName);
         if(ResponseData['Count'] == 0){
@@ -669,7 +669,7 @@ function ViewSignInPet(ResponseData){
 }
 
 //Multiple use
-function IsFieldFilled(Field){
+function CheckRequiredField(Field){
     if(Field == null || Field == ""){
         alert('Error 26: Please fill all of the fields.');
         throw e = "Error 26: Please fill all of the fields.";
