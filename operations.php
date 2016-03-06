@@ -493,27 +493,19 @@ function SignIn($Action){
     if(!empty($UserData['Email'])){
         $HashedPassword = $UserData['Password'];
         $PasswordResponse = ValidatePassword($Password,$HashedPassword);
-        if($Email == $UserData['Email'] && $PasswordResponse == 1){
-            if($UserData['Attempt'] < 5){
-                if($UserData['Disabled'] == 0) {
-                    ResetAttempt($Action,$Email);
-                    DeleteSession($Action,$Email);
-                    $ActivityMSG = "You signed in.";
-                    AddActivity($Action,$Email,$ActivityMSG);
-                    AddSession($Action,$Email);
-                    echo json_encode("refresh");
-                    $PDOconn = null;
-                }else{
-                    AddAttempt($Action,$UserData,$Email);
-                    $ActivityMSG = "You attempted to sign in but your account wasn't activated by an admin yet.";
-                    AddActivity($Action,$Email,$ActivityMSG);
-                    echo json_encode("notactive");
-                    $PDOconn = null;
-                }
-            }else{
-                $ActivityMSG = "Account was locked out due to multiple sign in attempts.";
+        if($Email == $UserData['Email'] && $PasswordResponse == 1 && $UserData['Attempt'] < 5){
+            if($UserData['Disabled'] == 0) {
+                ResetAttempt($Action,$Email);
+                DeleteSession($Action,$Email);
+                AddSession($Action,$Email);
+                $ActivityMSG = "You signed in.";
                 AddActivity($Action,$Email,$ActivityMSG);
-                echo json_encode("locked");
+                echo json_encode("refresh");
+                $PDOconn = null;
+            }else{
+                $ActivityMSG = "You attempted to sign in but your account wasn't activated by an admin yet.";
+                AddActivity($Action,$Email,$ActivityMSG);
+                echo json_encode("notactive");
                 $PDOconn = null;
             }
         }else{
@@ -545,22 +537,17 @@ function UpdatePassword($Action){
     $PasswordResponse = ValidatePassword($OldPassword,$HashedPassword);
     if($Email == $UserData['Email'] && $PasswordResponse == 1){
         $NewHashedPassword = HashIt($NewPassword);
-        $PasswordResponse = ValidatePassword($NewHashedPassword,$HashedPassword);
-        if($PasswordResponse == 0) {
-            global $PDOconn;
-            $Query = 'CALL UpdatePassword (?, ?)';
-            $Statement = $PDOconn->prepare($Query);
-            $Statement->bindParam(1, $NewHashedPassword, PDO::PARAM_STR, 64);
-            $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
-            Execute($Action, $Statement);
-            mail($Email, "Password was changed", "Your password was changed.");
-            $ActivityMSG = "Your password was changed.";
-            AddActivity($Action, $Email, $ActivityMSG);
-            echo json_encode("pupdated");
-            $PDOconn = null;
-        }else{
-            echo json_encode("xupdated");
-        }
+        global $PDOconn;
+        $Query = 'CALL UpdatePassword (?, ?)';
+        $Statement = $PDOconn->prepare($Query);
+        $Statement->bindParam(1, $NewHashedPassword, PDO::PARAM_STR, 64);
+        $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
+        Execute($Action, $Statement);
+        $ActivityMSG = "Your password was changed.";
+        AddActivity($Action, $Email, $ActivityMSG);
+        mail($Email, "Password was changed", "Your password was changed.");
+        echo json_encode("pupdated");
+        $PDOconn = null;
     }else{
         echo json_encode("xupdated");
     }
@@ -578,9 +565,9 @@ function ResetPassword($Action){
         $Statement->bindParam(1, $HashedPassword, PDO::PARAM_STR, 64);
         $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
         Execute($Action, $Statement);
-        mail($Email, "Password was reset", "Your password was reset to " . $Password . ".");
         $ActivityMSG = "Your password was changed.";
         AddActivity($Action, $Email, $ActivityMSG);
+        mail($Email, "Password was reset", "Your password was reset to " . $Password . ".");
         echo json_encode("refresh");
         $PDOconn = null;
     }else{

@@ -11,6 +11,7 @@
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
     if(isset($_POST['add'])){
+        $Action = "admin.php";
         $Email = $_POST['Email'];
         $Password = $_POST['Password'];
         $HashedPassword = HashIt($Password);
