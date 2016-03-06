@@ -167,13 +167,12 @@ function FetchAccountRole($Action,$Email){
     return $AccountRole;
 }
 
-function FetchSession($Action,$SessionID){
+function FetchSession($Action,$AliID){
     global $PDOconn;
     $Query = 'CALL FetchSession (?)';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
+    $Statement->bindParam(1, $AliID, PDO::PARAM_STR, 64);
     Execute($Action,$Statement);
-    $Response = $Statement->fetch(PDO::FETCH_ASSOC);
     $Response = $Statement->fetch(PDO::FETCH_ASSOC);
     return $Response;
 }
@@ -306,7 +305,7 @@ function AddError($Action,$ErrorMSG,$PHP){
     $Statement->bindParam(1, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(2, $FailedAction, PDO::PARAM_STR, 45);
     $Statement->bindParam(3, $ErrorMSG, PDO::PARAM_STR, 255);
-    Execute($Action,$Statement);
+    $Statement->execute();
     $PDOconn = null;
 }
 
@@ -819,9 +818,9 @@ function SignOut($Action){
 
 function ValidateSession($Action){
     StartSession();
-    if(isset($_SESSION['Session_ID'])){
-        $SessionID = $_SESSION["Session_ID"];
-        $SessionData = FetchSession($Action,$SessionID);
+    if(isset($_SESSION['AliID'])){
+        $AliID = $_SESSION["AliID"];
+        $SessionData = FetchSession($Action,$AliID);
         $Email = $SessionData['Email'];
         $BrowserData = GetBrowserData();
         $AccountRole = FetchAccountRole($Action,$Email);
@@ -855,8 +854,8 @@ function FetchUserEmail($Action){
 function AddSession($Action,$Email){
     StartSession();
     $BrowserData = GetBrowserData();
-    $SessionID = hash('sha256', uniqid(rand(), true));
-    $_SESSION["Session_ID"] = $SessionID;
+    $AliID = hash('sha256', uniqid(rand(), true));
+    $_SESSION["AliID"] = $AliID;
     $SessionIP = $BrowserData['IP'];
     $SessionBrowser = $BrowserData['Browser'];
     $SessionPlatform = $BrowserData['Platform'];
@@ -864,7 +863,7 @@ function AddSession($Action,$Email){
     global $PDOconn;
     $Query = 'CALL AddSession (?, ?, ?, ?, ?)';
     $Statement = $PDOconn->prepare($Query);
-    $Statement->bindParam(1, $SessionID, PDO::PARAM_STR, 64);
+    $Statement->bindParam(1, $AliID, PDO::PARAM_STR, 64);
     $Statement->bindParam(2, $Email, PDO::PARAM_STR, 45);
     $Statement->bindParam(3, $SessionIP, PDO::PARAM_STR, 45);
     $Statement->bindParam(4, $SessionBrowser, PDO::PARAM_STR, 45);

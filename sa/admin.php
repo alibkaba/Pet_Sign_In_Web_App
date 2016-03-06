@@ -26,6 +26,8 @@
         $Statement->bindParam(4, $Attempt, PDO::PARAM_INT, 1);
         $Statement->bindParam(5, $AdminCode, PDO::PARAM_INT, 1);
         $Statement->execute();
+        $ActivityMSG = "Your account was created by an admin.";
+        AddActivity($Action,$Email,$ActivityMSG);
         $MSG = "Super Admin created.";
         $PDOconn = null;
         echo "<script type='text/javascript'>alert('$MSG'); window.location = \"/petsignin/sa/admin.php\";</script>";
