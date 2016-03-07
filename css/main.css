@@ -14,6 +14,10 @@ body {
     -webkit-overflow-scrolling: touch ;
 }
 
+#Visitor{
+    width: 50%;
+    margin: 0 auto;
+}
 
 #Account, #SignOut, #ViewActivitiesButton, #ViewErrorsButton, #Visitor, #AddNewPetButton, #ViewAccountsButton, #HiddenValues, #ChangePasswordButton, #ViewBreedsButton{
     display: none;

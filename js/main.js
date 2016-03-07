@@ -1,20 +1,21 @@
 $(document).ready(function() {
-    console.log("ready!");
+    //console.log("ready!");
     $.ajaxSetup({
         url: 'operations.php',
         type: 'post',
         cache: 'false',
         async: false,
         success: function(AjaxData) {
-            console.log('Ajax passed');
+            //console.log('Ajax passed');
         },
         error: function(xhr, status, error) {
-            console.log("Error: " + xhr.status);
+            //console.log("Error: " + xhr.status);
         }
     });
 
     Start();
 
+    //SignInButton
     $("#SignInButton").click(function() {
         var Email = document.getElementById("Email1").value;
         var Password = document.getElementById("Password1").value;
@@ -25,16 +26,19 @@ $(document).ready(function() {
         PrepareAjax(Action,Email,Password);
     });
 
+    //ViewActivitiesModal
     $("#ViewActivitiesButton").click(function() {
         var Action = "FetchActivities";
         PrepareAjax(Action);
     });
 
+    //ViewErrorModal
     $("#ViewErrorsButton").click(function() {
         var Action = "FetchErrors";
         PrepareAjax(Action);
     });
 
+    //RegisterModal
     $("#Register").click(function() {
         document.getElementById("Email2").value = "";
         document.getElementById("Password2").value = "";
@@ -63,6 +67,7 @@ $(document).ready(function() {
             document.getElementById("UpdatePasswordButton").disabled = true;
         }
     });
+
     //UpdatePasswordButton
     $('#OldPassword1').change(function() {
         var Old = document.getElementById("OldPassword").value;
@@ -74,6 +79,7 @@ $(document).ready(function() {
             document.getElementById("UpdatePasswordButton").disabled = true;
         }
     });
+
     //UpdatePasswordButton
     $('#NewPassword').change(function() {
         var Old = document.getElementById("OldPassword").value;
@@ -129,12 +135,14 @@ $(document).ready(function() {
         }
     });
 
+    //ViewSignInPet
     $("#ViewSignInPet :input").change(function() {
         var Action = "SignInPet";
         var PetName = document.getElementById("SignInPet").value;
         PrepareAjax(Action,PetName);
     });
 
+    //AddNewPetModal
     $('input[type=radio][name=pettnc]').change(function() {
         if (this.value == "yes") {
             document.getElementById("AddPetButton").disabled = false;
@@ -143,6 +151,7 @@ $(document).ready(function() {
         }
     });
 
+    //ResetAccountModal
     $("#ResetPassword").click(function() {
         var Email = document.getElementById("Email3").value;
         CheckRequiredField(Email);
@@ -187,8 +196,8 @@ $(document).ready(function() {
     $("#ViewGender").change(function() {
         var DefaultValue = document.getElementById("HiddenValue4").value;
         var NewValue = document.getElementById("ViewGender").value;
-        console.log(DefaultValue);
-        console.log(NewValue);
+        //console.log(DefaultValue);
+        //console.log(NewValue);
         if (DefaultValue == NewValue) {
             document.getElementById("ViewGender").style.backgroundColor = "transparent";
             document.getElementById("UpdateAccountButton").disabled = true;
@@ -198,6 +207,7 @@ $(document).ready(function() {
         }
     });
 
+    //ViewAccountsModal
     $("#ViewPetName").change(function() {
         var DefaultValue = document.getElementById("HiddenValue2").value;
         var NewValue = document.getElementById("ViewPetName").value;
@@ -235,11 +245,13 @@ $(document).ready(function() {
         }
     });
 
+    //SignOut
     $("#SignOut").click(function() {
         var Action = "SignOut";
         PrepareAjax(Action);
     });
 
+    //RegisterModal
     $("#RegisterButton").click(function() {
         var Email = document.getElementById("Email2").value;
         var Password = document.getElementById("Password2").value;
@@ -251,6 +263,7 @@ $(document).ready(function() {
         PrepareAjax(Action,Email,Password);
     });
 
+    //AddNewPetModal
     $("#AddNewPetButton").click(function() {
         document.getElementById("PetName").value = "";
         document.getElementById("ViewBreeds").options.length = 1;
@@ -262,6 +275,7 @@ $(document).ready(function() {
         ViewBreeds(ResponseData);
     });
 
+    ////AddNewPetModal
     $("#AddPetButton").click(function() {
         var PetName = document.getElementById("PetName").value;
         var BreedID = document.getElementById("ViewBreeds").value;
@@ -279,7 +293,7 @@ $(document).ready(function() {
         }
     });
 
-    //AddBreedButton
+    //ViewBreedsModal
     $("#ViewBreedsButton").click(function() {
         document.getElementById("ViewBreedName").disabled = true;
         document.getElementById("ViewBreedName").disabled = true;
@@ -295,6 +309,7 @@ $(document).ready(function() {
         ViewBreeds1(ResponseData);
     });
 
+    //ViewAccountsModal
     $("#ViewAccountsButton").click(function() {
         document.getElementById("AccountStatus").disabled = true;
         document.getElementById("ViewAllAccountsPets").disabled = true;
@@ -532,7 +547,7 @@ function Fetch(Action,D1){
             D1: D1
         };
         var ResponseData = JSON.parse(OutgoingAjax(AjaxData));
-        console.log(ResponseData);
+        //console.log(ResponseData);
         return ResponseData;
     }catch(e){
         var ErrorMSG = e;
@@ -542,6 +557,7 @@ function Fetch(Action,D1){
     }
 }
 
+//ViewAccountsModal
 function ViewAccountStatus (ResponseData){
     document.getElementById("AccountStatus").disabled = false;
     if(ResponseData.Disabled == 0){
@@ -623,6 +639,7 @@ function ViewBreeds(ResponseData){
     }
 }
 
+//ViewBreedsModal
 function ViewBreeds1(ResponseData){
     var select = document.getElementById("ViewBreeds1");
     var i;
@@ -641,6 +658,7 @@ function ViewUserPets(ResponseData){
     }
 }
 
+//ViewAccountsModal
 function ViewAllAccounts(ResponseData){
     var select = document.getElementById("ViewAllAccounts");
     var i;
@@ -649,6 +667,7 @@ function ViewAllAccounts(ResponseData){
     }
 }
 
+//ViewSignInPet
 function ViewSignInPet(ResponseData){
     var ViewSignInPet = "";
     for (var i = 0; i < ResponseData.length; i++) {
@@ -840,7 +859,7 @@ function AddError(FailedAction, ErrorMSG) {
 }
 
 function JSOperation(Action, ResponseData){
-    console.log(ResponseData);
+    //console.log(ResponseData);
     switch(ResponseData) {
         case "locked":
             alert("Error 89: This account has been locked.  Reset your account or contact the administrator.");
@@ -890,7 +909,7 @@ function JSOperation(Action, ResponseData){
 }
 
 function JSOperation2(Action,ResponseData){
-    console.log(ResponseData);
+    //console.log(ResponseData);
     switch(Action) {
         case "FetchActivities":
             ViewActivities(ResponseData);
