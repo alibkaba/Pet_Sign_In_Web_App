@@ -189,6 +189,8 @@ $(document).ready(function() {
         }else{
             document.getElementById("ViewBreed").style.backgroundColor = "lightgreen";
             document.getElementById("UpdateAccountButton").disabled = false;
+            var BreedID = document.getElementById("ViewBreed").value;
+            document.getElementById("HiddenValue6").value = BreedID;
         }
     });
 
@@ -196,8 +198,6 @@ $(document).ready(function() {
     $("#ViewGender").change(function() {
         var DefaultValue = document.getElementById("HiddenValue4").value;
         var NewValue = document.getElementById("ViewGender").value;
-        //console.log(DefaultValue);
-        //console.log(NewValue);
         if (DefaultValue == NewValue) {
             document.getElementById("ViewGender").style.backgroundColor = "transparent";
             document.getElementById("UpdateAccountButton").disabled = true;
@@ -491,12 +491,7 @@ $(document).ready(function() {
         var AccountStatus = document.getElementById("HiddenValue9").value;
         var PetStatus = document.getElementById("HiddenValue8").value;
         var PetName = document.getElementById("ViewPetName").value;
-        if(typeof document.getElementById("ViewBreed" === "undefined")){
-            var BreedID = "";
-        }else{
-            var SelectedBreed = document.getElementById("ViewBreed");
-            var BreedID = SelectedBreed.options[SelectedBreed.selectedIndex].value;
-        }
+        var BreedID = document.getElementById("HiddenValue6").value;
         var Gender = document.getElementById("ViewGender").value;
         if(OldAccountStatus != AccountStatus){
             var Action = "UpdateAccountStatus";
@@ -510,7 +505,7 @@ $(document).ready(function() {
             var Action = "UpdatePetName";
             PrepareAjax(Action,PetName,OldName,Email);
         }
-        if(OldBreedID != BreedID && BreedID != ""){
+        if(OldBreedID != BreedID && BreedID != "" && (typeof document.getElementById("ViewBreed" === "undefined"))){
             var Action = "UpdatePetBreed";
             PrepareAjax(Action,BreedID,PetName,Email);
         }
@@ -859,7 +854,7 @@ function AddError(FailedAction, ErrorMSG) {
 }
 
 function JSOperation(Action, ResponseData){
-    //console.log(ResponseData);
+    console.log(ResponseData);
     switch(ResponseData) {
         case "locked":
             alert("Error 89: This account has been locked.  Reset your account or contact the administrator.");
