@@ -854,7 +854,7 @@ function AddError(FailedAction, ErrorMSG) {
 }
 
 function JSOperation(Action, ResponseData){
-    console.log(ResponseData);
+    //console.log(ResponseData);
     switch(ResponseData) {
         case "locked":
             alert("Error 89: This account has been locked.  Reset your account or contact the administrator.");
